@@ -65,51 +65,6 @@ const ChangeEmail = async (email) => {
   await AmplifyAuth.updateUserAttributes(user, { email: email });
 };
 
-//TODO:Not updating the Cognito standard attributes since it requires a different level of authentication
-//To be resolved later. For now, only updating the GraphQL fields.
-//https://stackoverflow.com/questions/53149091/what-does-the-aws-cognito-signin-user-admin-scope-mean-in-amazon-cognito
-// const ChangeName = async (name) => {
-//   try{ 
-//     const user = await AmplifyAuth.currentAuthenticatedUser();
-//     return await AmplifyAuth.updateUserAttributes(user, { name: name });
-//   }catch(error){
-//     return null;    
-//   }
-// };
-
-// const ChangeZip = async (address) => {
-//   try{ 
-//     const user = await AmplifyAuth.currentAuthenticatedUser();
-//     await AmplifyAuth.updateUserAttributes(user, { address: address });
-//   }catch(error){
-//     return null;    
-//   }
-// };
-
-// const ChangeBirthdate = async (birthdate) => {
-
-//   try{ 
-//   const user = await AmplifyAuth.currentAuthenticatedUser();    
-//   console.log("Change ChangeBirthdate for user", user);
-//   return await AmplifyAuth.updateUserAttributes(user, { birthdate: birthdate });
-//   }catch(error){
-//     return null;    
-//   }
-// };
-
-// const ChangeGender = async (gender) => {
-//   try{   
-  
-//     const user = await AmplifyAuth.currentAuthenticatedUser();    
-//     const v =  await AmplifyAuth.updateUserAttributes(user, {
-//       'gender': gender
-//     });
-//   }catch(error){    
-//     console.error("Auth.ChangeGender gender attribute  update error",error);
-//     return null;
-//   }
-
-// };
 
 const ConfirmChangeEmail = async (code) => {
   await AmplifyAuth.verifyCurrentUserAttributeSubmit("email", code);
@@ -148,10 +103,6 @@ const Auth = {
   ChangePassword,
   ChangeLanguage,
   GetCredentials,
-  // ChangeName,
-  // ChangeGender,
-  // ChangeZip,
-  // ChangeBirthdate,
   SignInWithFacebook,
   SignInWithGoogle,
   DeleteUser,
