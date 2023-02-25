@@ -1,6 +1,6 @@
-  projects:
-  flock:
-    schemaPath: amplify/backend/api/flock/build/schema.graphql
+projects:
+  flock-dev:
+    schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
     excludes:
@@ -10,6 +10,6 @@
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
-extensions:
-  amplify:
-    version: 3
+        region: us-east-1
+        apiId: znvkpugsu5cjtic2mrvfzmmc5u
+        maxDepth: 2

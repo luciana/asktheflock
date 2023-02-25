@@ -31,20 +31,21 @@ export default function SignIn() {
     return (
       <>    
       <hr className="my-2" />  
-      <div className="m-4">       
+      <div className="m-4 row text-center">       
+        <div className="col " >
           <Button
             text={LANGUAGES[state.lang].Auth.SignInWithGoogleButton}
             disabled={false}
             handler={signInWithGoogle}
             icon="mx-3 fa-brands fa-google"
-          />       
+          />             
           <Button
             text={LANGUAGES[state.lang].Auth.SignInWithFacebookButton}
             disabled={false}
             handler={signInWithFacebook}
-            icon="mx-3 fa-brands fa-facebook"
+            icon="mx-3 fa-brands fa-facebook-f"
           />
-       
+        </div>
         </div> 
       <form className="form-control">
         <AuthTitle text={LANGUAGES[state.lang].Auth.SignInTitle} />
@@ -64,8 +65,10 @@ export default function SignIn() {
             handler={setPwd}
           />
         </div>
-        <div className="flex justify-between items-center mb-4">
+        <div className="d-flex justify-between mb-4">
           <RememberMe remember={remember} setRemember={setRemember} />
+        </div>
+        <div className="d-flex justify-between mb-4">
           <AuthLink
           to={ROUTES[state.lang].FORGOT_PASSWORD}
           text={LANGUAGES[state.lang].Auth.ForgotPassword}
@@ -74,10 +77,9 @@ export default function SignIn() {
         <Button
         text={LANGUAGES[state.lang].Auth.SignInButton}
         disabled={disabled()}
-        handler={() => signIn(email, pwd, remember)}
-       // full
+        handler={() => signIn(email, pwd, remember)}       
       />
-        <div className="w-full text-center mt-6">
+        <div className="w-full text-center mt-5">
         <AuthLink
           to={ROUTES[state.lang].SIGN_UP}
           text={LANGUAGES[state.lang].Auth.NotRegistered}

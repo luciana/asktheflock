@@ -5,7 +5,7 @@ import { AppContext } from "../../Contexts";
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
 import { Alert, Loading, HomeNav } from "../../Components";
-import '../../App.css';
+import '../../Pages/pages.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -47,11 +47,12 @@ export default function AuthLayout() {
     startLoading();
     try {
       const { attributes } = await Auth.SignIn(email, pwd, remember);
-      console.log("AuthLayout.js signIn Auth attributes", attributes);     
-      dispatch({ type: TYPES.UPDATE_LANG, payload: attributes.locale });
+      console.log("AuthLayout.js signIn Auth attributes", attributes);    
+      const locale =  attributes.locale ? attributes.locale : "en-US";
+      dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
-      console.log("Navigate to ROUTES[en-US].MAIN", ROUTES[attributes.locale].MAIN);
-      navigate(ROUTES[attributes.locale].MAIN);
+      console.log("Navigate to ROUTES[en-US].MAIN", ROUTES[locale].MAIN);
+      navigate(ROUTES[locale].MAIN);
     } catch (err) {
       stopLoading();
       console.error("AuthLayout.js signIn error calling Auth.Signin", err);
@@ -63,14 +64,23 @@ export default function AuthLayout() {
   };
 
   function signInWithGoogle() {
-    const user = Auth.SignInWithGoogle();
-    console.log("sign In user with Google", user);
+      const user = Auth.SignInWithGoogle();
+      console.log("AuthLayout.js SignInWithGoogle user", user);    
+      const locale =  "en-US";
+      dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
+      stopLoading();
+      console.log("Navigate to ROUTES[en-US].MAIN signInWithGoogle", ROUTES[locale].MAIN);
+      navigate(ROUTES[locale].MAIN);
    }
  
    function signInWithFacebook() {
       const user = Auth.signInWithFacebook();  
-     //const user = Auth.federatedSignIn();
-      console.log("sign In user with Facebook", user);
+      console.log("AuthLayout.js signInWithFacebook user", user);    
+      const locale =  "en-US";
+      dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
+      stopLoading();
+      console.log("Navigate to ROUTES[en-US].MAIN signInWithFacebook" , ROUTES[locale].MAIN);
+      navigate(ROUTES[locale].MAIN);
     }
 
   const sendForgotPasswordCode = async (email) => {

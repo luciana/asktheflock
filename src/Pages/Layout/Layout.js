@@ -3,9 +3,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { AppContext } from "../../Contexts";
 import { ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
-// import '../pages.css';
+import '../pages.css';
 import '../../App.css';
-// import './../profile-nav.css';
+import './../profile-nav.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
@@ -22,12 +22,12 @@ export default function Layout() {
      console.log("Layhout.js is user in state?", state);  
     if ( !state.user || force === true) { 
       console.log("Layhout.js about to create user in Query", state.user, email);  
-      let user = null; //await Queries.GetUserByEmail(email);
+      let user = await Queries.GetUserByEmail(email);
       if (!user) {
         //The user is created in cognito but not in GraphQL. 
         //Create user in GraphQL with the attributes from Cognito
         console.log("Layout.js queries.GetUserByEmail result", user);  
-       // user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
+        user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
         console.log("Layout.js create user in mutation", user);
       }else{
         //The user is created in Cognito and in GraphQL
@@ -65,7 +65,7 @@ export default function Layout() {
     dispatch({ type: TYPES.UPDATE_LANG, payload: state.user.locale });
     dispatch({ type: TYPES.UPDATE_USER, payload: null });
     console.log("Cleared user data in state");
-    navigate(ROUTES[state.lang].HOME);
+    //navigate(ROUTES[state.lang].HOME);
   };
 
 
@@ -108,10 +108,9 @@ async function getUser() {
     console.error("Layout.js Main error in isUserLoggedIn", error);
     if(error === "Error: No current user"){
       //clear cookies
-      console.error("Layout.js Main error in isUserLoggedIn clear cookie", error);
-      //dispatch({ type: TYPES.UPDATE_USER, payload: "" });
+      console.error("Layout.js Main error in isUserLoggedIn clear cookie", error);     
     }
-   // navigate(ROUTES[state.lang].SIGN_IN);
+   navigate(ROUTES[state.lang].HOME);
   }
 }
 
