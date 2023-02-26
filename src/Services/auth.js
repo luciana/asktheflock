@@ -47,7 +47,7 @@ const RedefinePassword = async (email, code, pwd) => {
 
 const GetUser = async () => {
   const result = await AmplifyAuth.currentAuthenticatedUser();
-  console.log("Service Auth.js GetUser  returned from Amplify", result);
+  console.log("Service Auth.js GetUser  currentAuthenticatedUser returned from Amplify", result);
   return result.attributes;
 
 };
@@ -75,10 +75,10 @@ const ChangePassword = async (pwd, newPwd) => {
   await AmplifyAuth.changePassword(user, pwd, newPwd);
 };
 
-const ChangeLanguage = async (language) => {
-  const user = await AmplifyAuth.currentAuthenticatedUser();
-  await AmplifyAuth.updateUserAttributes(user, { locale: language });
-};
+// const ChangeLanguage = async (language) => {
+//   const user = await AmplifyAuth.currentAuthenticatedUser();
+//   await AmplifyAuth.updateUserAttributes(user, { locale: language });
+// };
 
 const GetCredentials = async () => {
   const credentials = await AmplifyAuth.currentCredentials();
@@ -101,7 +101,6 @@ const Auth = {
   ChangeEmail,
   ConfirmChangeEmail,
   ChangePassword,
-  ChangeLanguage,
   GetCredentials,
   SignInWithFacebook,
   SignInWithGoogle,

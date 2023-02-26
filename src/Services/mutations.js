@@ -17,6 +17,7 @@ const CreateUser = async (email, locale,  name, address, birthdate, gender) => {
 };
 
 const UpdateUser = async ( {id, email, locale, name, gender, address, birthdate, userTag} ) => {
+  console.log("UpdateUser mutation inputs", id, email, locale, name, gender, address, birthdate, userTag);
   const {
     data: { updateUser },
   } = await API.graphql(

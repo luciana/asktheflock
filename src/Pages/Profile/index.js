@@ -114,19 +114,22 @@ export default function Profile() {
   const handleProfileInfo = async () => {
     loading();
     try {
-      await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
+      console.log("handleProfileInfo input", user.email, language, name, gender, address, birthdate, tag);   
+      const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
+      console.log("handleProfileInfo Mutation result", results);
+
       loadUser({ force: true, 
         email: user.email,
-        locale: language,
         name: name, 
-        address: address, 
-        birthdate: birthdate,
-        gender: gender,
-        userTag: tag
+        locale: language  ? language : "en-US",         
+        gender: gender ? gender : "",
+        address: address ? address : "",
+        birthdate: birthdate ? birthdate : null,
+        userTag: tag,      
       });
       navigate(ROUTES[language].PROFILE);
     } catch (error) {
-      console.error("handleChangeLanguage error", error);
+      console.error("handleProfileInfo error", error);
       setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
     }
     setLoading(false);
@@ -134,8 +137,7 @@ export default function Profile() {
 
   const handleChangeLanguage = async () => {
     loading();
-    try {
-      await Auth.ChangeLanguage(language);
+    try {   
       await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language });
       loadUser({ force: true, email: user.email });
       navigate(ROUTES[language].PROFILE);
@@ -150,8 +152,6 @@ export default function Profile() {
   const handleChangeName = async () => {
     loading();
     try {
-     // const authResponse = await Auth.ChangeName(name);
-     // console.log("authResponse to change name", authResponse);
       const mutationResponse = await Mutations.UpdateUserName( { id: user.id,  name: name } );
       console.log("mutations response to change name", mutationResponse);
       loadUser({ force: true, email: user.email, name: name });
@@ -167,12 +167,9 @@ export default function Profile() {
   const handleChangeGender = async () => {
     console.log("handleChangeGender");
     loading();
-    try {
-      // const authResult = await Auth.ChangeGender(gender);
-      // console.log("Auth.ChangeGender auth result", authResult);    
-       // console.log("Auth.ChangeGender mutation input with", user.id, gender);
+    try {        
         const mutationResult = await Mutations.UpdateUserGender({ id: user.id,  gender: gender });
-        console.log("Auth.ChangeGender mutation result", mutationResult);
+        console.log("handleChangeGender mutation result", mutationResult);
         loadUser({ force: true, email: user.email, gender: gender });
         console.log("Mutations.UpdateUserGender", gender);
         navigate(ROUTES[language].PROFILE);
@@ -187,9 +184,9 @@ export default function Profile() {
   const handleChangeZip = async () => {
     loading();
     try {    
-     // await Auth.ChangeZip(address); 
+
       await Mutations.UpdateUserZip({ id: user.id, address: address });
-      loadUser({ force: true, email: user.email });
+      loadUser({ force: true, email: user.email, address: address });
       navigate(ROUTES[language].PROFILE);
     } catch (error) {
       setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
@@ -213,12 +210,9 @@ export default function Profile() {
   const handleChangeBirthdate = async () => {
     loading();
     try {    
-      // console.log("handleChangeBirthdate", birthdate);
-      // const authResult = await Auth.ChangeBirthdate(birthdate);
-      // console.log("Auth.Birthdate auth result", authResult);
-     
+
       await Mutations.UpdateUserBirthdate({ id: user.id, birthdate: birthdate });
-      loadUser({ force: true, email: user.email });
+      loadUser({ force: true, email: user.email, birthdate: birthdate });
       navigate(ROUTES[language].PROFILE);
       
     } catch (error) {
@@ -457,7 +451,7 @@ export default function Profile() {
     
   );
 
-  console.log("User from profile", user);
+  //console.log("User from profile", user);
 
   return (
    <div className="container">     
@@ -495,13 +489,13 @@ export default function Profile() {
               {renderChangeLanguage()}
             </div>
         </div>
-        {/* <button                 
+        <button                 
           className="btn btn-outline-primary rounded-pill "
           type="button"
           onClick={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
           
           
-        >{LANGUAGES[state.lang].Auth.SignUpButton} </button> */}
+        >{LANGUAGES[state.lang].Auth.SignUpButton} </button>
       </form>
       </div>
       
