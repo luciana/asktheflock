@@ -18,9 +18,6 @@ export const createUser = /* GraphQL */ `
       votes
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -42,9 +39,6 @@ export const updateUser = /* GraphQL */ `
       votes
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -66,9 +60,6 @@ export const deleteUser = /* GraphQL */ `
       votes
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -91,9 +82,6 @@ export const createQuestion = /* GraphQL */ `
       stats
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -115,9 +103,6 @@ export const updateQuestion = /* GraphQL */ `
       stats
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;
@@ -139,9 +124,6 @@ export const deleteQuestion = /* GraphQL */ `
       stats
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
     }
   }
 `;

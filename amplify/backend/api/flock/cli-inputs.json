@@ -8,10 +8,6 @@
       "cognitoUserPoolId": "authflockAuth"
     },
     "additionalAuthTypes": [],
-    "conflictResolution": {
-      "defaultResolutionStrategy": {
-        "type": "AUTOMERGE"
-      }
-    }
+    "conflictResolution": {}
   }
 }
