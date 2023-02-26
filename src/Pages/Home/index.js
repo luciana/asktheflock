@@ -19,14 +19,14 @@ function Home() {
         const isUserLoggedIn = async () => {
           try {
             if( user ){
-                console.log("Home.js user exists in state (FlockAppState)", user);
+                console.log("Home.js user exists in state (AskTheFlockAppState)", user);
                 navigate(ROUTES[state.lang].MAIN);
             }else {
-                console.log("Home.js no user exist in state (FlockAppState)", user);               
+                console.log("Home.js no user exist in state (AskTheFlockAppState)", user);               
             }
            
           } catch (error) {
-            console.error("Home.js error checking if user exists in state(FlockAppState)", error);    
+            console.error("Home.js error checking if user exists in state(AskTheFlockAppState)", error);    
            //navigate(ROUTES[state.lang].HOME);
           }
         };

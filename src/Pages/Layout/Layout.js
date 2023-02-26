@@ -29,43 +29,22 @@ export default function Layout() {
         console.log("Layout.js queries.GetUserByEmail result", user);  
         user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
         console.log("Layout.js create user in mutation", user);
-      }else{
-        //The user is created in Cognito and in GraphQL
-        //Check if the attribute fields are different btw Cognito and GraphQL
-        //If so, update GraphQL data with Cognito data
-        console.log(" user is created in Cognito and in GraphQL");
-        const needsUpdate  =
-          user.gender === gender ||
-          user.birthdate === birthdate ||
-          user.address === address ||
-          user.locale === locale ||
-          user.userTag === userTag ||
-          user.name === name;
-        
-         console.log("there is data discrepancy in Cognito and in GraphQL", needsUpdate);
-
-        //TODO:If any of the fields above are different, then update GraphQL
-        // if(needsUpdate){
-        //   console.log(" user data is different btw Cognito and in GraphQL. Call Update user next");
-        //   user = await Mutations.UpdateUser(email, locale, name, address, birthdate, gender);    
-        //   console.log("Called update use because data was different btw cognito and graphql, update user was done. user data is now:", user);
-        // }
       }
      //Update language and user in the cookie
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale || user.locale });
       dispatch({ type: TYPES.UPDATE_USER, payload: user });
     } 
     // console.log("User exist in the state" , state.user);
-  }, [dispatch, state.user]);
+  }, [dispatch, state]);
 
   const handleSignOut = async () => {
     
     await Auth.SignOut();
-    console.log("Cleared cognito data in handlesignout");
+    console.log("Cleared cognito data in handlesignout" , state.user);
     dispatch({ type: TYPES.UPDATE_LANG, payload: state.user.locale });
     dispatch({ type: TYPES.UPDATE_USER, payload: null });
     console.log("Cleared user data in state");
-    //navigate(ROUTES[state.lang].HOME);
+    navigate(ROUTES[state.lang].HOME);
   };
 
 
@@ -83,7 +62,7 @@ useEffect(() => {
       }
   });
   getUser();
-}, []);
+}, [getUser]);
 
 async function getUser() {
   // try {
@@ -101,7 +80,7 @@ async function getUser() {
       locale: attributes.locale  ? attributes.locale : "en-US",         
       gender: attributes.gender ? attributes.gender : "",
       address: attributes.address ? attributes.address : "",
-      birthdate: attributes.birthdate ? attributes.birthdate : "",
+      birthdate: attributes.birthdate ? attributes.birthdate : null,
       userTag: "",
     });
   } catch (error) {

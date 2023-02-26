@@ -1,6 +1,15 @@
 {
   "api": {
     "flock": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "asktheflock589370c8"
+        }
+      ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [],

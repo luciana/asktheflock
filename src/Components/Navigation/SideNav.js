@@ -81,7 +81,7 @@ function SideNav({ handleSignOut }) {
                 <span className="d-block d-lg-none">{process.env.REACT_APP_TITLE}</span>
                 <span className="d-none d-lg-block text-wrap">    
                     <p><img src={logo} className="img-fluid" alt={process.env.REACT_APP_TITLE} /> </p>
-                    <Avatar facebookId="2750815308383132"  className=" img-profile rounded-circle mx-auto mb-2" />
+                    <Avatar  className=" img-profile rounded-circle mx-auto mb-2" />
                     <div className="text-white my-3 profile-name">{user.name}</div>   
                 </span>          
             </div>
