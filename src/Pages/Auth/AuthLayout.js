@@ -69,8 +69,8 @@ export default function AuthLayout() {
       const locale =  "en-US";
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
-      console.log("Navigate to ROUTES[en-US].MAIN signInWithGoogle", ROUTES[locale].MAIN);
-      navigate(ROUTES[locale].MAIN);
+      // console.log("Navigate to ROUTES[en-US].MAIN signInWithGoogle", ROUTES[locale].MAIN);
+      // navigate(ROUTES[locale].MAIN);
    }
  
    function signInWithFacebook() {
@@ -79,8 +79,8 @@ export default function AuthLayout() {
       const locale =  "en-US";
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
-      console.log("Navigate to ROUTES[en-US].MAIN signInWithFacebook" , ROUTES[locale].MAIN);
-      navigate(ROUTES[locale].MAIN);
+      // console.log("Navigate to ROUTES[en-US].MAIN signInWithFacebook" , ROUTES[locale].MAIN);
+      // navigate(ROUTES[locale].MAIN);
     }
 
   const sendForgotPasswordCode = async (email) => {

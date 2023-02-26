@@ -154,6 +154,8 @@ const pt_br_lang = {
       LanguagePreference: "Idioma de preferencia",
       YourExpertise: "Sua Especialidade",
       YourName: "Seu Nome",
+      UpdateProfile: "Alterar Informações de Perfil",
+      ChangeProfileInfo: "Informações de Perfil",
     },
     Tags: {
       parent: "#pais",

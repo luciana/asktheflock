@@ -152,6 +152,8 @@ const en_us_lang = {
       LanguagePreference: "Language preference",
       YourExpertise: "Your Expertise",
       YourName: "Your Name",
+      UpdateProfile: "Update Profile Information",
+      ChangeProfileInfo: "Your Profile Info",
     },
     Tags: {
       parent: "#parent",

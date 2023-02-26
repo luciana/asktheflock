@@ -114,8 +114,9 @@ export default function Profile() {
   const handleProfileInfo = async () => {
     loading();
     try {
-      console.log("handleProfileInfo input", user.email, language, name, gender, address, birthdate, tag);   
-      const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
+      const validBirthDate = (birthdate || birthdate.length != 0 )? birthdate : null;
+      console.log("handleProfileInfo input", user.email, language, name, gender, address, validBirthDate, tag);   
+      const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: validBirthDate, userTag: tag });
       console.log("handleProfileInfo Mutation result", results);
 
       loadUser({ force: true, 
@@ -124,7 +125,7 @@ export default function Profile() {
         locale: language  ? language : "en-US",         
         gender: gender ? gender : "",
         address: address ? address : "",
-        birthdate: birthdate ? birthdate : null,
+        birthdate: validBirthDate,
         userTag: tag,      
       });
       navigate(ROUTES[language].PROFILE);
@@ -135,91 +136,91 @@ export default function Profile() {
     setLoading(false);
   };
 
-  const handleChangeLanguage = async () => {
-    loading();
-    try {   
-      await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language });
-      loadUser({ force: true, email: user.email });
-      navigate(ROUTES[language].PROFILE);
-    } catch (error) {
-      console.error("handleChangeLanguage error", error);
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
-    }
-    setLoading(false);
-  };
+  // const handleChangeLanguage = async () => {
+  //   loading();
+  //   try {   
+  //     await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language });
+  //     loadUser({ force: true, email: user.email });
+  //     navigate(ROUTES[language].PROFILE);
+  //   } catch (error) {
+  //     console.error("handleChangeLanguage error", error);
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
+  //   }
+  //   setLoading(false);
+  // };
 
 
-  const handleChangeName = async () => {
-    loading();
-    try {
-      const mutationResponse = await Mutations.UpdateUserName( { id: user.id,  name: name } );
-      console.log("mutations response to change name", mutationResponse);
-      loadUser({ force: true, email: user.email, name: name });
-      navigate(ROUTES[language].PROFILE);
-    } catch (error) {
-      console.error("error with handling change name", error);
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-    }
-    setLoading(false);
-  };
+  // const handleChangeName = async () => {
+  //   loading();
+  //   try {
+  //     const mutationResponse = await Mutations.UpdateUserName( { id: user.id,  name: name } );
+  //     console.log("mutations response to change name", mutationResponse);
+  //     loadUser({ force: true, email: user.email, name: name });
+  //     navigate(ROUTES[language].PROFILE);
+  //   } catch (error) {
+  //     console.error("error with handling change name", error);
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
+  //   }
+  //   setLoading(false);
+  // };
 
 
-  const handleChangeGender = async () => {
-    console.log("handleChangeGender");
-    loading();
-    try {        
-        const mutationResult = await Mutations.UpdateUserGender({ id: user.id,  gender: gender });
-        console.log("handleChangeGender mutation result", mutationResult);
-        loadUser({ force: true, email: user.email, gender: gender });
-        console.log("Mutations.UpdateUserGender", gender);
-        navigate(ROUTES[language].PROFILE);
+  // const handleChangeGender = async () => {
+  //   console.log("handleChangeGender");
+  //   loading();
+  //   try {        
+  //       const mutationResult = await Mutations.UpdateUserGender({ id: user.id,  gender: gender });
+  //       console.log("handleChangeGender mutation result", mutationResult);
+  //       loadUser({ force: true, email: user.email, gender: gender });
+  //       console.log("Mutations.UpdateUserGender", gender);
+  //       navigate(ROUTES[language].PROFILE);
       
-    } catch (error) {
-      console.error("handleChangeGender error", error);
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
-    }
-    setLoading(false);
-  };
+  //   } catch (error) {
+  //     console.error("handleChangeGender error", error);
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
+  //   }
+  //   setLoading(false);
+  // };
 
-  const handleChangeZip = async () => {
-    loading();
-    try {    
+  // const handleChangeZip = async () => {
+  //   loading();
+  //   try {    
 
-      await Mutations.UpdateUserZip({ id: user.id, address: address });
-      loadUser({ force: true, email: user.email, address: address });
-      navigate(ROUTES[language].PROFILE);
-    } catch (error) {
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-    }
-    setLoading(false);
-  };
+  //     await Mutations.UpdateUserZip({ id: user.id, address: address });
+  //     loadUser({ force: true, email: user.email, address: address });
+  //     navigate(ROUTES[language].PROFILE);
+  //   } catch (error) {
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
+  //   }
+  //   setLoading(false);
+  // };
 
-  const handleUserTag = async () => {
-    loading();
-    try {    
-      console.log("handleUserTag");
-      await Mutations.UpdateUserTag({ id: user.id, userTag: tag });
-      loadUser({ force: true, email: user.email, userTag: tag });
-      navigate(ROUTES[language].PROFILE);
-    } catch (error) {
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-    }
-    setLoading(false);
-  };
+  // const handleUserTag = async () => {
+  //   loading();
+  //   try {    
+  //     console.log("handleUserTag");
+  //     await Mutations.UpdateUserTag({ id: user.id, userTag: tag });
+  //     loadUser({ force: true, email: user.email, userTag: tag });
+  //     navigate(ROUTES[language].PROFILE);
+  //   } catch (error) {
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
+  //   }
+  //   setLoading(false);
+  // };
 
-  const handleChangeBirthdate = async () => {
-    loading();
-    try {    
+  // const handleChangeBirthdate = async () => {
+  //   loading();
+  //   try {    
 
-      await Mutations.UpdateUserBirthdate({ id: user.id, birthdate: birthdate });
-      loadUser({ force: true, email: user.email, birthdate: birthdate });
-      navigate(ROUTES[language].PROFILE);
+  //     await Mutations.UpdateUserBirthdate({ id: user.id, birthdate: birthdate });
+  //     loadUser({ force: true, email: user.email, birthdate: birthdate });
+  //     navigate(ROUTES[language].PROFILE);
       
-    } catch (error) {
-      setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-    }
-    setLoading(false);
-  };
+  //   } catch (error) {
+  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
+  //   }
+  //   setLoading(false);
+  // };
 
   const disabledEmail = () =>
     !email || email === user.email || !isValidEmail(email);
@@ -238,7 +239,7 @@ export default function Profile() {
   const disabledGender = () => gender === user.gender;
   const disabledBirthdate = () => birthdate === user.birthdate;
 
-
+  const disableProfileButton = disabledTag || disabledZip || disabledLanguage || disabledGender || disabledBirthdate;
 
   const userVoteCount = () => {
    
@@ -276,11 +277,11 @@ export default function Profile() {
         handler={setName}
         label={LANGUAGES[user.locale].Profile.YourName}
       />   
-      <Button
+      {/* <Button
         text={LANGUAGES[user.locale].Profile.ChangeName}
         disabled={disabledName()}
         handler={() => handleChangeName()}
-      />
+      /> */}
     </div>
 
   );
@@ -295,11 +296,11 @@ export default function Profile() {
         handler={setAddress}
         label={LANGUAGES[user.locale].Profile.YourZipCode}
       />
-      <Button
+      {/* <Button
         text={LANGUAGES[user.locale].Profile.ChangeZip}
         disabled={disabledZip()}
         handler={() => handleChangeZip()}
-      />
+      /> */}
     </div>
    
   );
@@ -317,11 +318,11 @@ export default function Profile() {
             value={user.birthdate}     
         />   
 
-      <Button
+      {/* <Button
         text={LANGUAGES[user.locale].Profile.ChangeBirthdate}
         disabled={disabledBirthdate()}
         handler={() => handleChangeBirthdate()}
-      />
+      /> */}
     </div>
    
   );
@@ -402,11 +403,11 @@ export default function Profile() {
           ))}
         </Select>
        
-        <Button
+        {/* <Button
           text={LANGUAGES[user.locale].Profile.ChangeTag}
           disabled={disabledTag()}
           handler={() => handleUserTag()}
-        />
+        /> */}
       </div>
    
   );
@@ -422,11 +423,11 @@ export default function Profile() {
             </option>
           ))}
         </Select>
-        <Button
+        {/* <Button
           text={LANGUAGES[user.locale].Profile.ChangeLanguage}
           disabled={disabledLanguage()}
           handler={() => handleChangeLanguage()}
-        />
+        /> */}
       </div>
     
   );
@@ -442,11 +443,11 @@ export default function Profile() {
             </option>
           ))}
         </Select>
-        <Button
+        {/* <Button
           text={LANGUAGES[user.locale].Profile.ChangeGender}
           disabled={disabledGender()}
           handler={() => handleChangeGender()}
-        />
+        /> */}
       </div>
     
   );
@@ -462,8 +463,8 @@ export default function Profile() {
       <hr className="m-3"></hr>     
       <div className="grid sm:grid-cols-3 gap-2">  
        <div className="card">
-        <div className="card-header">
-          Change Your Profile Info
+        <div className="card-header">          
+          {LANGUAGES[state.lang].Profile.ChangeProfileInfo}
         </div>
         <div className="card-body">   
         <form className=" form-control">
@@ -493,9 +494,8 @@ export default function Profile() {
           className="btn btn-outline-primary rounded-pill "
           type="button"
           onClick={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
-          
-          
-        >{LANGUAGES[state.lang].Auth.SignUpButton} </button>
+          disabled={disableProfileButton()}          
+        >{LANGUAGES[state.lang].Profile.UpdateProfile} </button>
       </form>
       </div>
       
