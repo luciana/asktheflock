@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import Vote from '../Votes/Vote';
 import { FaCircleNotch , FaSyncAlt, FaCircle, FaTrashAlt, FaGrinHearts, FaPhoneVolume} from 'react-icons/fa';
-//import { Tooltip } from 'bootstrap';
 import Avatar from 'react-avatar';
 import ReplyModalDialog from './ReplyModalDialog';
 import QuestionForm from './QuestionForm';
@@ -19,7 +18,7 @@ function Question({
   handleVote,
   activeQuestion,
   deleteQuestion,
-  addQuestion,
+  //addQuestion,
   parentId = null,
   user
  }) {
@@ -158,7 +157,7 @@ function Question({
                  Tell what happened afterwards
                 </button>
               )}
-          {isReplying && (
+          {/* {isReplying && (
             <QuestionForm 
               submitLabel="This is what happened afterwards..."
               placeHolderText="Explain if the suggestion worked out... "   
@@ -174,7 +173,7 @@ function Question({
                 options:user.options,
               })}
             />
-          )}
+          )} */}
           {/* {replies && replies.length > 0 && (             
           <div className="replies alert alert-primary ">            
             {replies.map((reply) => (

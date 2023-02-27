@@ -33,6 +33,7 @@ const pt_br_lang = {
     },
     Questions:{
       Questions: "Perguntas",
+      NoQuestionsPosted: "Nenhuma pergunta feita ainda. Faça a sua!",
       NewQuestion: "Nova Pergunta",
       New: "Nova",
       NewQuestionTitle: "Precisa de ajuda? Faça uma pergunta",
@@ -45,6 +46,11 @@ const pt_br_lang = {
       EnterOptions: "Quais as suas opções?",
       FlockOptionTip: "Insira todas as opções que você gostaria que as pessoas votassem ( min 2, max 5 )",
       FlockOptionTipExample: "Por example, se a sua pergunta foi: Indo de férias para o exterior, product uma praia ou neve? Nesse caso as suas opções são praia e neve",
+      FilterOpenQuestionLabel: "Perguntas em aberto",
+      FilterMyQuestionsLabel: "Minhas Perguntas",
+      PlaceholderQuestion: "O que devo servir na festa de aniversário da minha filha? #flocks pizza, cachorro quente?",
+      PollClosesIn: "Enquete fecha em ",
+      ExpertCallOutTitle: "Especialista",
     },
     PasswordRules: {
       Chars: "Pelo menos 8 caracteres",
@@ -156,6 +162,7 @@ const pt_br_lang = {
       YourName: "Seu Nome",
       UpdateProfile: "Alterar Informações de Perfil",
       ChangeProfileInfo: "Informações de Perfil",
+      CompleteProfile: "Por favor, preencha as informações do seu perfil!",
     },
     Tags: {
       parent: "#pais",

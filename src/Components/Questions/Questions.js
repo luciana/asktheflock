@@ -1,11 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import Question from "./Question";
-import QuestionService from '../../Services/QuestionService';
 import { Loading, Alert, Switch, Friends }  from '../../Components';
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
 import { AppContext} from '../../Contexts'; 
-import { ROUTES, TYPES } from "../../Constants";
+import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
 
 
@@ -31,20 +30,23 @@ const Questions = () => {
           setLoading(true);       
           let q = await Queries.GetAllQuestions();
           //console.log("Get all Questions from db", q);
-          setBackendQuestions(q.filter(
-              (backendQuestion) => ((backendQuestion.parentID === null) )
-            ).sort(
-            (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          ));
+          if(q){
+              setBackendQuestions(q.filter(
+                (backendQuestion) => ((backendQuestion.parentID === null) )
+              ).sort(
+              (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            ));
           
           // initial setFilter list is the same as backendquestions retrieved from the server.
-            setFilterList(q.filter(
-              (backendQuestion) => ((backendQuestion.parentID === null) )
-            ).sort(
-            (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          ));
+              setFilterList(q.filter(
+                (backendQuestion) => ((backendQuestion.parentID === null) )
+              ).sort(
+              (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            ));
+          }
+         
           
           
           setLoading(false);
@@ -178,11 +180,8 @@ const Questions = () => {
     
 
       const addQuestion = (text) => {
-        console.log('addQuestion triggered from question and poll - not calling graphql mutation', text);
-        QuestionService.createQuestion(text).then((question) => {         
-          setBackendQuestions([question.text, ...backendQuestions]);
-          setActiveQuestion(null);
-        });
+        console.log('THIS Should never BE TRIGGERD - addQuestion triggered from question and poll - not calling graphql mutation', text);
+       
     };
 
       const getReplies = (questionId) =>{       
@@ -360,15 +359,19 @@ const Questions = () => {
       return ( 
         <>
             {loading && <Loading />}
-            {( !loading && showNoQuestions ) && <Alert type="warning" text="No questions retrieved. Start one!" link={ROUTES[state.lang].NEW_QUESTION} />}          
+            {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             <div className="row border border-1 ">
               <div className=" col">
-                 <Switch label={"Only open questions"}
+                { backendQuestions && backendQuestions.length > 0 && (
+                  <Switch label={LANGUAGES[state.lang].Questions.FilterOpenQuestionLabel}
                     handleSwitch={handleVoteFilterSwitch}/> 
+                  )}
               </div>
-              <div className=" col">                
-                  <Switch label={"Only my questions"}
+              <div className=" col">             
+                { backendQuestions && backendQuestions.length > 0 && (   
+                  <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
                     handleSwitch={handleQuestionFilterSwitch}/>   
+                )}
               </div>              
             </div>     
             <div className=" ">{(!loading) && <Friends votedList={votedList} 
@@ -388,7 +391,7 @@ const Questions = () => {
                           updateVotedOptionsList={updateVotedOptionsList}
                           votedList={votedList}
                           votedOptionsList={votedOptionsList}
-                          addQuestion={addQuestion}
+                        //  addQuestion={addQuestion}
                           activeQuestion={activeQuestion}                       
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}                        

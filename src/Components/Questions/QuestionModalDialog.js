@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react'
 import { Modal } from 'react-bootstrap'
 import { RiTimeLine, RiMagicLine }  from 'react-icons/ri';
+import { FaPhoneVolume }  from 'react-icons/fa';
 import Avatar from 'react-avatar';
 import Item from '../Items/Item';
 import ItemForm from '../Items/ItemForm';
@@ -26,6 +27,7 @@ function QuestionModalDialog(
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [votePeriod, setVotePeriod] = useState(480);
   const [input, setInput] = useState("");
+  const [characterCount, setCharacterCount] = useState(0);
   const [expertTag, setExpertTag] = useState("");
   const inputRef = useRef(null);
   const isTextareaEmpty = input.length === 0;
@@ -35,6 +37,7 @@ function QuestionModalDialog(
 
   const handleChange = e => {
     setInput(e.target.value);
+    setCharacterCount(e.target.value.length);
   };
 
   const handleChangeExpertTage = (e) =>{
@@ -69,6 +72,7 @@ function QuestionModalDialog(
     setShowOptionsModal(true);
   }
   const disabledPublishButton =  todos.length < 2 || todos.length > 5;
+  const maxQuestionCharacter = process.env.REACT_APP_MAX_QUESTION_CHARACTER;
   return (
     <>
       <div className="p-2 row align-items-start"> 
@@ -90,23 +94,24 @@ function QuestionModalDialog(
               </Modal.Header>
               <Modal.Body >               
                   <textarea
-                    placeholder={"What should I make for my kids birthday? #flocks pizza, pasta, salad"}
+                    placeholder={LANGUAGES[user.locale].Questions.PlaceholderQuestion}
                     value={input}
                     onChange={handleChange}
                     name='textarea'
                     rows="4"
-                    maxLength="124"
+                    maxLength={maxQuestionCharacter}
                     className='form-control'
                     ref={inputRef}
-                  />         
+                  />
+                  <span className="text-sm">{characterCount}/{maxQuestionCharacter}</span>
                   <div>
                   <div className="row g-3 align-items-center">
-                      <div className="col-auto">
-                        <label htmlFor="expertTag" className="col-form-label"><RiTimeLine size={24}/></label>
+                      <div className="col-md-2">
+                        <label htmlFor="votePeriod" className="col-form-label text-sm px-2"><RiTimeLine size={24}/> {LANGUAGES[user.locale].Questions.PollClosesIn}</label>
                       </div>
-                      <div className="col-auto">
+                      <div className="col-md-4">
                      
-
+    
                         <div className="form-check form-check-inline">
                             <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="10" name="votePeriod" value="10" defaultChecked={votePeriod === 10} /><label className="form-check-label text-sm "  htmlFor="10">10 min</label>
                         </div>
@@ -117,14 +122,13 @@ function QuestionModalDialog(
                           <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="480" name="votePeriod" value="480" defaultChecked={votePeriod === 480} /><label className="form-check-label text-sm " htmlFor="480">8 hours</label>
                         </div>
                       </div>             
-                    </div>           
-                  </div>
-                           
-                    <div className="row g-3 align-items-center">
-                      <div className="col-auto">
-                        <label htmlFor="expertTag" className="col-form-label text-sm " data-bs-toggle="tooltip" data-bs-placement="top" title=" an expert opinion will weigh more">Expert Tag</label>
+                          
+             
+                      <div className="col-md-2">
+                        <label htmlFor="expertTag" className="col-form-label text-sm px-2" data-bs-toggle="tooltip" 
+                        data-bs-placement="top" title=" an expert opinion will weigh more"><FaPhoneVolume size={24}/> {LANGUAGES[user.locale].Questions.ExpertCallOutTitle}</label>
                       </div>
-                      <div className="col-auto">
+                      <div className="col-md-4">
                         <input type="text" 
                               id="expertTag" 
                               name="expertTag" 
@@ -141,15 +145,31 @@ function QuestionModalDialog(
                                 ))}                               
                                 </datalist>
 
-                      </div>         
+                      </div>    
+                      </div>        
                     </div>
 
-                    <div className="mt-5 alert alert-warning alert-dismissible fade show text-sm" role="alert">
+                    <div className="mt-1 alert alert-warning alert-dismissible fade show text-sm" role="alert">
                     <div className="alert-heading" ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
                       <div>{LANGUAGES[user.locale].Questions.FlockTip} </div>
                      <div className="fst-italic"> {LANGUAGES[user.locale].Questions.FlockTipExample} </div>                  
                     </div>
-                                                       
+
+                  <h5 className="my-3">{LANGUAGES[user.locale].Questions.EnterOptions}</h5>
+                    <Item
+                    todos={todos}           
+                    removeTodo={removeTodo}
+                    completeTodo={completeTodo}
+                    updateTodo={updateTodo}
+                  />
+                  <ItemForm onSubmit={addTodo} />
+
+                  <div className="mb-5 alert alert-warning alert-dismissible fade show text-sm" role="alert">
+                  <div className="alert-heading" ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
+                  <div>{LANGUAGES[user.locale].Questions.FlockOptionTip} </div>
+                  <div className="fst-italic"> {LANGUAGES[user.locale].Questions.FlockOptionTipExample} </div>                  
+                 </div>
+
               </Modal.Body>
               <Modal.Footer>                                           
                   {hasCancelButton && (
@@ -161,9 +181,13 @@ function QuestionModalDialog(
                       Discard
                     </button>                    
                   )}         
-                  <Button handler={onSubmit} 
+                  {/* <Button handler={onSubmit} 
                   disabled={isTextareaEmpty} 
-                   text={LANGUAGES[user.locale].Questions.Next} />
+                   text={LANGUAGES[user.locale].Questions.Next} /> */}
+
+                <Button handler={handlePublishQuestion} 
+                  disabled={isTextareaEmpty || disabledPublishButton} 
+                   text={LANGUAGES[user.locale].Questions.Publish} />
                   
                           
               </Modal.Footer>

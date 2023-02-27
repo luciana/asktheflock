@@ -114,7 +114,7 @@ export default function Profile() {
   const handleProfileInfo = async () => {
     loading();
     try {
-      const validBirthDate = (birthdate || birthdate.length != 0 )? birthdate : null;
+      const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null;
       console.log("handleProfileInfo input", user.email, language, name, gender, address, validBirthDate, tag);   
       const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: validBirthDate, userTag: tag });
       console.log("handleProfileInfo Mutation result", results);
@@ -232,14 +232,15 @@ export default function Profile() {
     newPassword !== repeatPassword ||
     newPassword.length < 8;
 
-  const disabledName = () => !name || name.length < 0;
-  const disabledTag = () => tag === user.userTag;
-  const disabledZip = () => address === "" || !isValidZip(address, user.locale);
-  const disabledLanguage = () => language === user.locale;
-  const disabledGender = () => gender === user.gender;
-  const disabledBirthdate = () => birthdate === user.birthdate;
+  //const disabledName = () => !name || name.length < 0;
+  //const disabledTag = tag === user.userTag;
+  const disabledZip = address !== "" && !isValidZip(address, user.locale);
+  // const disabledLanguage = () => language === user.locale;
+  // const disabledGender = () => gender === user.gender;
+  // const disabledBirthdate = () => birthdate === user.birthdate;
 
-  const disableProfileButton = disabledTag || disabledZip || disabledLanguage || disabledGender || disabledBirthdate;
+  //const disableProfileButton = disabledTag || disabledZip || disabledLanguage || disabledGender || disabledBirthdate;
+  const disableProfileButton = disabledZip;
 
   const userVoteCount = () => {
    
@@ -275,6 +276,7 @@ export default function Profile() {
         placeholder={LANGUAGES[user.locale].Name}
         value={name}
         handler={setName}
+        disabled={true}
         label={LANGUAGES[user.locale].Profile.YourName}
       />   
       {/* <Button
@@ -490,12 +492,18 @@ export default function Profile() {
               {renderChangeLanguage()}
             </div>
         </div>
-        <button                 
+
+        <Button
+          text={LANGUAGES[state.lang].Profile.UpdateProfile}
+          disabled={disableProfileButton}
+          handler={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
+        />
+        {/* <button                 
           className="btn btn-outline-primary rounded-pill "
           type="button"
           onClick={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
           disabled={disableProfileButton()}          
-        >{LANGUAGES[state.lang].Profile.UpdateProfile} </button>
+        >{LANGUAGES[state.lang].Profile.UpdateProfile} </button> */}
       </form>
       </div>
       

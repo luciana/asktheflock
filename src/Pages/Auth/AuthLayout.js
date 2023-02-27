@@ -66,18 +66,18 @@ export default function AuthLayout() {
   function signInWithGoogle() {
       const user = Auth.SignInWithGoogle();
       console.log("AuthLayout.js SignInWithGoogle user", user);    
-      const locale =  "en-US";
-      dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
+      // const locale =  "en-US";
+      // dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
       // console.log("Navigate to ROUTES[en-US].MAIN signInWithGoogle", ROUTES[locale].MAIN);
       // navigate(ROUTES[locale].MAIN);
    }
  
    function signInWithFacebook() {
-      const user = Auth.signInWithFacebook();  
+      const user = Auth.SignInWithFacebook();  
       console.log("AuthLayout.js signInWithFacebook user", user);    
-      const locale =  "en-US";
-      dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
+      // const locale =  "en-US";
+      // dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
       // console.log("Navigate to ROUTES[en-US].MAIN signInWithFacebook" , ROUTES[locale].MAIN);
       // navigate(ROUTES[locale].MAIN);

@@ -47,7 +47,7 @@ function ItemForm(props) {
         
         <div className="input-group mb-3">
           <input
-            placeholder='Type available options'
+            placeholder='Type available option'
             value={input}
             type="text"
             onChange={handleChange}

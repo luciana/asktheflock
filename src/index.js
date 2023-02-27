@@ -6,10 +6,44 @@ import './index.css';
 import App from './App';
 import { AppProvider } from "./Contexts";
 import reportWebVitals from './reportWebVitals';
-import awsconfig from './aws-exports';
+import awsConfig from './aws-exports';
 //https://www.linkedin.com/pulse/part-3-complete-login-flow-using-react-aws-amplify-s3-jos%C3%A9-augusto/?trk=pulse-article_more-articles_related-content-card
 //https://github.com/gugazimmermann/amplify-login/blob/v1.7/src/pages/home/Layout.jsx
-Amplify.configure(awsconfig);
+
+
+
+// const isLocalhost = Boolean(
+//   window.location.hostname === "localhost" ||
+//     // [::1] is the IPv6 localhost address.
+//     window.location.hostname === "[::1]" ||
+//     // 127.0.0.1/8 is considered localhost for IPv4.
+//     window.location.hostname.match(
+//       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+//     )
+// );
+
+// // Assuming you have two redirect URIs, and the first is for localhost and second is for production
+// const [
+//   localRedirectSignIn,
+//   productionRedirectSignIn,
+// ] = awsConfig.oauth.redirectSignIn.split(",");
+
+// const [
+//   localRedirectSignOut,
+//   productionRedirectSignOut,
+// ] = awsConfig.oauth.redirectSignOut.split(",");
+
+// const updatedAwsConfig = {
+//   ...awsConfig,
+//   oauth: {
+//     ...awsConfig.oauth,
+//     redirectSignIn: isLocalhost ? localRedirectSignIn : productionRedirectSignIn,
+//     redirectSignOut: isLocalhost ? localRedirectSignOut : productionRedirectSignOut,
+//   }
+// }
+
+// Amplify.configure(updatedAwsConfig);
+Amplify.configure(awsConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

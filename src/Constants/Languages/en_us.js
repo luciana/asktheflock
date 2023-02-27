@@ -33,6 +33,7 @@ const en_us_lang = {
     },
     Questions:{
       Questions: "Questions",
+      NoQuestionsPosted: "No questions posted. Start one!",
       NewQuestion: "New Question",
       New: "New",
       NewQuestionTitle: "Need help? Ask a question!",
@@ -45,6 +46,12 @@ const en_us_lang = {
       EnterOptions: "Enter the options",
       FlockOptionTip: "Enter all the options that you want others to vote ( min 2, max 5 )",
       FlockOptionTipExample: "i.e if your question is What do you prefer breakfast or brunch? Then your options to be entered here are: breakfast and brunch.",
+      FilterOpenQuestionLabel: "Open Questions",
+      FilterMyQuestionsLabel: "My Questions",
+      PlaceholderQuestion: "What should I serve for my kids birthday? #flocks pizza, pasta, salad",
+      PollClosesIn: "Poll closes in ",
+      ExpertCallOutTitle: "Expert",
+
     },
     PasswordRules: {
       Chars: "Must have at least 8 chars",
@@ -154,6 +161,7 @@ const en_us_lang = {
       YourName: "Your Name",
       UpdateProfile: "Update Profile Information",
       ChangeProfileInfo: "Your Profile Info",
+      CompleteProfile: "Please, complete your profile!",
     },
     Tags: {
       parent: "#parent",

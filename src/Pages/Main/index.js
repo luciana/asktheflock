@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
-// import '../pages.css';
-// import './../profile-nav.css';
+import '../pages.css';
+import './../profile-nav.css';
 import { AppContext} from '../../Contexts';
-//import Questions from '../../Components/Questions/ ';
+import Questions from '../../Components/Questions/Questions';
+import { LANGUAGES, ROUTES } from "../../Constants";
 import { Alert } from '../../Components';
 
 
@@ -13,9 +14,9 @@ function Main() {
   return (
     <div className="App  ">      
        
-        {(!user.name || !user.userTag || !user.gender || !user.address || !user.birthdate) && <Alert type="warning" text="Please, complete the Profile!" link="/Profile" />}
+        {(!user.name || !user.userTag || !user.gender || !user.address || !user.birthdate) && <Alert type="warning" text={LANGUAGES[state.lang].Profile.CompleteProfile} link="/Profile" />}
         <div className="white-bg container p-2 ">
-              {user.name}
+        <Questions />
         </div>               
         <hr className="m-0"></hr>       
                   
