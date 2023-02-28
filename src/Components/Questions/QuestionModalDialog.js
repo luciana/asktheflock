@@ -10,9 +10,9 @@ import { Button } from './../../Components';
 
 function QuestionModalDialog(
   {
-    addPostOptionsFromQuestion,
+    addFlocksToOptions,
   handlePublishQuestion,
-  handleCancel,
+  //handleCancel,
   removeTodo,
   updateTodo,
   completeTodo,
@@ -24,7 +24,7 @@ function QuestionModalDialog(
 
  
   const [showQuestionModal, setShowQuestionModal] = useState(false);
-  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  //const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [votePeriod, setVotePeriod] = useState(480);
   const [input, setInput] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
@@ -36,9 +36,14 @@ function QuestionModalDialog(
   }  
 
   const handleChange = e => {
+   
     setInput(e.target.value);
     setCharacterCount(e.target.value.length);
   };
+
+  const handleOnBlur = e => {
+    addFlocksToOptions(e.target.value);
+  }
 
   const handleChangeExpertTage = (e) =>{
     setExpertTag(e.target.value);
@@ -57,28 +62,44 @@ function QuestionModalDialog(
   }
 
   const onSubmit = e => {
-    addPostOptionsFromQuestion({
-      id: Math.floor(Math.random() * 10000),
-      text: input,
-      parentId: null,
-      userId: user.id,
-      createdAt: new Date().toISOString(),
-      voteEndAt: addMinutes(new Date(), parseFloat(votePeriod)),
-      sentiment: "",
-      options:null,
-      questionTag: expertTag
-    });
-
-    setShowOptionsModal(true);
+    e.preventDefault(); 
+    // addPostOptionsFromQuestion({
+    //   id: Math.floor(Math.random() * 10000),
+    //   text: input,
+    //   parentId: null,
+    //   userId: user.id,
+    //   createdAt: new Date().toISOString(),
+    //   voteEndAt: addMinutes(new Date(), parseFloat(votePeriod)),
+    //   sentiment: "",
+    //   options:todos,
+    //   questionTag: expertTag
+    // });
+    handlePublishQuestion({
+        id: Math.floor(Math.random() * 10000),
+        text: input,
+        parentId: null,
+        userId: user.id,
+        createdAt: new Date().toISOString(),
+        voteEndAt: addMinutes(new Date(), parseFloat(votePeriod)),
+        sentiment: "",
+        options:todos,
+        questionTag: expertTag
+      });
+    
+    //setShowOptionsModal(true);
   }
-  const disabledPublishButton =  todos.length < 2 || todos.length > 5;
+  const minQuestionOptions = 2;
+  const maxQuestionOptions = 5;
+  const disabledPublishButton =  todos.length < minQuestionOptions || todos.length > maxQuestionOptions;
+  const optionInvalidMessage =  disabledPublishButton ? " - invalid number of options" : "";
+  
   const maxQuestionCharacter = process.env.REACT_APP_MAX_QUESTION_CHARACTER;
   return (
     <>
       <div className="p-2 row align-items-start"> 
             <div className="col-2 px-1 d-grid  "> <Avatar size="42" name={user.name} className=" img-profile rounded-circle mx-auto mb-0" alt="{Luciana Bruscino}" /></div>
             <div className="col-10 d-grid  py-3">
-                <div className="text-sm lh-1"><span>Hi {user.name} </span> </div>                                                                   
+                <div className="text-sm lh-1"><span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {user.name} </span> </div>                                                                   
             </div>  
             <Button handler={initModal}
                     text={LANGUAGES[user.locale].Questions.EnterNewQuestion}
@@ -96,14 +117,15 @@ function QuestionModalDialog(
                   <textarea
                     placeholder={LANGUAGES[user.locale].Questions.PlaceholderQuestion}
                     value={input}
-                    onChange={handleChange}
+                    onChange={handleChange}    
+                    onBlur={handleOnBlur}              
                     name='textarea'
                     rows="4"
                     maxLength={maxQuestionCharacter}
                     className='form-control'
                     ref={inputRef}
                   />
-                  <span className="text-sm">{characterCount}/{maxQuestionCharacter}</span>
+                  <span className="text-sm text-color-gray">{characterCount}/{maxQuestionCharacter}</span>
                   <div>
                   <div className="row g-3 align-items-center">
                       <div className="col-md-2">
@@ -149,13 +171,17 @@ function QuestionModalDialog(
                       </div>        
                     </div>
 
-                    <div className="mt-1 alert alert-warning alert-dismissible fade show text-sm" role="alert">
+                    <div className="mt-1 alert alert-warning alert-dismissible fade show text-sm d-none" role="alert">
                     <div className="alert-heading" ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
                       <div>{LANGUAGES[user.locale].Questions.FlockTip} </div>
                      <div className="fst-italic"> {LANGUAGES[user.locale].Questions.FlockTipExample} </div>                  
                     </div>
 
-                  <h5 className="my-3">{LANGUAGES[user.locale].Questions.EnterOptions}</h5>
+                  <div className="fs-5 text my-3">
+                    {LANGUAGES[user.locale].Questions.EnterOptions} 
+                    <span className="text-sm text-color-gray px-2">(min of {minQuestionOptions} and max of {maxQuestionOptions})</span> 
+                  </div>
+                  <span className="text-sm text-color-red"> {optionInvalidMessage}</span>
                     <Item
                     todos={todos}           
                     removeTodo={removeTodo}
@@ -164,8 +190,8 @@ function QuestionModalDialog(
                   />
                   <ItemForm onSubmit={addTodo} />
 
-                  <div className="mb-5 alert alert-warning alert-dismissible fade show text-sm" role="alert">
-                  <div className="alert-heading" ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
+                  <div className="mb-5 alert alert-warning alert-dismissible fade show text-sm d-none" role="alert">
+                  <div className="alert-heading " ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
                   <div>{LANGUAGES[user.locale].Questions.FlockOptionTip} </div>
                   <div className="fst-italic"> {LANGUAGES[user.locale].Questions.FlockOptionTipExample} </div>                  
                  </div>
@@ -185,7 +211,7 @@ function QuestionModalDialog(
                   disabled={isTextareaEmpty} 
                    text={LANGUAGES[user.locale].Questions.Next} /> */}
 
-                <Button handler={handlePublishQuestion} 
+                <Button handler={onSubmit} 
                   disabled={isTextareaEmpty || disabledPublishButton} 
                    text={LANGUAGES[user.locale].Questions.Publish} />
                   
@@ -194,13 +220,13 @@ function QuestionModalDialog(
         </Modal>
         </form>   
 
-        <Modal  fullscreen={true} show={showOptionsModal} >
+        {/* <Modal  fullscreen={true} show={showOptionsModal} >
               <Modal.Header closeButton onClick={() => {setShowOptionsModal(false)}}>
                 <Modal.Title>{LANGUAGES[user.locale].Questions.EnterOptions}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <div className="mb-5 alert alert-warning alert-dismissible fade show text-sm" role="alert">
-                  <div className="alert-heading" ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
+                <div className="mb-5 alert alert-warning alert-dismissible fade show text-sm d-none" role="alert">
+                  <div className="alert-heading " ><RiMagicLine size={24} /><strong>Pro Tip!</strong></div>
                   <div>{LANGUAGES[user.locale].Questions.FlockOptionTip} </div>
                   <div className="fst-italic"> {LANGUAGES[user.locale].Questions.FlockOptionTipExample} </div>                  
                  </div>
@@ -219,7 +245,7 @@ function QuestionModalDialog(
                   disabled={disabledPublishButton} 
                    text={LANGUAGES[user.locale].Questions.Publish} />
               </Modal.Footer>
-        </Modal>
+        </Modal> */}
          </div>
        
     </>

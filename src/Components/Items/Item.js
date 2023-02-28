@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ItemForm from './ItemForm';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import { TiEdit } from 'react-icons/ti';
+import { RiCloseCircleLine, RiEditLine } from 'react-icons/ri';
+
 
 const Item = ({ todos, completeTodo, removeTodo, updateTodo }) => {
   const [edit, setEdit] = useState({
@@ -37,7 +37,7 @@ const Item = ({ todos, completeTodo, removeTodo, updateTodo }) => {
         />  
         </div>
         <div className='col-1'>
-        <TiEdit
+        <RiEditLine
           onClick={() => setEdit({ id: todo.id, value: todo.text })}
           className='edit-icon'
           size={"30"}

@@ -34,6 +34,7 @@ const en_us_lang = {
     Questions:{
       Questions: "Questions",
       NoQuestionsPosted: "No questions posted. Start one!",
+      NewQuestionGreeting: "Hi,",
       NewQuestion: "New Question",
       New: "New",
       NewQuestionTitle: "Need help? Ask a question!",
@@ -51,6 +52,9 @@ const en_us_lang = {
       PlaceholderQuestion: "What should I serve for my kids birthday? #flocks pizza, pasta, salad",
       PollClosesIn: "Poll closes in ",
       ExpertCallOutTitle: "Expert",
+      YouHelped: "You helped",
+      YouCanHelp: "You have the skill to help!",
+      SpecialCallOutFor: " Special call out for #",
 
     },
     PasswordRules: {
@@ -162,6 +166,7 @@ const en_us_lang = {
       UpdateProfile: "Update Profile Information",
       ChangeProfileInfo: "Your Profile Info",
       CompleteProfile: "Please, complete your profile!",
+      Joined: "Joined",
     },
     Tags: {
       parent: "#parent",

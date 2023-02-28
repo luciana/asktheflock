@@ -15,6 +15,11 @@
 .text-color-gray {
   color:  var(--bs-gray-600);
 }
+
+.text-color-red {
+  color:  var(--bs-red);
+}
+
 .req{
   color: var(--bs-red);
   font-size: .875rem;

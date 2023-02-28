@@ -5,6 +5,7 @@ import { AppContext } from "../../Contexts";
 import './Card.css';
 import { isOwner } from "../../Helpers/owner";
 import WebNotification from "../Notification/WebNotification";
+import {formatDateTime} from '../../Helpers';
 
 const Card = ({voteCounts}) => {
 
@@ -47,7 +48,7 @@ const Card = ({voteCounts}) => {
           )}
           </div>  
           <div className="fw-bolder">   {LANGUAGES[user.locale].Profile.LanguagePreference + " : "} {LANGUAGES[user.locale].Languages[user.locale]  }</div>       
-        <div className="fw-bolder text-sm">Joined {user.createdAt}</div>
+        <div className="fw-bolder text-sm">{LANGUAGES[user.locale].Profile.Joined} {formatDateTime(user.createdAt)}</div>
       </div>
       </div>
       <div className="border border-1 d-flex p-3 my-2"> 

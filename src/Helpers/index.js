@@ -4,3 +4,4 @@ export { default as isValidPassword } from "./isValidPassword";
 export { default as findCounts } from "./findCounts";
 export { default as findGeneration } from "./findGeneration";
 export { default as findAge } from "./findAge";
+export { default as formatDateTime } from "./formatDateTime";

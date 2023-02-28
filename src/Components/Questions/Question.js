@@ -6,6 +6,8 @@ import ReplyModalDialog from './ReplyModalDialog';
 import QuestionForm from './QuestionForm';
 import StatsDialog from '../Stats/StatsDialog';
 import { SocialShare } from '../Social';
+import {formatDateTime} from '../../Helpers';
+import { LANGUAGES } from '../../Constants';
 
 function Question({ 
   question, 
@@ -35,23 +37,13 @@ function Question({
 
 
 
- const formatDateAndTime = (date_input)  => {
-  let date = new Date(date_input);
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'pm' : 'am';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? '0'+minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
-  return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + strTime;
-}
+ 
 
   const isAReply = question.parentId != null;
   const canDelete = user.id === question.userID  && !isAReply; 
   //don't want to show the option to reply yet. setting bool to false 
   const canReply = user.id === question.userID && !isAReply && replies.length === 0 && false;
-  const createdAt = formatDateAndTime(question.createdAt);
+  const createdAt = formatDateTime(question.createdAt);
   const replyId = parentId ? parentId : question.id;
   const voteEnded = new Date() - new Date(question.voteEndAt) > 1;
   const canRepost = user.id === question.userID  && voteEnded; 
@@ -108,18 +100,18 @@ function Question({
     <div key={question.id} className="my-2">
        <div key={question.id} className="container border border-1 p-1" >           
         <div className="p-2 row align-items-start"> 
-            <div className="col-2"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
+            <div className="col-1"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
             <div className="col-8">
               <div className="text-sm lh-1"><span>{question.userName} </span><span aria-hidden="true"> · </span> <span> {createdAt} </span></div>
               <div className="text-sm">
                 {!isAReply && voteEnded && (<span > Voting closed <FaCircle /> </span>)}
-                {!isAReply && !voteEnded && (<span> Voting Open < FaCircleNotch /> until {formatDateAndTime(question.voteEndAt)}</span>)}
+                {!isAReply && !voteEnded && (<span> Voting Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
                 {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}
                 
               </div>
               
             </div>
-            <div className="col-2">
+            <div className="col-3">
              
               {canDelete && (
                 <button className="btn btn-sm  mx-1" onClick={()=> deleteQuestion(question.id)}>
@@ -193,17 +185,17 @@ function Question({
         )} */}
          <div className=" border border-0 bg-light text-sm lh-3">    
         { expertNeeded && (       
-          <span className="p-2"><FaPhoneVolume /> Special call out for #<strong>{question.questionTag}</strong></span>
+          <span className="p-2"><FaPhoneVolume /> {LANGUAGES[user.locale].Questions.SpecialCallOutFor}<strong>{question.questionTag}</strong></span>
         )}
       { expertNeededWithYourSkill && (       
         
-        <span className="p-2">· You have the skill to help!</span>
+        <span className="p-2">· {LANGUAGES[user.locale].Questions.YouCanHelp}</span>
         )}
         </div> 
       
       { alreadyVotedForQuestionListBool && (       
        <div className="container  text-sm lh-3">
-        <span className="p-2">You helped {question.userName} <FaGrinHearts /></span>
+        <span className="p-2">{LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
       </div>   )}
       </div>
       

@@ -35,6 +35,7 @@ const pt_br_lang = {
       Questions: "Perguntas",
       NoQuestionsPosted: "Nenhuma pergunta feita ainda. Faça a sua!",
       NewQuestion: "Nova Pergunta",
+      NewQuestionGreeting: "Oi,",
       New: "Nova",
       NewQuestionTitle: "Precisa de ajuda? Faça uma pergunta",
       EnterNewQuestion: "Insira sua Nova Pergunta",
@@ -51,6 +52,9 @@ const pt_br_lang = {
       PlaceholderQuestion: "O que devo servir na festa de aniversário da minha filha? #flocks pizza, cachorro quente?",
       PollClosesIn: "Enquete fecha em ",
       ExpertCallOutTitle: "Especialista",
+      YouHelped: "Você ajudou",
+      YouCanHelp: "Você pode ajudar!",
+      SpecialCallOutFor: "Preciso de ajuda na especialidade #",
     },
     PasswordRules: {
       Chars: "Pelo menos 8 caracteres",
@@ -163,6 +167,7 @@ const pt_br_lang = {
       UpdateProfile: "Alterar Informações de Perfil",
       ChangeProfileInfo: "Informações de Perfil",
       CompleteProfile: "Por favor, preencha as informações do seu perfil!",
+      Joined: "Membro desde",  
     },
     Tags: {
       parent: "#pais",
