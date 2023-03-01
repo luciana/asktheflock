@@ -1,14 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { useOutletContext, useLocation } from "react-router-dom";
 import { isValidEmail, isValidZip, isValidPassword } from "../../Helpers";
-import { AuthLink, AuthTitle, Input, Title, Select, DatePicker } from "../../Components";
+import { AuthLink, AuthTitle, Input, Title, Select, DatePicker, Button } from "../../Components";
 import { AppContext } from "../../Contexts";
 import { LANGUAGES, ROUTES, GENDER } from "../../Constants";
 
 export default function SignUp() {
   const location = useLocation();
   const { state } = useContext(AppContext);
-  const { setAlert, signUp } = useOutletContext();
+  const { setAlert, signUp, signInWithGoogle, signInWithFacebook } = useOutletContext();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
@@ -89,8 +89,26 @@ export default function SignUp() {
     }    
   return (
     <>
+    <hr className="my-2" />  
+      <div className="m-4 row text-center">       
+        <div className="col " >
+          <Button
+            text={LANGUAGES[state.lang].Auth.SignInWithGoogleButton}
+            disabled={false}
+            handler={signInWithGoogle}
+            icon="mx-3 fa-brands fa-google"
+          />             
+          <Button
+            text={LANGUAGES[state.lang].Auth.SignInWithFacebookButton}
+            disabled={false}
+            handler={signInWithFacebook}
+            icon="mx-3 fa-brands fa-facebook-f"
+          />
+        </div>
+      </div>
     <form className=" form-control">
     <AuthTitle text={LANGUAGES[state.lang].Auth.SignUpTitle} />  
+    
       <div className="mb-4">      
         <Input
           type="text"
@@ -184,13 +202,18 @@ export default function SignUp() {
       </div>
 
       <div>
-        <button       
+      <Button
+        text={LANGUAGES[state.lang].Auth.SignUpButton}
+        disabled={disabled()}
+        onClick={() => signUp(email, pwd, name, gender, address, birthdate)}
+      />
+        {/* <button       
           disabled={disabled()}
           className="btn btn-outline-primary rounded-pill "
           type="button"
           onClick={() => signUp(email, pwd, name, gender, address, birthdate)}
           
-        >{LANGUAGES[state.lang].Auth.SignUpButton} </button>
+        >{LANGUAGES[state.lang].Auth.SignUpButton} </button> */}
       </div>
 
 

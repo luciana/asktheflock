@@ -25,23 +25,16 @@ export default function AuthLayout() {
     setAlert();
   };
 
-
-  // const handleFbLogin = (user) => {
-  //   try {
-  //     startLoading();
-  //     console.log("Handling FB Login - dispatch and then redirect to main for", user);
-  //     //TODO the lang here should be filed out 
-  //     dispatch({ type: TYPES.UPDATE_LANG, payload: "en-US" });    
-  //     navigate(ROUTES["en-US"].MAIN);
-  //   } catch (err) {
-  //     stopLoading();
-  //     console.error("AuthLayout.js handleFbLogin", err);
-  //     setAlert({
-  //       type: "error",
-  //       text: LANGUAGES[state.lang].CommonError.Login,
-  //     });
-  //   }
-  // };
+  const handleErrors = (message) => {
+    let errorMessage = message;
+    console.log("handle error message", String(message).includes('User does not exist'));
+    if ( String(message).includes('User does not exist')){    
+      errorMessage = LANGUAGES[state.lang].CommonError.UserDoesNotExist;
+    }else{
+      errorMessage = LANGUAGES[state.lang].CommonError.Login;
+    }         
+    setAlert({ type: "error", text: errorMessage });
+  };
 
   const signIn = async (email, pwd, remember) => {
     startLoading();
@@ -50,16 +43,12 @@ export default function AuthLayout() {
       console.log("AuthLayout.js signIn Auth attributes", attributes);    
       const locale =  attributes.locale ? attributes.locale : "en-US";
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
-      stopLoading();
-      console.log("Navigate to ROUTES[en-US].MAIN", ROUTES[locale].MAIN);
+      stopLoading();     
       navigate(ROUTES[locale].MAIN);
     } catch (err) {
       stopLoading();
       console.error("AuthLayout.js signIn error calling Auth.Signin", err);
-      setAlert({
-        type: "error",
-        text: LANGUAGES[state.lang].CommonError.Login,
-      });
+      handleErrors(err);  
     }
   };
 

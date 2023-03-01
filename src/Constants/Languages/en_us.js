@@ -106,7 +106,8 @@ const en_us_lang = {
       InvalidEmail:"Email is not valid.",
       InvalidName:"Name is required.",
       InvalidZip: "Enter a valid zip code.",
-      UpdateUser: "Something happened on our side that we could not update your information. Try later."
+      UpdateUser: "Something happened on our side that we could not update your information. Try later.",
+      UserDoesNotExist: "You are not registered, go to Sign Up.",
     },
     Auth: {
       SignInTitle: "Sign In",

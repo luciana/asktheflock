@@ -6,10 +6,12 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     const [style, setStyle] = useState({});
     const [active, setActive] = useState();
     const maxNumberOfFriends = 3;   
+    const minNumberOfFriendsToDisplay = 0;
     let thoseWhoIHelpedCount =[];
     let thoseWhoHelpedMeCount=[];
     let friends=[];
 
+  console.log("my user id", userId);
     const handleClick = (userID, index) => {
 
       // console.log("active", active);
@@ -56,7 +58,8 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
       
         thoseWhoIHelpedCount = findCounts(votedOnQuestions, "userID", "userName")
                             .sort((a, b) => b.value - a.value)
-                            .filter((item, idx) => idx < maxNumberOfFriends);
+                            .filter((item, idx) => idx < maxNumberOfFriends)
+                            .filter((l) => l.userId && l.userName && l.userId !== userId);
       }
 
       //Those who helped me the most
@@ -75,7 +78,8 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     }
     //console.log("thoseWhoIHelpedCount",thoseWhoIHelpedCount);
    // console.log("thoseWhoHelpedMeCount",thoseWhoHelpedMeCount);
-    const showFriendsSection = (thoseWhoHelpedMeCount && thoseWhoHelpedMeCount.length >0) || (thoseWhoIHelpedCount && thoseWhoIHelpedCount.length >0);
+    const showFriendsSection = (thoseWhoHelpedMeCount && thoseWhoHelpedMeCount.length >0) || 
+                                (thoseWhoIHelpedCount && thoseWhoIHelpedCount.length >0);
 
     if (showFriendsSection ){
       
@@ -91,10 +95,13 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
 
       const mergeResult = [...thoseWhoIHelpedCount, ...thoseWhoHelpedMeCountCorrected];
       //console.log("mergeResult",mergeResult);
-      friends = findCounts(mergeResult, "userID", "userName")
+      if( mergeResult && mergeResult.length > minNumberOfFriendsToDisplay){
+        friends = findCounts(mergeResult, "userID", "userName")
                 .sort((a, b) => b.value - a.value)
                 .filter((item, idx) => idx < maxNumberOfFriends);
-      console.log("friends",friends);
+        console.log("friends",friends);
+      }
+      
     }
 
     const displayName = (name) => {

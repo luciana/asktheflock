@@ -107,6 +107,7 @@ const pt_br_lang = {
       InvalidEmail:"E-mail iinválido. Tente novamente.",
       InvalidName:"Insira seu nome.",
       InvalidZip: "Insira um cep válido.",
+      UserDoesNotExist: "Register o seu email para poder accessar o site.",
     },
     Auth: {
       SignInTitle: "Entrar",
