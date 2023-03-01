@@ -91,7 +91,7 @@ function QuestionModalDialog(
   const minQuestionOptions = 2;
   const maxQuestionOptions = 5;
   const disabledPublishButton =  todos.length < minQuestionOptions || todos.length > maxQuestionOptions;
-  const optionInvalidMessage =  disabledPublishButton ? " - invalid number of options" : "";
+  const optionInvalidMessage =  (disabledPublishButton && todos.length !== 0) ? LANGUAGES[user.locale].Questions.InvalidNumberOfOptions : "";
   
   const maxQuestionCharacter = process.env.REACT_APP_MAX_QUESTION_CHARACTER;
   return (
@@ -126,31 +126,29 @@ function QuestionModalDialog(
                     ref={inputRef}
                   />
                   <span className="text-sm text-color-gray">{characterCount}/{maxQuestionCharacter}</span>
-                  <div>
-                  <div className="row g-3 align-items-center">
-                      <div className="col-md-2">
-                        <label htmlFor="votePeriod" className="col-form-label text-sm px-2"><RiTimeLine size={24}/> {LANGUAGES[user.locale].Questions.PollClosesIn}</label>
+            
+                  <div className="d-flex flex-row mb-3">
+                      <div className="p-2">
+                        <label htmlFor="votePeriod" className=" px-2"><RiTimeLine size={24}/> {LANGUAGES[user.locale].Questions.PollClosesIn}</label>
                       </div>
-                      <div className="col-md-4">
-                     
-    
+                      <div className="p-2">                  
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="10" name="votePeriod" value="10" defaultChecked={votePeriod === 10} /><label className="form-check-label text-sm "  htmlFor="10">10 min</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="10" name="votePeriod" value="10" defaultChecked={votePeriod === 10} /><label className=" "  htmlFor="10">10 min</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="120" name="votePeriod" value="120" defaultChecked={votePeriod === 120}/><label className="form-check-label text-sm " htmlFor="120">2 hours</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="120" name="votePeriod" value="120" defaultChecked={votePeriod === 120}/><label className=" " htmlFor="120">2 hours</label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="480" name="votePeriod" value="480" defaultChecked={votePeriod === 480} /><label className="form-check-label text-sm " htmlFor="480">8 hours</label>
+                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="480" name="votePeriod" value="480" defaultChecked={votePeriod === 480} /><label className=" " htmlFor="480">8 hours</label>
                         </div>
                       </div>             
                           
              
-                      <div className="col-md-2">
-                        <label htmlFor="expertTag" className="col-form-label text-sm px-2" data-bs-toggle="tooltip" 
+                      <div className="p-2">
+                        <label htmlFor="expertTag" className="px-2" data-bs-toggle="tooltip" 
                         data-bs-placement="top" title=" an expert opinion will weigh more"><FaPhoneVolume size={24}/> {LANGUAGES[user.locale].Questions.ExpertCallOutTitle}</label>
                       </div>
-                      <div className="col-md-4">
+                      <div className="p-2">
                         <input type="text" 
                               id="expertTag" 
                               name="expertTag" 
@@ -167,8 +165,7 @@ function QuestionModalDialog(
                                 ))}                               
                                 </datalist>
 
-                      </div>    
-                      </div>        
+                      </div>                                   
                     </div>
 
                     <div className="mt-1 alert alert-warning alert-dismissible fade show text-sm d-none" role="alert">
@@ -180,8 +177,9 @@ function QuestionModalDialog(
                   <div className="fs-5 text my-3">
                     {LANGUAGES[user.locale].Questions.EnterOptions} 
                     <span className="text-sm text-color-gray px-2">(min of {minQuestionOptions} and max of {maxQuestionOptions})</span> 
+                    <div className="text-sm text-color-red"> {optionInvalidMessage}</div>
                   </div>
-                  <span className="text-sm text-color-red"> {optionInvalidMessage}</span>
+                 
                     <Item
                     todos={todos}           
                     removeTodo={removeTodo}

@@ -55,6 +55,7 @@ const en_us_lang = {
       YouHelped: "You helped",
       YouCanHelp: "You have the skill to help!",
       SpecialCallOutFor: " Special call out for #",
+      InvalidNumberOfOptions: "invalid number of options",
 
     },
     PasswordRules: {

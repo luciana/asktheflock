@@ -55,6 +55,7 @@ const pt_br_lang = {
       YouHelped: "Você ajudou",
       YouCanHelp: "Você pode ajudar!",
       SpecialCallOutFor: "Preciso de ajuda na especialidade #",
+      InvalidNumberOfOptions: "número inválido de opções",
     },
     PasswordRules: {
       Chars: "Pelo menos 8 caracteres",
