@@ -10,7 +10,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
 import { SideNav, Loading} from "../../Components";
-import { Hub } from 'aws-amplify';
 
 export default function Layout() {
   const { state, dispatch } = useContext(AppContext);
@@ -47,52 +46,6 @@ export default function Layout() {
     navigate(ROUTES[state.lang].HOME);
   };
 
-
-  //listen for sign in + out events, if neither are happening check if user exists 
-// useEffect(() => {
-//   Hub.listen('auth', ({ payload }) => {
-//     if (payload.event === 'signIn') {
-//           console.log("Home.js sign in event", payload.event);
-//           getUser();
-//   }
-//     if (payload.event === 'signOut') {  
-//         handleSignOut();
-//         console.log("Home.js signout event", payload.event);
-
-//       }
-//   });
-//   getUser();
-// }, [getUser]);
-
-// async function getUser() {
-//   // try {
-//   //   const token = await Auth.currentAuthenticatedUser();           
-//   //   console.log("Home.js get  user", token);
-//   // } catch(error) {
-//   //    console.error("Home.js get  user error",error);      
-//   //    }
-//   try {
-//     const attributes = await Auth.GetUser();
-//     console.log("Layout.js getUser attributes", attributes);
-//     await loadUser({
-//       email: attributes.email,
-//       name: attributes.name,  
-//       locale: attributes.locale  ? attributes.locale : "en-US",         
-//       gender: attributes.gender ? attributes.gender : "",
-//       address: attributes.address ? attributes.address : "",
-//       birthdate: attributes.birthdate ? attributes.birthdate : null,
-//       userTag: "",
-//     });
-//   } catch (error) {
-//     console.error("Layout.js Main error in isUserLoggedIn", error);
-//     if(error === "Error: No current user"){
-//       //clear cookies
-//       console.error("Layout.js Main error in isUserLoggedIn clear cookie", error);     
-//     }
-//    navigate(ROUTES[state.lang].HOME);
-//   }
-// }
-
   useEffect(() => {
     const isUserLoggedIn = async () => {
       try {
@@ -109,18 +62,16 @@ export default function Layout() {
         });
       } catch (error) {
         console.error("Layout.js Main error in isUserLoggedIn", error);
-        if(error === "Error: No current user"){
-          //clear cookies
-          console.error("Layout.js Main error in isUserLoggedIn clear cookie");
-          //dispatch({ type: TYPES.UPDATE_USER, payload: "" });
-          //localStorage.removeItem("aws-amplify-federatedInfo");
+        if(String(error).includes("The user is not authenticated")){         
+          //clear cookies         
+          dispatch({ type: TYPES.UPDATE_USER, payload: "" });   
         }
-       navigate(ROUTES[state.lang].SIGN_IN);
+       navigate(ROUTES[state.lang].HOME);
       }
     };
 
     isUserLoggedIn();
-  }, [loadUser, navigate, state.lang]);
+  }, [loadUser, dispatch, navigate, state.lang]);
 
   if (!state.user) return <Loading />;
 

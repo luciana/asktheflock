@@ -6,7 +6,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     const [style, setStyle] = useState({});
     const [active, setActive] = useState();
     const maxNumberOfFriends = 3;   
-    const minNumberOfFriendsToDisplay = 0;
+    const minNumberOfFriendsToDisplay = 3;
     let thoseWhoIHelpedCount =[];
     let thoseWhoHelpedMeCount=[];
     let friends=[];
@@ -59,7 +59,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         thoseWhoIHelpedCount = findCounts(votedOnQuestions, "userID", "userName")
                             .sort((a, b) => b.value - a.value)
                             .filter((item, idx) => idx < maxNumberOfFriends)
-                            .filter((l) => l.userId && l.userName && l.userId !== userId);
+                            .filter((l) => l.userId !== userId);
       }
 
       //Those who helped me the most
@@ -67,7 +67,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
           (backendQuestion.parentID === null) && backendQuestion.userID === userId && backendQuestion.stats ))
           .map((q) => JSON.parse(q.stats))
           .flat(1)
-          .filter((l) => l.userId && l.userName && l.userId !== userId);
+          .filter((l) => l.userId !== userId);
 
        // console.log("thoseWhoHelpedMe",thoseWhoHelpedMe);
       if (thoseWhoHelpedMe && thoseWhoHelpedMe.length > 0){

@@ -8,7 +8,6 @@ import { AppContext } from "../../Contexts";
 import { ROUTES, LANGUAGES } from "../../Constants";
 import { HomeNav, WebNotification} from '../../Components';
 import Badge from '../../Components/Votes/Badge';
-import { Auth } from 'aws-amplify';
 
 
 function Home() {
@@ -33,13 +32,6 @@ function Home() {
     
         isUserLoggedIn();
       }, [navigate, user, state.lang]);
-    
-  function signOut() {
-    const user = Auth.signOut()
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
-      console.log("Home.js signout user", user);
-  }
 
   console.log("Home.js state", state);
   return (
@@ -55,7 +47,7 @@ function Home() {
                 <button className="btn btn-light mx-2 btn-lg" onClick={()=> navigate(ROUTES[state.lang].SIGN_UP)}>{LANGUAGES[state.lang].Auth.SignUpTitle}</button>
                 <a className="btn btn-dark mx-2 btn-lg" href="/#services">{LANGUAGES[state.lang].HomePage.LearnMore}</a>
                 <a className="d-block my-2" onClick={()=> navigate(ROUTES[state.lang].SIGN_IN)} >or {LANGUAGES[state.lang].Auth.SignInTitle} </a>
-                <button onClick={signOut}>Sign Out</button>             
+                         
             </div>
         </header>
         </div>    
