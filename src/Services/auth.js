@@ -53,11 +53,11 @@ const GetUser = async () => {
 };
 
 const SignOut = async () => {
-  await AmplifyAuth.signOut({ global: true });
-  // await AmplifyAuth.signOut()
-  // .then(data => console.log("signout data", data))
-  // .catch(err => console.log("signout error",err));
-
+  try{
+    await AmplifyAuth.signOut({ global: true })
+  }catch(error){
+    await AmplifyAuth.signOut();
+  }
 };
 
 const ChangeEmail = async (email) => {

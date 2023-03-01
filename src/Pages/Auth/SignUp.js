@@ -202,18 +202,14 @@ export default function SignUp() {
       </div>
 
       <div>
-      <Button
-        text={LANGUAGES[state.lang].Auth.SignUpButton}
-        disabled={disabled()}
-        onClick={() => signUp(email, pwd, name, gender, address, birthdate)}
-      />
-        {/* <button       
+     
+        <button       
           disabled={disabled()}
-          className="btn btn-outline-primary rounded-pill "
+          className="btn btn-outline-primary rounded-pill mx-3 p-3"
           type="button"
           onClick={() => signUp(email, pwd, name, gender, address, birthdate)}
           
-        >{LANGUAGES[state.lang].Auth.SignUpButton} </button> */}
+        >{LANGUAGES[state.lang].Auth.SignUpButton} </button>
       </div>
 
 
