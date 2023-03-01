@@ -6,7 +6,7 @@ import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
 import { Alert, Loading, HomeNav } from "../../Components";
 import '../../Pages/pages.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default function AuthLayout() {

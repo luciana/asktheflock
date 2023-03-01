@@ -6,6 +6,8 @@ import Mutations from "../../Services/mutations";
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
+import { useLocation } from "react-router-dom";
+import { Modal } from 'react-bootstrap';
 
 
 const Questions = () => {
@@ -21,9 +23,37 @@ const Questions = () => {
     const { state, dispatch } = useContext(AppContext);
     const { user } = state;
     const [filterList, setFilterList]= useState([]);
+    const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
+    const query = new URLSearchParams(useLocation().search);
+    const questionQueryId = query.get("id");
    // console.log("USER in Questions.js state", state);  
 
     useEffect(() => {
+
+
+      const loadSingleQuestion = async () => {
+        try{
+          setLoading(true);       
+         
+          if (questionQueryId){
+            console.log("Get Single Question from db for id", questionQueryId);
+            const singleQuestion = await Queries.GetSingleQuestion(questionQueryId);
+            console.log("Get Single Question from db", singleQuestion);
+            if(singleQuestion){
+              setActiveQuestion(singleQuestion);  
+              setShowSingleQuestionModal(true);        
+            } 
+          }else{
+            setActiveQuestion(null); 
+            setShowSingleQuestionModal(false);
+          }                       
+          setLoading(false);
+        }catch(err){
+          console.error("Questions.js Loading Single Question from queries error", err);
+          setActiveQuestion(null);    
+          setShowSingleQuestionModal(false);          
+        }
+      }
 
       const loadQuestions = async () => {
         try{
@@ -81,9 +111,7 @@ const Questions = () => {
       
         loadQuestions();
         loadVotes();
-        
-        
-                      
+        loadSingleQuestion();                                    
       }, [user,  setFilterList ]);
        
         const handleVoteFilterSwitch = () => {               
@@ -179,11 +207,12 @@ const Questions = () => {
            
     
 
-      const addQuestion = (text) => {
-        console.log('THIS Should never BE TRIGGERD - addQuestion triggered from question and poll - not calling graphql mutation', text);
-       
-    };
+      // const openQuestion = (question) => {       
+      //   setActiveQuestion(question); 
+      //   setShowSingleQuestionModal(true);  
+      // }
 
+      console.log("activeQuestion", activeQuestion);
       const getReplies = (questionId) =>{       
         return backendQuestions
         .filter((backendQuestion) => backendQuestion.parentId === questionId)
@@ -384,21 +413,56 @@ const Questions = () => {
                       <Question 
                           key={rootQuestion.id}
                           question={rootQuestion}
-                          replies={getReplies(rootQuestion.id)}                        
-                          setActiveQuestion={setActiveQuestion}
+                          //replies={getReplies(rootQuestion.id)}                        
+                          //setActiveQuestion={setActiveQuestion}
+                          //activeQuestion={activeQuestion}   
                           handleVote={handleVote}
                           updateVotedList={updateVotedList}
                           updateVotedOptionsList={updateVotedOptionsList}
                           votedList={votedList}
                           votedOptionsList={votedOptionsList}
-                        //  addQuestion={addQuestion}
-                          activeQuestion={activeQuestion}                       
+                          //openQuestion={openQuestion}                                              
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}                        
                           user={user}
                       />
                   ))}
-              </div>             
+              </div>   
+
+
+              { ( activeQuestion ) && (
+                  <Modal  fullscreen={false} show={showSingleQuestionModal} >
+                    <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>
+                      <Modal.Title>{activeQuestion.text}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >                              
+                        <Question 
+                            key={activeQuestion.id}
+                            question={activeQuestion}                                                                      
+                            handleVote={handleVote}
+                            updateVotedList={updateVotedList}
+                            updateVotedOptionsList={updateVotedOptionsList}
+                            votedList={votedList}
+                            votedOptionsList={votedOptionsList}
+                          // openQuestion={openQuestion}                                       
+                            deleteQuestion={deleteQuestion}
+                            updateQuestion={updateQuestion}                        
+                            user={user}
+                        />                                                 
+                    </Modal.Body>
+                    <Modal.Footer>                                                            
+                          <button
+                            type="button"
+                            className="btn btn-outline-dark rounded-pill"
+                            onClick={()=> {setShowSingleQuestionModal(false)}}
+                          >
+                            Close
+                          </button>                  
+                    </Modal.Footer>
+                  </Modal>
+                   
+              )}
+              
        
         </>
       );

@@ -6,7 +6,7 @@ import Auth from "../../Services/auth";
 import '../pages.css';
 import '../../App.css';
 import './../profile-nav.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
 import { SideNav, Loading} from "../../Components";

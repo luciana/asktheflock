@@ -1,5 +1,5 @@
-import React, {useState, useRef} from 'react'
-import { Modal } from 'react-bootstrap'
+import React, {useState, useRef} from 'react';
+import { Modal } from 'react-bootstrap';
 import { RiTimeLine, RiMagicLine }  from 'react-icons/ri';
 import { FaPhoneVolume }  from 'react-icons/fa';
 import Avatar from 'react-avatar';

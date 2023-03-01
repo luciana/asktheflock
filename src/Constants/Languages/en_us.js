@@ -56,6 +56,8 @@ const en_us_lang = {
       YouCanHelp: "You have the skill to help!",
       SpecialCallOutFor: " Special call out for #",
       InvalidNumberOfOptions: "invalid number of options",
+      CopyLinkLabel: "Copy Link",
+      CopyLabel: "Copy",
 
     },
     PasswordRules: {

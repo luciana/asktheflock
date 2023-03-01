@@ -1,7 +1,7 @@
 import React from 'react';
 import { Footer } from '../../Components/Shared/index';
 import '../pages.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../Contexts";

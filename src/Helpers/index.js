@@ -5,3 +5,4 @@ export { default as findCounts } from "./findCounts";
 export { default as findGeneration } from "./findGeneration";
 export { default as findAge } from "./findAge";
 export { default as formatDateTime } from "./formatDateTime";
+export { default as formatName } from "./formatName";

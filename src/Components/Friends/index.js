@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { findCounts } from './../../Helpers';
+import { findCounts, formatName } from './../../Helpers';
 import Avatar from 'react-avatar';
 
 const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
@@ -104,17 +104,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
       
     }
 
-    const displayName = (name) => {
-      const maxChars = 15;
-      if ( name.length > maxChars){
-        return name.substring(0, maxChars-3)+'...';
-      }else if ( name.length === maxChars){
-        return name;
-      }else{
-       return name;
-      }
-  
-    }
+
    
    
 return (
@@ -140,7 +130,7 @@ return (
                                 className="rounded-circle mx-auto mb-0 mx-1 align-items-center" 
                                 alt={u.userName} />
                                 <div className="ms-2 d-none d-lg-block">
-                                    <h6 className="mb-0">{displayName(u.userName)}</h6>
+                                    <h6 className="mb-0">{formatName(u.userName, 15)}</h6>
                                 </div>
                                 </div>
                                 </div>                                                   

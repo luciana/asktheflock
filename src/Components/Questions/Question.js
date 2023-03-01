@@ -1,44 +1,40 @@
-import React, { useEffect } from 'react';
+import React, {useState} from 'react';
 import Vote from '../Votes/Vote';
-import { FaCircleNotch , FaSyncAlt, FaCircle, FaTrashAlt, FaGrinHearts, FaPhoneVolume} from 'react-icons/fa';
+import { FaCircleNotch , FaLink, FaSyncAlt, FaCircle, FaTrashAlt, FaGrinHearts, FaPhoneVolume} from 'react-icons/fa';
 import Avatar from 'react-avatar';
-import ReplyModalDialog from './ReplyModalDialog';
-import QuestionForm from './QuestionForm';
+//import ReplyModalDialog from './ReplyModalDialog';
+//import QuestionForm from './QuestionForm';
 import StatsDialog from '../Stats/StatsDialog';
 import { SocialShare } from '../Social';
-import {formatDateTime} from '../../Helpers';
+import { formatDateTime, formatName } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
+import { Modal } from 'react-bootstrap';
+import { Button, Input, Alert } from './../../Components';
 
 function Question({ 
   question, 
   replies,
-  setActiveQuestion,
+  //setActiveQuestion,
   votedList,
   updateVotedList,
   votedOptionsList,
   updateVotedOptionsList,
   handleVote,
-  activeQuestion,
+  //activeQuestion,
   deleteQuestion,
-  //addQuestion,
+  openQuestion,
   parentId = null,
   user
  }) {
- 
-  useEffect(() => {
-    // Array.from(document.querySelectorAll('button[data-bs-toggle="tooltip"]'))
-    // .forEach(tooltipNode => new Tooltip(tooltipNode))
-  });
 
+  const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
+  const [alert, setAlert] = useState();
  if (!question) return;
   //console.log("Question ", question);
   // //console.log("User ", user.votes);
   // console.log("votedList", votedList);
 
-
-
  
-
   const isAReply = question.parentId != null;
   const canDelete = user.id === question.userID  && !isAReply; 
   //don't want to show the option to reply yet. setting bool to false 
@@ -47,10 +43,10 @@ function Question({
   const replyId = parentId ? parentId : question.id;
   const voteEnded = new Date() - new Date(question.voteEndAt) > 1;
   const canRepost = user.id === question.userID  && voteEnded; 
-  const isReplying =
-    activeQuestion &&
-    activeQuestion.id === question.id &&
-    activeQuestion.type === "replying";
+  // const isReplying =
+  //   activeQuestion &&
+  //   activeQuestion.id === question.id &&
+  //   activeQuestion.type === "replying";
 
   const minStatVoteCount = 2; //statistically 100 is min value
   const isThereEnoughStats =  question && user.id === question.userID && question.options && question.stats && JSON.parse(question.stats).length > minStatVoteCount ;
@@ -94,24 +90,30 @@ function Question({
     } 
     
   };
+  const questionLink = "https://www.asktheflock.com/main?id=" + question.id;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(questionLink);
+    setAlert({ type: "success", text:"Link copied. Start sharing!"});  
+  }
 
 
   return (
-    <div key={question.id} className="my-2">
-       <div key={question.id} className="container border border-1 p-1" >           
+    
+       <div key={question.id} className="container border border-1 p-1 my-2" >           
         <div className="p-2 row align-items-start"> 
-            <div className="col-1"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
-            <div className="col-8">
-              <div className="text-sm lh-1"><span>{question.userName} </span><span aria-hidden="true"> · </span> <span> {createdAt} </span></div>
+            <div className="col-2"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
+            <div className="col-7">
+              <div className="text-sm lh-1"><span>{formatName(question.userName, 20)} </span><span aria-hidden="true"> · </span> <span className="d-none">  {createdAt} </span></div>
               <div className="text-sm">
-                {!isAReply && voteEnded && (<span > Voting closed <FaCircle /> </span>)}
-                {!isAReply && !voteEnded && (<span> Voting Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
+                {!isAReply && voteEnded && (<span > Closed <FaCircle /> </span>)}
+                {!isAReply && !voteEnded && (<span> Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
                 {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}
                 
               </div>
               
             </div>
-            <div className="col-3">
+            <div className="col-2">
              
               {canDelete && (
                 <button className="btn btn-sm  mx-1" onClick={()=> deleteQuestion(question.id)}>
@@ -126,6 +128,9 @@ function Question({
                 <StatsDialog question={question}
                             locale={user.locale}/>
               )}
+              <button className="btn btn-sm  mx-1"  onClick={()=> setShowQuestionCopyLink(true)}>
+                  <FaLink alt="Link to Question" /></button>
+
               <SocialShare />
             </div>
         </div>      
@@ -139,16 +144,17 @@ function Question({
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded} />    
         </div>     
-          {replies && replies.length > 0 && (             
+          {/* {replies && replies.length > 0 && (             
              <div> 
                 <ReplyModalDialog text={replies}/>
              </div>
-          )}
-           {canReply && (                
-                <button className="btn btn-outline-secondary rounded-pill "  data-bs-toggle="tooltip" data-bs-placement="top" title="What happend afterwards?" onClick={()=> setActiveQuestion({id: question.id, type:"replying"})}>
+          )} */}
+           {/* {canReply && (                
+                <button className="btn btn-outline-secondary rounded-pill "  data-bs-toggle="tooltip" data-bs-placement="top" title="What happend afterwards?" 
+                onClick={()=> setActiveQuestion({id: question.id, type:"replying"})}>
                  Tell what happened afterwards
                 </button>
-              )}
+              )} */}
           {/* {isReplying && (
             <QuestionForm 
               submitLabel="This is what happened afterwards..."
@@ -197,9 +203,25 @@ function Question({
        <div className="container  text-sm lh-3">
         <span className="p-2">{LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
       </div>   )}
-      </div>
-      
-      </div>
+
+
+        <Modal  fullscreen={false} show={showQuestionCopyLink} >
+          <Modal.Header closeButton onClick={() => {setShowQuestionCopyLink(false)}}>
+            <Modal.Title>  {LANGUAGES[user.locale].Questions.CopyLinkLabel}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body >                          
+              <Alert type={alert?.type} text={alert?.text} />
+            
+              <Input type="text"                  
+                  value={questionLink} disabled={true} />
+              <Button
+                    text= {LANGUAGES[user.locale].Questions.CopyLabel}
+                    className="btn btn-outline-dark rounded-pill"                     
+                    handler={copyToClipboard}
+                />                 
+          </Modal.Body>                 
+          </Modal>
+      </div>    
   );
 }
 export default Question;

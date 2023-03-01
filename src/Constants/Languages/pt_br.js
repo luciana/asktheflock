@@ -56,6 +56,8 @@ const pt_br_lang = {
       YouCanHelp: "Você pode ajudar!",
       SpecialCallOutFor: "Preciso de ajuda na especialidade #",
       InvalidNumberOfOptions: "número inválido de opções",
+      CopyLinkLabel: "Copiar Link",
+      CopyLabel: "Copiar",
     },
     PasswordRules: {
       Chars: "Pelo menos 8 caracteres",
