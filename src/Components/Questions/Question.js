@@ -42,7 +42,7 @@ function Question({
   const isAReply = question.parentId != null;
   const canDelete = user.id === question.userID  && !isAReply; 
   //don't want to show the option to reply yet. setting bool to false 
-  const canReply = user.id === question.userID && !isAReply && replies.length === 0 && false;
+ // const canReply = user.id === question.userID && !isAReply && replies.length === 0 && false;
   const createdAt = formatDateTime(question.createdAt);
   const replyId = parentId ? parentId : question.id;
   const voteEnded = new Date() - new Date(question.voteEndAt) > 1;
@@ -98,7 +98,7 @@ function Question({
   const displayCopyLinkDialog = async () => {
     try{
       setLoading(true);
-      const url = "https://www.asktheflock.com/main?id=" + question.id;
+      const url = window.location.origin +"/main?id=" + question.id;
       const s = await shortenURL(url);
       console.log("Question displayCopyLinkDialog shorten URL result ", s);
       if(s){
@@ -107,13 +107,13 @@ function Question({
         setLoading(false);
       }else{
         setShowQuestionCopyLink(true);
-        setQuestionLink("https://www.asktheflock.com/main?id=" + question.id);
+        setQuestionLink(window.location.origin +"/main?id=" + question.id);
         setLoading(false);
         }
       
     }catch (error){
       setShowQuestionCopyLink(true);
-      setQuestionLink("https://www.asktheflock.com/main?id=" + question.id);
+      setQuestionLink(window.location.origin +"/main?id=" + question.id);
       setLoading(false);
     }  
   }

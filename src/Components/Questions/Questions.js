@@ -431,7 +431,7 @@ const Questions = () => {
 
 
               { ( activeQuestion ) && (
-                  <Modal  fullscreen={false} show={showSingleQuestionModal} >
+                  <Modal  fullscreen={true} show={showSingleQuestionModal} >
                     <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>
                       <Modal.Title>{activeQuestion.text}</Modal.Title>
                     </Modal.Header>
