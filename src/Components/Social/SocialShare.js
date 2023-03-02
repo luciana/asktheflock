@@ -3,7 +3,6 @@ import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { FacebookIcon, TwitterIcon } from "react-share";
 
 export default function SocialShare({message, url}) {
-  console.log("SocialShare message and url", url);
   return (
     <div className="d-block">   
       <span className="px-1"> 

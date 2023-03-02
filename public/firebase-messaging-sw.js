@@ -7,7 +7,6 @@ importScripts('https://www.gstatic.com/firebasejs/8.6.8/firebase-messaging.js')
 
 
 const c = JSON.parse(new URL(location).searchParams.get("firebaseConfig"));
-console.log("Service Worker started", c);
 
 const firebaseConfig = {
   apiKey: "AIzaSyCg7YYpq7Uz-tVHft-_oRvAn8g9GYLMds0",
@@ -18,17 +17,12 @@ const firebaseConfig = {
   appId: "1:899073372499:web:c99c2daac89bcee503f1a6",
 };
 
-// if(c){
-//   console.log("c is set");
-// }else{
-//   console.log("c is not set");
-// }
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  //console.log('[firebase-messaging-sw.js] Received background message ', payload);
   const notificationTitle = payload.notification.title
   const notificationOptions = {
     body: payload.notification.body,
@@ -39,8 +33,7 @@ messaging.onBackgroundMessage((payload) => {
 })
 
 self.addEventListener('notificationclick', (event) => {
-  if (event.action) {
-    console.log('notification click event ', event);
+  if (event.action) {  
     clients.openWindow(event.action)
   }
   event.notification.close()

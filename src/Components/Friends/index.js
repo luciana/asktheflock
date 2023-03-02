@@ -11,14 +11,13 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     let thoseWhoHelpedMeCount=[];
     let friends=[];
 
-  console.log("my user id", userId);
     const handleClick = (userID, index) => {
 
       // console.log("active", active);
       // console.log("index", index);
       
       if (active === index) {
-        console.log("item already clicked, set active to blank", active);       
+        //console.log("item already clicked, set active to blank", active);       
         setStyle(prevState => ({
           ...style,
           [index]: !prevState[index]
@@ -27,7 +26,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         handleSwitch(userID);
       } else { 
         if(active){
-          console.log("an item is already clicked on", index);
+          //console.log("an item is already clicked on", index);
           //TODO: clear selection of type active and set index to active
           // setStyle(prevState => ({
           //   ...style,
@@ -35,7 +34,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
           // }));
           // setActive(index); 
         }else{
-          console.log("item is clicked on for the first time", active);
+         // console.log("item is clicked on for the first time", active);
           setStyle(prevState => ({
             ...style,
             [index]: !prevState[index]
@@ -99,7 +98,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         friends = findCounts(mergeResult, "userID", "userName")
                 .sort((a, b) => b.value - a.value)
                 .filter((item, idx) => idx < maxNumberOfFriends);
-        console.log("friends",friends);
+        //console.log("friends",friends);
       }
       
     }

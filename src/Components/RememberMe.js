@@ -5,8 +5,6 @@ import { LANGUAGES } from "../Constants";
 
 const RememberMe = ({ remember, setRemember }) => {
   const { state } = useContext(AppContext);
-
-  //console.log("RememberMe.js remember bool", remember);
   return (
     <div className="form-group form-check">
       <input

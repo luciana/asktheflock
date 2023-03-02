@@ -115,10 +115,8 @@ export default function Profile() {
   const handleProfileInfo = async () => {
     loading();
     try {
-      const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null;
-      console.log("handleProfileInfo input", user.email, language, name, gender, address, validBirthDate, tag);   
+      const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null; 
       const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: validBirthDate, userTag: tag });
-      console.log("handleProfileInfo Mutation result", results);
 
       loadUser({ force: true, 
         email: user.email,
@@ -136,92 +134,6 @@ export default function Profile() {
     }
     setLoading(false);
   };
-
-  // const handleChangeLanguage = async () => {
-  //   loading();
-  //   try {   
-  //     await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language });
-  //     loadUser({ force: true, email: user.email });
-  //     navigate(ROUTES[language].PROFILE);
-  //   } catch (error) {
-  //     console.error("handleChangeLanguage error", error);
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
-  //   }
-  //   setLoading(false);
-  // };
-
-
-  // const handleChangeName = async () => {
-  //   loading();
-  //   try {
-  //     const mutationResponse = await Mutations.UpdateUserName( { id: user.id,  name: name } );
-  //     console.log("mutations response to change name", mutationResponse);
-  //     loadUser({ force: true, email: user.email, name: name });
-  //     navigate(ROUTES[language].PROFILE);
-  //   } catch (error) {
-  //     console.error("error with handling change name", error);
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-  //   }
-  //   setLoading(false);
-  // };
-
-
-  // const handleChangeGender = async () => {
-  //   console.log("handleChangeGender");
-  //   loading();
-  //   try {        
-  //       const mutationResult = await Mutations.UpdateUserGender({ id: user.id,  gender: gender });
-  //       console.log("handleChangeGender mutation result", mutationResult);
-  //       loadUser({ force: true, email: user.email, gender: gender });
-  //       console.log("Mutations.UpdateUserGender", gender);
-  //       navigate(ROUTES[language].PROFILE);
-      
-  //   } catch (error) {
-  //     console.error("handleChangeGender error", error);
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const handleChangeZip = async () => {
-  //   loading();
-  //   try {    
-
-  //     await Mutations.UpdateUserZip({ id: user.id, address: address });
-  //     loadUser({ force: true, email: user.email, address: address });
-  //     navigate(ROUTES[language].PROFILE);
-  //   } catch (error) {
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const handleUserTag = async () => {
-  //   loading();
-  //   try {    
-  //     console.log("handleUserTag");
-  //     await Mutations.UpdateUserTag({ id: user.id, userTag: tag });
-  //     loadUser({ force: true, email: user.email, userTag: tag });
-  //     navigate(ROUTES[language].PROFILE);
-  //   } catch (error) {
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const handleChangeBirthdate = async () => {
-  //   loading();
-  //   try {    
-
-  //     await Mutations.UpdateUserBirthdate({ id: user.id, birthdate: birthdate });
-  //     loadUser({ force: true, email: user.email, birthdate: birthdate });
-  //     navigate(ROUTES[language].PROFILE);
-      
-  //   } catch (error) {
-  //     setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser });
-  //   }
-  //   setLoading(false);
-  // };
 
   const disabledEmail = () =>
     !email || email === user.email || !isValidEmail(email);

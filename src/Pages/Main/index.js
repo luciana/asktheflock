@@ -10,7 +10,6 @@ import { Alert } from '../../Components';
 function Main() {  
   const { state } = useContext(AppContext);
   const { user } = state;
-  console.log("Main.js state", state);
   return (
     <div className="App  ">      
        

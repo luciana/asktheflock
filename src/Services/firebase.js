@@ -21,7 +21,6 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
-//console.log("Messaging config", firebaseConfig);
 const messaging = getMessaging();
 const vapidKey =process.env.REACT_APP_FIREBASE_VAPI_KEY;
 
@@ -29,22 +28,21 @@ export const requestForToken = () => {
     return getToken(messaging, { vapidKey: vapidKey })
       .then((currentToken) => {
         if (currentToken) {
-          console.log('current token for client: ', currentToken);
+        //  console.log('current token for client: ', currentToken);
           // Perform any other neccessary action with the token         
         } else {
           // Show permission request UI
-          console.log('No registration token available. Request permission to generate one.');
+        //  console.log('No registration token available. Request permission to generate one.');
         }
       })
       .catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
+        console.error('An error occurred while retrieving token. ', err);
       });
   };
 
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(messaging, (payload) => {
-      console.log("payload", payload)
       resolve(payload);
     });
   });

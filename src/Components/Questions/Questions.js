@@ -26,7 +26,6 @@ const Questions = () => {
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const questionQueryId = query.get("id");
-   // console.log("USER in Questions.js state", state);  
 
     useEffect(() => {
 
@@ -36,9 +35,9 @@ const Questions = () => {
           setLoading(true);       
          
           if (questionQueryId){
-            console.log("Get Single Question from db for id", questionQueryId);
+       
             const singleQuestion = await Queries.GetSingleQuestion(questionQueryId);
-            console.log("Get Single Question from db", singleQuestion);
+  
             if(singleQuestion){
               setActiveQuestion(singleQuestion);  
               setShowSingleQuestionModal(true);        
@@ -59,7 +58,6 @@ const Questions = () => {
         try{
           setLoading(true);       
           let q = await Queries.GetAllQuestions();
-          //console.log("Get all Questions from db", q);
           if(q){
               setBackendQuestions(q.filter(
                 (backendQuestion) => ((backendQuestion.parentID === null) )
@@ -116,7 +114,7 @@ const Questions = () => {
        
         const handleVoteFilterSwitch = () => {               
           setIsVoteFilterChecked(!isVoteFilterChecked);  
-         console.log("when the user clicks vote filter, the filtered list is ", filterList);
+    
          
           if(!isVoteFilterChecked){
             const v = filterList.filter(
@@ -126,29 +124,27 @@ const Questions = () => {
                (a, b) =>
                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
              ); 
-             setVoteFilteredList(v);
-             console.log("handleVoteFilterSwitch question ",isQuestionFilterChecked ); 
-             console.log("handleVoteFilterSwitch vote ",isVoteFilterChecked, v );             
+             setVoteFilteredList(v);                      
            
 
            //both swithes are on
            if(isQuestionFilterChecked){
-              console.log("both switches are on");       
+             //console.log("both switches are on");       
               const filterFromTwoArrays = questionFilteredList.some(item => v.includes(item));
-              console.log("combine both vote and question list", filterFromTwoArrays);
+              //console.log("combine both vote and question list", filterFromTwoArrays);
               if(filterFromTwoArrays)
                 setFilterList(filterFromTwoArrays); 
               setFilterList([]);
             }else{
               //only this switch is on
-              console.log("only vote swich is on");  
+             // console.log("only vote swich is on");  
               setFilterList(v);                     
             }        
            
          }else{
           //vote switch is off
           if(isQuestionFilterChecked){
-            console.log("question switch is on and vote switch is off");          
+           // console.log("question switch is on and vote switch is off");          
            setFilterList(questionFilteredList);
           }else{
             //both switches are off
@@ -165,7 +161,7 @@ const Questions = () => {
             const id = (userID || userID!=="")? userID : user.id;
            // console.log("USERID handleQuestionFilterSwitch ", userID);
             //const id = user.id;
-            console.log("Questions.js checkFilteredList for question looking for user ",id );
+            //console.log("Questions.js checkFilteredList for question looking for user ",id );
             const q = filterList.filter(
               (backendQuestion) => ((backendQuestion.parentID === null) && 
                                     ( backendQuestion.userID === id) )
@@ -173,13 +169,11 @@ const Questions = () => {
                 (a, b) =>
                 new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
               );
-            setQuestionFilteredList(q);
-            console.log("handleQuestionFilterSwitch question ",isQuestionFilterChecked, q ); 
-            console.log("handleQuestionFilterSwitch vote ",isVoteFilterChecked );     
+            setQuestionFilteredList(q);             
 
             //both swithes are on
             if(isVoteFilterChecked){
-              console.log("both switches are on");
+             // console.log("both switches are on");
              // setFilterList([...new Set([...questionFilteredList,...filterList])]);
              const filterFromTwoArrays = voteFilteredList.some(item => q.includes(item));
              if(filterFromTwoArrays)
@@ -187,14 +181,14 @@ const Questions = () => {
               setFilterList([]);
             }else{
               //only this switch is on
-              console.log("only question swich is on");
+              //console.log("only question swich is on");
               setFilterList(q); 
             }
            
           }else{
            
             if(isVoteFilterChecked){
-              console.log("question switch is off and vote switch is on");
+              //console.log("question switch is off and vote switch is on");
              // setFilterList([...new Set([...questionFilteredList,...filterList])]);
              setFilterList(voteFilteredList);
             }else{
@@ -204,15 +198,6 @@ const Questions = () => {
           }         
         }
         
-           
-    
-
-      // const openQuestion = (question) => {       
-      //   setActiveQuestion(question); 
-      //   setShowSingleQuestionModal(true);  
-      // }
-
-      console.log("activeQuestion", activeQuestion);
       const getReplies = (questionId) =>{       
         return backendQuestions
         .filter((backendQuestion) => backendQuestion.parentId === questionId)
@@ -240,8 +225,7 @@ const Questions = () => {
                   optionsInQuestion[i] = option;      
                   break;
                 }
-              }
-              console.log("Options after", optionsInQuestion);
+              }            
             }
           }
 
@@ -269,23 +253,13 @@ const Questions = () => {
         }
          stat.userLanguage = user.locale;
 
-         console.log(" stat item result", stat);
+ 
 
          const newStatsArray = [...statsInQuestion];
          newStatsArray.push(stat);      
-         console.log("stats resultssss", newStatsArray);  
+     
 
 
-        //   {
-        //     optionId: 219,
-        //     userTag: "",
-        //     userGender: "male",
-        //     userAge: "46",
-        //     userAddress: "44039",
-        //     userBirthdate: "01/22/1977",
-        //     userGen: "Generation X",
-        //     userLanguage: "en-US",
-        // }
 
           let q = await Mutations.UpdateQuestionOptions(
             question.id,
@@ -296,7 +270,7 @@ const Questions = () => {
           const newA = [];  
           newA.push(q);          
           const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
-          console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
+         // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
           setBackendQuestions(updatedBackendQuestions);
           setActiveQuestion(null);             
         }catch(err){
@@ -308,7 +282,6 @@ const Questions = () => {
         if (window.confirm("Are you sure you want to remove question?")) {
           try{
         
-            console.log("Questions.js Delete Question input ", id);
             setLoading(true);  
             await Mutations.DeleteQuestion(
               id             
@@ -334,13 +307,13 @@ const Questions = () => {
           //user.votes = "[{\"optionId\":3942,\"questionId\":\"7998615d-88dd-427a-a20f-1a2851d009b3\"}]"
 
 
-          console.log("Mutations.UpdateUserVotes inputs ", user.id, JSON.stringify(userVotes));
+         
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
             JSON.stringify(userVotes)
           );
       
-          console.log("Mutations.UpdateUserVotes result", userVotesUpdated);
+         
          
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
@@ -352,7 +325,7 @@ const Questions = () => {
       const handleVote = async (question, option, userVote) =>{                     
         try{
         
-        console.log("Questions.js Handle Vote updateUserVotes input", userVote);
+
          setLoading(true);         
          updateQuestion(question, option);
          updateUserVotes(userVote);
@@ -381,9 +354,7 @@ const Questions = () => {
       
       const showNoQuestions = filterList.length === 0;
 
-    console.log("backendQuestion", backendQuestions);
-    console.log("filterList questions", filterList);      
-    console.log("votedList", votedList); 
+
 
       return ( 
         <>

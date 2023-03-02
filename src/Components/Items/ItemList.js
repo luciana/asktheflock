@@ -13,8 +13,7 @@ function ItemList() {
       return;
     }
 
-    setTodos(todos => {
-      console.log("I should be printed once and I am printed once", todos);
+    setTodos(todos => {     
       const newArray = [...todos];
       newArray.push(todo);
       return newArray;

@@ -61,7 +61,6 @@ reportWebVitals();
 
 
 if ("serviceWorker" in navigator) {
-  console.log("Registration started");
   const firebaseConfig = encodeURIComponent(
     JSON.stringify({
       apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -77,9 +76,9 @@ if ("serviceWorker" in navigator) {
       `../../firebase-messaging-sw.js?firebaseConfig=${firebaseConfig}`
     )
     .then(function (registration) {
-      console.log("Registration successful, scope is:", registration.scope);
+      //console.log("Registration successful, scope is:", registration.scope);
     })
     .catch(function (err) {
-      console.log("Service worker registration failed, error:", err);
+      console.error("Service worker registration failed, error:", err);
     });
   }

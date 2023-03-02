@@ -16,33 +16,26 @@ export default function Layout() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const loadUser = useCallback(async ({force, email, locale, name, address, birthdate, gender, userTag}) => {      
-     console.log("Layout.js loadUser input", email, locale, name, address, birthdate, gender, userTag);    
+  const loadUser = useCallback(async ({force, email, locale, name, address, birthdate, gender, userTag}) => {        
     if ( !state.user || force === true) { 
      
       let user = await Queries.GetUserByEmail(email);
-      console.log("Layhout.js queried user", user);  
       if (!user) {
         //The user is created in cognito but not in GraphQL. 
         //Create user in GraphQL with the attributes from Cognito
-        console.log("Layout.js queries.GetUserByEmail result", user);  
         user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
-        console.log("Layout.js create user in mutation", user);
       }
      //Update language and user in the cookie
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale || user.locale });
       dispatch({ type: TYPES.UPDATE_USER, payload: user });
     } 
-    // console.log("User exist in the state" , state.user);
   }, [dispatch, state]);
 
   const handleSignOut = async () => {
     
     await Auth.SignOut();
-    console.log("Cleared cognito data in handlesignout" , state.user);
     dispatch({ type: TYPES.UPDATE_LANG, payload: state.user.locale });
     dispatch({ type: TYPES.UPDATE_USER, payload: null });
-    console.log("Cleared user data in state");
     navigate(ROUTES[state.lang].HOME);
   };
 
@@ -50,7 +43,7 @@ export default function Layout() {
     const isUserLoggedIn = async () => {
       try {
         const attributes = await Auth.GetUser();
-        console.log("Layout.js isUserLoggedIn Auth GetUser attributes", attributes);
+
         await loadUser({
           email: attributes.email,
           name: attributes.name,  

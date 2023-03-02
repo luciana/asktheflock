@@ -25,7 +25,6 @@ const QuestionForm2 = ({
 
   const onSubmit = e => {
     e.preventDefault();
-    console.log("handleSubmit(input);", input);
     handleSubmit({
       id: Math.floor(Math.random() * 10000),
       text: input,

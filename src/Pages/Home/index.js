@@ -18,10 +18,10 @@ function Home() {
         const isUserLoggedIn = async () => {
           try {
             if( user ){
-                console.log("Home.js user exists in state (AskTheFlockAppState)", user);
+              
                 navigate(ROUTES[state.lang].MAIN);
             }else {
-                console.log("Home.js no user exist in state (AskTheFlockAppState)", user);               
+                           
             }
            
           } catch (error) {
@@ -33,7 +33,6 @@ function Home() {
         isUserLoggedIn();
       }, [navigate, user, state.lang]);
 
-  console.log("Home.js state", state);
   return (
     <div className="App">    
 

@@ -29,8 +29,7 @@ export default function GenderStats({dataInput, optionId}) {
     pieAllGenderData.push(buildGenderData('female',allFemaleGender ));
     pieAllGenderData.push(buildGenderData('non-binary',allNonBinaryGender ));
 
-        
-    console.log("pieAllGenderData,pieAllGenderData",pieAllGenderData);
+      
     const noneGenderListFor = (optionId) => ((data).filter((i) => i.optionId === optionId && (i.userGender === '' || !i.userGender)).length);
     const maleGenderListFor = (optionId) => ((data).filter((i) => i.optionId === optionId && i.userGender === 'male').length);
     const femaleGenderListFor = (optionId) => ((data).filter((i) => i.optionId === optionId && i.userGender === 'female').length);

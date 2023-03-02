@@ -3,9 +3,7 @@ import * as queries from "../graphql/queries";
 
 const GetUserByEmail = async (email) => {
   try{
-  //   console.log("GetUserByEmail  for ", email);
     const data = await API.graphql(graphqlOperation(queries.userByEmail, { email }));
-    console.log("GetUserByEmail  result ", data);
     return data && data.data && data.data.userByEmail && data.data.userByEmail.items && data.data.userByEmail.items.length ? data.data.userByEmail.items[0] : null;
   }catch(error){
     console.error("GetUserByEmail  error ", error);
@@ -25,7 +23,6 @@ const GetAllQuestions = async() => {
 
 const GetSingleQuestion = async(id) => {
   const data = await API.graphql(graphqlOperation(queries.getQuestion, { id }));
-  console.log("GetSingleQuestion  from query service ", data);
   return data.data.getQuestion ? data.data.getQuestion : null;
 }
 

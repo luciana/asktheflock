@@ -13,7 +13,6 @@ export default class FacebookButton extends Component {
   }
 
   async componentDidMount() {
-    console.log("FB button is mounted");
     this.loadFacebookSDK();
     this.createScript();
     this.setState({ isLoading: false });
@@ -70,19 +69,16 @@ export default class FacebookButton extends Component {
     const fb = window.FB;
     fb.getLoginStatus(response => {
       if (response.status === "connected") {
-        console.log("You're already connected");
+      
         this.getAWSCredentials(response.authResponse);
       } else {
-        console.log("You're not connected");
+      
         fb.login(
           response => {
             if (!response || !response.authResponse) {
               return;
             }
-            console.log(
-              "response.authResponse: " +
-                JSON.stringify(response.authResponse, null, 2)          
-            );
+          
             this.getAWSCredentials(response.authResponse);
           },
           {
@@ -96,7 +92,7 @@ export default class FacebookButton extends Component {
 
   // #2
   getAWSCredentials =(response)=> {
-    console.log("Get AWS credentials response: " + response);
+ 
     const { accessToken, expiresIn } = response;
     const date = new Date();
     // eslint-disable-next-line
@@ -108,7 +104,7 @@ export default class FacebookButton extends Component {
     const fb = window.FB;
     try {
       fb.api("/me", { fields: "name,email,gender,birthday,location" }, response => {
-        console.log("FacebookButton.js signIn response", response);   
+        
         const user = {
           name: response.name,
           email: response.email,
@@ -119,29 +115,27 @@ export default class FacebookButton extends Component {
           socialId: response.id,
           userTag: "",
         };
-        console.log("Auth.federatedSignIn attempt", user);
+   
         try {
             AmplifyAuth.federatedSignIn(
             "facebook",
             { token: accessToken, expires_at },
             user
           ).then(credentials => {                      
-            console.log("User Name: " + user.name);
-            console.log("User Email: " + user.email);           
-            console.log("FacebookButton.js credentials=>", credentials);    
+       
             return AmplifyAuth.currentAuthenticatedUser();                                 
           });         
           
         } catch (error) {
-          console.log("Auth.federateSignIn error: " + error);
+          console.error("Auth.federateSignIn error: " + error);
           return null;
         }
-        console.log("After Auth.federatedSignIn attempt");
+        console.error("After Auth.federatedSignIn attempt");
         return null;
       });
      
     } catch (error) {
-      console.log("FB API error: " + error);
+      console.error("FB API error: " + error);
       return null;
     }
   }
@@ -160,7 +154,6 @@ export default class FacebookButton extends Component {
   initFB() {
     // eslint-disable-next-line
     const fb = window.FB;
-    console.log("FB SDK inited");
   }
 
   createScript() {
@@ -174,7 +167,7 @@ export default class FacebookButton extends Component {
   }
 
   handleError(error) {
-    console.log("Error encountered: " + error);
+    console.error("Error encountered: " + error);
     alert(error);
   }
 

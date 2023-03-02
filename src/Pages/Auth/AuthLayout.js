@@ -27,7 +27,6 @@ export default function AuthLayout() {
 
   const handleErrors = (message) => {
     let errorMessage = message;
-    console.log("handle error message", String(message).includes('User does not exist'));
     if ( String(message).includes('User does not exist')){    
       errorMessage = LANGUAGES[state.lang].CommonError.UserDoesNotExist;
     }else{
@@ -40,7 +39,7 @@ export default function AuthLayout() {
     startLoading();
     try {
       const { attributes } = await Auth.SignIn(email, pwd, remember);
-      console.log("AuthLayout.js signIn Auth attributes", attributes);    
+       
       const locale =  attributes.locale ? attributes.locale : "en-US";
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();     
@@ -54,22 +53,14 @@ export default function AuthLayout() {
 
   function signInWithGoogle() {
       const user = Auth.SignInWithGoogle();
-      console.log("AuthLayout.js SignInWithGoogle user", user);    
-      // const locale =  "en-US";
-      // dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();
-      // console.log("Navigate to ROUTES[en-US].MAIN signInWithGoogle", ROUTES[locale].MAIN);
-      // navigate(ROUTES[locale].MAIN);
+     
    }
  
    function signInWithFacebook() {
-      const user = Auth.SignInWithFacebook();  
-      console.log("AuthLayout.js signInWithFacebook user", user);    
-      // const locale =  "en-US";
-      // dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
+      const user = Auth.SignInWithFacebook(); 
       stopLoading();
-      // console.log("Navigate to ROUTES[en-US].MAIN signInWithFacebook" , ROUTES[locale].MAIN);
-      // navigate(ROUTES[locale].MAIN);
+
     }
 
   const sendForgotPasswordCode = async (email) => {
@@ -121,7 +112,6 @@ export default function AuthLayout() {
   const signUp = async (email, pwd, name, gender, address, birthdate) => {
     startLoading();
     try {
-      console.log("AuthLayout.js signUp", email, name, gender, address, birthdate);
       await Auth.SignUp(email, pwd, name, gender, address, birthdate,state.lang );
       stopLoading();
       navigate(ROUTES[state.lang].CONFIRM_SIGN_UP, {
@@ -135,7 +125,7 @@ export default function AuthLayout() {
      });
     } catch (err) {
       stopLoading();    
-      console.log("Auth Layout.js Signup error", err);
+      console.error("Auth Layout.js Signup error", err);
       setAlert({
         type: "error",
         text: LANGUAGES[state.lang].CommonError.SignUp,
@@ -190,12 +180,11 @@ export default function AuthLayout() {
   };
 
   useEffect(() => {
-    console.log("AuthLayout.js state context", state);
     const loadUser = async () => {
       setLoading(true);
       try {
         const attributes = await Auth.GetUser();
-        console.log("AuthLayout.js Auth.GetUser attributes", attributes);
+
         if ( attributes){
           setLoading(false);
           navigate(ROUTES[state.lang].MAIN);

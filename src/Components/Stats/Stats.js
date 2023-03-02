@@ -18,87 +18,6 @@ export default function Stats({data, options, text, questionTag}) {
     setAlert({ type: "error", text:"No data loaded"});  
     return;
   }
-
-  console.log("stats data input converted to data", data);
-//   const data = {
-//     email: "luciana123_2002@yahoo.com",
-//     questionID: "0714e188-f988-4492-9ddf-6378059c438b",
-//     text: "Qual vestido devo comprar para uma festa social #flocks curto, longo?",
-//     options: "[{\"votes\":5,\"id\":219,\"text\":\"Curto\"},{\"votes\":2,\"id\":9552,\"text\":\"Longo\",\"isComplete\":true}]",
-//     questionTag: "parent",
-//     stats: [{
-//             optionId: 219,
-//             userTag: "",
-//             userGender: "male",
-//             userAge: "46",
-//             userAddress: "44039",
-//             userBirthdate: "01/22/1977",
-//             userGen: "Generation X",
-//             userLanguage: "en-US",
-//         },
-//         {
-//             optionId: 219,
-//             userTag: "technologist",
-//             userGender: "male",           
-//             userAge: "47",
-//             userAddress: "44139",
-//             userBirthdate: "01/22/1975",
-//             userGen: "Generation X",
-//             userLanguage: "en-US",
-//         },
-//         {
-//             optionId: 219,
-//             userTag: "parent",
-//             userGender: "female",           
-//             userAge: "50",
-//             userAddress: "52057",
-//             userBirthdate: "01/22/1973",
-//             userGen: "Generation X",
-//             userLanguage: "pt-BR",
-//         },
-//         {
-//             optionId: 219,
-//             userTag: "cook",
-//             userGender: "female",
-//             userAge: "34",
-//             userAddress: "44345",
-//             userBirthdate: "01/22/1995",
-//             userGen: "Generation Z",
-//             userLanguage: "en-US",
-//         },
-//         {
-//             optionId: 9552,
-//             userTag: "parent",
-//             userGender: "female",
-//             userAge: "40",
-//             userAddress: "44345",
-//             userBirthdate: "01/22/1983",
-//             userGen: "Millennials",
-//             userLanguage: "en-US",
-//         },
-//         {
-//             optionId: 9552,
-//             userTag: "fashion_designer",
-//             userGender: "female",
-//             userAge: "23",
-//             userAddress: "44039",
-//             userBirthdate: "01/22/2000",
-//             userGen: "Millennials",
-//             userLanguage: "en-US",
-//         },
-//         {
-//             optionId: 219,
-//             userTag: "fashion_designer",
-//             userGender: "non-binary",
-//             userAge: "30",
-//             userAddress: "44124",
-//             userBirthdate: "01/22/1993",
-//             userGen: "Millennials",
-//             userLanguage: "en-US",
-//         }
-//     ]
-// };
-
   const minStatVoteCount = 2; 
   const maxNumberOfAddress = 5;
   const maxNumberOfExpertTags = 5;
@@ -114,11 +33,7 @@ export default function Stats({data, options, text, questionTag}) {
   const expertsTags = findCounts(data, "userTag", "userTag")
                         .sort((a, b) => b.value - a.value)
                         .filter((item, idx) => idx < maxNumberOfExpertTags);
-  //console.log("expertsTags", expertsTags);
-    // 0: {userTag: '', value: 1}
-    // 1: {userTag: 'technologist', value: 1}
-    // 2: {userTag: 'cook', value: 1}
-    // 3: {userTag: 'parent', value: 1}
+
 
   const expertsTagsFor = (optionId) => (findCounts(statListFor(optionId), "userTag", "userTag")
                                     .sort((a, b) => b.value - a.value)
@@ -145,14 +60,7 @@ export default function Stats({data, options, text, questionTag}) {
   const winners = wininingOptionItem.map((i) => i.text + ' ');
   const winner = wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners;
 
- // console.log("winners" , winners);
-//   [
-//     {
-//         "votes": 3,
-//         "id": 219,
-//         "text": "Curto"
-//     }
-// ]
+
 
  const generationList = findCounts(data, "userGen", "userGen")
             .sort((a, b) => b.userGen - a.userGen)

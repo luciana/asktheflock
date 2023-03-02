@@ -1,7 +1,6 @@
 import { Auth as AmplifyAuth } from "aws-amplify";
 
 const SignUp = async (email, password, name, gender, address, birthdate, locale) => {
-  console.log("Auth Sign up");
   return await AmplifyAuth.signUp({
     username: email,
     password,
@@ -20,7 +19,6 @@ const ConfirmSignUp = async (email, code) => {
 const SignIn = async (email, pwd, remember) => {
   
   const auth = await AmplifyAuth.signIn(email, pwd);
-  console.log("Service Auth.js SignIn Auth returned from Amplify", auth);
   if (auth.challengeName === "NEW_PASSWORD_REQUIRED")
     await AmplifyAuth.completeNewPassword(auth, pwd);
   if (remember) await AmplifyAuth.rememberDevice();
@@ -47,7 +45,6 @@ const RedefinePassword = async (email, code, pwd) => {
 
 const GetUser = async () => {
   const result = await AmplifyAuth.currentAuthenticatedUser();
-  console.log("Service Auth.js GetUser  currentAuthenticatedUser returned from Amplify", result);
   return result.attributes;
 
 };

@@ -16,8 +16,6 @@ function QuestionAndPoll2({
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    console.log("USER in Questions and Poll 2", user);
-
     const addQuestion = async (question) => {       
       try{
         setLoading(true);
@@ -31,19 +29,6 @@ function QuestionAndPoll2({
         const options  = JSON.stringify(question.options);
         const userName = user.name;
 
-        console.log("userName = ", userName);
-        console.log("before create question mutation question = ", question);
-
-        console.log("Mutations.CreateQuestion input ", text, 
-        userID,
-        voteEndAt,
-        sentiment,
-        userName,
-        parentID,
-        questionTag,
-        options );
-
-
         let q = await Mutations.CreateQuestion(
           text, 
           userID,
@@ -54,8 +39,7 @@ function QuestionAndPoll2({
           questionTag,
           options
         );
-        //setQuestion(question);      
-        console.log("Create Questions in db", q);   
+        //setQuestion(question);            
         navigate('/Main');        
  
       }catch(err){
@@ -126,16 +110,16 @@ function QuestionAndPoll2({
           return;
         }
         
-        console.log("options about to be added:",index);
+  
         
         let addToListArray = index;
         //modify list of options in case they already exist
         if (todos && todos.length > 0){
           const flocks = todos.map((t) => t.text);
-          console.log("options already added",flocks);
+  
           if(flocks && flocks.length >0){
             addToListArray = index.filter(x => !flocks.includes(x)); //arr_diff(index,flocks);            
-            console.log("options merged",addToListArray);           
+                
           }       
         }
         for (let i in addToListArray) {
@@ -154,20 +138,8 @@ function QuestionAndPoll2({
       
 
 
-      const handlePublishQuestion = (question) => {
-        //e.preventDefault();  
-       // question.options = todos;     
-       console.log("handlePublishQuestion",question);
-        addQuestion(question);
-        // const isValidForm = todos.length >= 2 && todos.length <= 5; 
-        // console.log("is Question publishing valid - must have a date in the future and items > 2 and < 5", todos.length);
-        // if (isValidForm){
-         
-        // }else{
-        //   alert("Please enter options to your question ( min of 2 and max of 5 )");
-        //   return;
-        // } 
-           
+      const handlePublishQuestion = (question) => {        
+        addQuestion(question);     
       }
     return(
         <>

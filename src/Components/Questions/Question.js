@@ -106,8 +106,7 @@ function Question({
     try{
       setLoading(true);
       const url = window.location.origin +"/main?id=" + question.id;
-      const s = await shortenURL(url);
-      console.log("Question displayCopyLinkDialog shorten URL result ", s);
+      const s = await shortenURL(url);  
       if(s){
         setQuestionLink(s);
         setShowQuestionCopyLink(true);

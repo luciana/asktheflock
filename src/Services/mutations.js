@@ -17,8 +17,6 @@ const CreateUser = async (email, locale,  name, address, birthdate, gender) => {
 };
 
 const UpdateUser = async ( {id, email, locale, name, gender, address, birthdate, userTag} ) => {
-  console.log("UpdateUser mutation inputs", id, email, locale, name, gender, address, birthdate, userTag);
-
   if (birthdate){
     const {
       data: { updateUser },
@@ -43,7 +41,6 @@ const UpdateUser = async ( {id, email, locale, name, gender, address, birthdate,
 
 
 const UpdateUserName = async ( {id, name} ) => {
-  console.log("UpdateUserName mutation inputs", id, name);
   const {
     data: { updateUser },
   } = await API.graphql(
@@ -55,7 +52,6 @@ const UpdateUserName = async ( {id, name} ) => {
 };
 
 const UpdateUserTag = async ( {id, userTag} ) => {
-  console.log("Mutation UpdateUserTag", id, userTag);
   const {
     data: { updateUser },
   } = await API.graphql(
@@ -79,7 +75,6 @@ const UpdateUserZip = async ( {id, address} ) => {
 };
 
 const UpdateUserBirthdate = async ({ id, birthdate} ) => {
-  console.log("Mutation UpdateUserBirthdate", id, birthdate);
   const {
     data: { updateUser },
   } = await API.graphql(
@@ -91,7 +86,6 @@ const UpdateUserBirthdate = async ({ id, birthdate} ) => {
 };
 
 const UpdateUserGender = async ({ id, gender} ) => {
-  console.log("Mutation UpdateUserGender", id, gender);
   const {
     data: { updateUser },
   } = await API.graphql(
@@ -160,7 +154,6 @@ const CreateQuestion = async (
 }
 
 const DeleteQuestion = async ( id ) => {
-  console.log("Service Mudation to Delete Question input ", id);
   const {
     data: { deleteQuestion },
   } = await API.graphql(

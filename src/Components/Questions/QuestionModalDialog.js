@@ -50,12 +50,10 @@ function QuestionModalDialog(
   }
 
   const handleChangeVotePeriod = e => {       
-    console.log("onchange radio button" ,e.currentTarget.value);
     setVotePeriod(e.currentTarget.value);
   }
 
   const addMinutes = (date, minutes)  => {
-    console.log("addMinutes", date, minutes);
     date.setMinutes(date.getMinutes() + minutes);
   
     return date;
