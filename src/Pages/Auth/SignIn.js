@@ -47,6 +47,7 @@ export default function SignIn() {
           />
         </div>
         </div> 
+        <div className="text-color-gray text-xl text-center mb-4 uppercase">OR</div>
       <form className="form-control">
         <AuthTitle text={LANGUAGES[state.lang].Auth.SignInTitle} />
         <div className="mb-4">

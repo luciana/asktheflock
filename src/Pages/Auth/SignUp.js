@@ -89,7 +89,7 @@ export default function SignUp() {
     }    
   return (
     <>
-    <hr className="my-2" />  
+   
       <div className="m-4 row text-center">       
         <div className="col " >
           <Button
@@ -106,6 +106,9 @@ export default function SignUp() {
           />
         </div>
       </div>
+    
+    <div className="text-color-gray text-xl text-center mb-4 uppercase">OR</div>
+    
     <form className=" form-control">
     <AuthTitle text={LANGUAGES[state.lang].Auth.SignUpTitle} />  
     
