@@ -2,14 +2,16 @@ import React from "react";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { FacebookIcon, TwitterIcon } from "react-share";
 
-export default function SocialShare(message) {
+export default function SocialShare({message, url}) {
+  console.log("SocialShare message and url", url);
   return (
     <div className="d-block">   
-      <span className="px-1"> <FacebookShareButton
-          url={"https://www.asktheflock.com/"}
-          quote={"AskTheFlock.com Decisions made easy - just posted a question"}
+      <span className="px-1"> 
+      <FacebookShareButton
+          url={"https://www.asktheflock.com"}
+          quote={message}
           hashtag={"#decisions"}
-          description={"aiueo"}
+          description={"AskTheFlock site."}
           className=""
         >
       <FacebookIcon size={24} round /> 
@@ -17,9 +19,9 @@ export default function SocialShare(message) {
       </span>
       <span className="px-1">
       <TwitterShareButton
-        title={"AskTheFlock.com Decisions made easy - just posted a question"}
-        url={"https://www.asktheflock.com/"}
-        hashtags={["help", "decision"]}
+        title={message}
+        url={String(url)}
+        hashtags={["help", "decisions", "asktheflock"]}
       >
         <TwitterIcon size={24} round />
       

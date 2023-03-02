@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Vote from '../Votes/Vote';
 import { FaCircleNotch , FaLink, FaSyncAlt, FaCircle, FaTrashAlt, FaGrinHearts, FaPhoneVolume} from 'react-icons/fa';
 import Avatar from 'react-avatar';
@@ -33,10 +33,15 @@ function Question({
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
 
- if (!question) return;
+// if (!question) return;
   //console.log("Question ", question);
   // //console.log("User ", user.votes);
   // console.log("votedList", votedList);
+
+  useEffect(() => {
+    setQuestionLink( window.location.origin +"/main?id=" + question.id);
+  }, []);
+
 
  
   const isAReply = question.parentId != null;
@@ -94,6 +99,8 @@ function Question({
     } 
     
   };
+
+  
 
   const displayCopyLinkDialog = async () => {
     try{
@@ -158,7 +165,9 @@ function Question({
               <button className="btn btn-sm  mx-1"  onClick={displayCopyLinkDialog}>
                   <FaLink alt="Link to Question" /></button>
 
-              <SocialShare />
+              <SocialShare 
+                  message={"Help me with a decision - " + formatName(question.text, 80)}
+                  url={questionLink} />
             </div>
         </div>      
         <div className="p-2"> 
