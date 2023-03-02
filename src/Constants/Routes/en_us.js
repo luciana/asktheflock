@@ -9,6 +9,7 @@ const en_us_routes = {
     PROFILE: "/profile",
     NEW_QUESTION: "/new",
     TERMS: "/terms",
+    PRIVACY: "/privacy",
     STATS: "/Stats",
   };
   

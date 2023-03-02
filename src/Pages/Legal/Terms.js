@@ -1,12 +1,12 @@
 import React from 'react';
 import {AuthTitle, HomeNav} from '../../Components';
+import '../pages.css';
 
 function Terms() {
 
     return (
         <div className="App ">          
          <HomeNav />   
-         <div className="container">
             <AuthTitle text="Privacy Policies and Terms"/>  
             <hr className="m-2"></hr>  
             <div>
@@ -42,9 +42,7 @@ function Terms() {
             We provide you with the ability to access your data. We store your public profile data  until it is no longer necessary to provide our services, or until your account is deleted - whichever comes first.  When you cancel your account, we delete all your data. You will not be able to recover that information later. 
         </p>    
         </div>                
-        </div>           
-        </div>
-            
+        </div>         
     )
 };
 

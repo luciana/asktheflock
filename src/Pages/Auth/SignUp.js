@@ -93,13 +93,13 @@ export default function SignUp() {
       <div className="m-4 row text-center">       
         <div className="col " >
           <Button
-            text={LANGUAGES[state.lang].Auth.SignInWithGoogleButton}
+            text={LANGUAGES[state.lang].Auth.SignUpWithGoogleButton}
             disabled={false}
             handler={signInWithGoogle}
             icon="mx-3 fa-brands fa-google"
           />             
           <Button
-            text={LANGUAGES[state.lang].Auth.SignInWithFacebookButton}
+            text={LANGUAGES[state.lang].Auth.SignUpWithFacebookButton}
             disabled={false}
             handler={signInWithFacebook}
             icon="mx-3 fa-brands fa-facebook-f"
