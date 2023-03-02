@@ -16,7 +16,7 @@ const ConfirmSignUp = lazy(() => import("./Pages/Auth/ConfirmSignUp"));
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
 const Main = lazy(() => import("./Pages/Main"));
 const Home = lazy(() => import("./Pages/Home"));
-const Terms = lazy(() => import("./Pages/Legal/Terms"));
+//const Terms = lazy(() => import("./Pages/Legal/Terms"));
 const Privacy = lazy(() => import("./Pages/Legal/Privacy"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const NewQuestion = lazy(() => import("./Pages/NewQuestion"));
@@ -35,8 +35,7 @@ function App() {
       <Routes>
         
         
-        <Route path={ROUTES[state.lang].HOME} element={<Home />} />
-        <Route path={ROUTES[state.lang].TERMS} element={<Terms />} />
+        <Route path={ROUTES[state.lang].HOME} element={<Home />} />     
         <Route path={ROUTES[state.lang].PRIVACY} element={<Privacy />} />
        
         

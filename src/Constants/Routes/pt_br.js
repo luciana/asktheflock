@@ -8,7 +8,6 @@ const pt_br_routes = {
     HOME: "/",
     PROFILE: "/profile",
     NEW_QUESTION: "/new",
-    TERMS: "/terms",
     PRIVACY: "/privacy",
     STATS: "/Stats",
   };

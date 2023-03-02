@@ -8,7 +8,7 @@ function Terms() {
         <div className="App ">          
          <HomeNav />   
             <AuthTitle text="Privacy Policies and Terms"/>  
-            <hr className="m-2"></hr>  
+            <hr className="m-2 container"></hr>  
             <div>
             <h4>(1) Privacy Terms </h4>       
             <p> We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions.</p>       
