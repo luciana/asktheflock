@@ -9,7 +9,8 @@ import { SocialShare } from '../Social';
 import { formatDateTime, formatName } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
-import { Button, Input, Alert } from './../../Components';
+import { Button, Input, Alert, Loading } from './../../Components';
+import  shortenURL  from './../../Services/shortenURL';
 
 function Question({ 
   question, 
@@ -29,6 +30,9 @@ function Question({
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
   const [alert, setAlert] = useState();
+  const [questionLink, setQuestionLink] = useState("");
+  const [loading, setLoading] = useState(false);
+
  if (!question) return;
   //console.log("Question ", question);
   // //console.log("User ", user.votes);
@@ -90,7 +94,29 @@ function Question({
     } 
     
   };
-  const questionLink = "https://www.asktheflock.com/main?id=" + question.id;
+
+  const displayCopyLinkDialog = async () => {
+    try{
+      setLoading(true);
+      const url = "https://www.asktheflock.com/main?id=" + question.id;
+      const s = await shortenURL(url);
+      console.log("Question displayCopyLinkDialog shorten URL result ", s);
+      if(s){
+        setQuestionLink(s);
+        setShowQuestionCopyLink(true);
+        setLoading(false);
+      }else{
+        setShowQuestionCopyLink(true);
+        setQuestionLink("https://www.asktheflock.com/main?id=" + question.id);
+        setLoading(false);
+        }
+      
+    }catch (error){
+      setShowQuestionCopyLink(true);
+      setQuestionLink("https://www.asktheflock.com/main?id=" + question.id);
+      setLoading(false);
+    }  
+  }
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(questionLink);
@@ -99,7 +125,8 @@ function Question({
 
 
   return (
-    
+    <>
+        {loading && <Loading />}
        <div key={question.id} className="container border border-1 p-1 my-2" >           
         <div className="p-2 row align-items-start"> 
             <div className="col-2"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
@@ -128,7 +155,7 @@ function Question({
                 <StatsDialog question={question}
                             locale={user.locale}/>
               )}
-              <button className="btn btn-sm  mx-1"  onClick={()=> setShowQuestionCopyLink(true)}>
+              <button className="btn btn-sm  mx-1"  onClick={displayCopyLinkDialog}>
                   <FaLink alt="Link to Question" /></button>
 
               <SocialShare />
@@ -222,6 +249,7 @@ function Question({
           </Modal.Body>                 
           </Modal>
       </div>    
+      </>
   );
 }
 export default Question;
