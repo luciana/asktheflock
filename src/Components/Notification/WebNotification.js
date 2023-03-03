@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Toast, {toast, Toaster} from 'react-hot-toast';
+import {toast, Toaster} from 'react-hot-toast';
 import { requestForToken, onMessageListener } from '../../Services/firebase';
 
 const WebNotification = () => {

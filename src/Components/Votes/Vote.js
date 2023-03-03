@@ -4,6 +4,7 @@ import { FaCircle, FaRegCircle } from 'react-icons/fa';
 const Vote = ({ question,              
              votedOptionsList,
              voteUp,            
+             myOwnQuestion,
              alreadyVotedForQuestionList,
              voteEnded }) => {
 
@@ -29,12 +30,12 @@ const Vote = ({ question,
             
             <div className="col ">                   
                 <button className=" mx-5 badge border-0 bg-light"  
-                  disabled={(voteEnded || alreadyVotedForQuestionListBool) ? true : false}                   
+                  disabled={(voteEnded || alreadyVotedForQuestionListBool || myOwnQuestion) ? true : false}                   
                   onClick={() => voteUp(item)}>                             
                   { (iVotedForIt(item.id) ) && (
                     <FaCircle color='green' size={28}/>
                   )}
-                  { (!iVotedForIt(item.id) && voteEnded )&& (
+                  { (!iVotedForIt(item.id) && voteEnded)&& (
                     <FaRegCircle color='gray' size={28}/>
                   )}
                   { (!iVotedForIt(item.id) && !voteEnded )&& (

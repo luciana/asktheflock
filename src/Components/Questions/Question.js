@@ -68,8 +68,13 @@ function Question({
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
   let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
- 
+  const myOwnQuestion = question.userID === user.id;
+  //console.log("Can I vote up", myOwnQuestion);
+
   const voteUp = (item) => {
+
+    if (myOwnQuestion) return; 
+
     const id = item.id;
     const text = item.text;
     if (alreadyVotedForQuestionListBool) {
@@ -103,23 +108,24 @@ function Question({
   
 
   const displayCopyLinkDialog = async () => {
+    const url = window.location.origin +"/main?id=" + question.id;
+    const s = await shortenURL(url);  
     try{
       setLoading(true);
-      const url = window.location.origin +"/main?id=" + question.id;
-      const s = await shortenURL(url);  
+      
       if(s){
-        setQuestionLink(s);
+        setQuestionLink(url);
         setShowQuestionCopyLink(true);
         setLoading(false);
       }else{
         setShowQuestionCopyLink(true);
-        setQuestionLink(window.location.origin +"/main?id=" + question.id);
+        setQuestionLink(url);
         setLoading(false);
         }
       
     }catch (error){
       setShowQuestionCopyLink(true);
-      setQuestionLink(window.location.origin +"/main?id=" + question.id);
+      setQuestionLink(url);
       setLoading(false);
     }  
   }
@@ -137,7 +143,7 @@ function Question({
         <div className="p-2 row align-items-start"> 
             <div className="col-2"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
             <div className="col-7">
-              <div className="text-sm lh-1"><span>{formatName(question.userName, 20)} </span><span aria-hidden="true"> · </span> <span className="d-none">  {createdAt} </span></div>
+              <div className="text-sm lh-1"><span><strong>{formatName(question.userName, 20)}</strong></span><span aria-hidden="true"> · </span> <span className="d-none">  {createdAt} </span></div>
               <div className="text-sm">
                 {!isAReply && voteEnded && (<span > Closed <FaCircle /> </span>)}
                 {!isAReply && !voteEnded && (<span> Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
@@ -174,7 +180,8 @@ function Question({
         </div>
         <div className="p-2">
           <Vote question={question}                                
-                voteUp={voteUp}                     
+                voteUp={voteUp}     
+                myOwnQuestion={myOwnQuestion}                
                 votedOptionsList={votedOptionsList}
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded} />    

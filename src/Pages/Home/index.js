@@ -41,8 +41,8 @@ function Home() {
         <div>       
         <header className="masthead d-flex align-items-center">
             <div className="container px-4 px-lg-5 text-center">
-                <h1 className="mb-1">Flock App</h1>
-                <h3 className="mb-5"><em>{LANGUAGES[state.lang].HomePage.TagLine} </em></h3>
+                <h1 className="mb-1">Ask The Flock </h1>
+                <h3 className="mb-5">{LANGUAGES[state.lang].HomePage.TagLine} </h3>
                 <button className="btn btn-light mx-2 btn-lg" onClick={()=> navigate(ROUTES[state.lang].SIGN_UP)}>{LANGUAGES[state.lang].Auth.SignUpTitle}</button>
                 <a className="btn btn-dark mx-2 btn-lg" href="/#services">{LANGUAGES[state.lang].HomePage.LearnMore}</a>
                 <a className="d-block my-2" onClick={()=> navigate(ROUTES[state.lang].SIGN_IN)} >or {LANGUAGES[state.lang].Auth.SignInTitle} </a>

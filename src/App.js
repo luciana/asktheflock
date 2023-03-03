@@ -3,6 +3,7 @@ import { Routes, Route, useSearchParams } from "react-router-dom";
 import { AppContext } from "./Contexts";
 import { ROUTES, TYPES } from "./Constants";
 import { Loading } from "./Components";
+import './Assets/Fonts/BebasNeue-Regular.ttf';
 
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const AuthLayout = lazy(() => import("./Pages/Auth/AuthLayout"));
@@ -17,7 +18,7 @@ const Layout = lazy(() => import("./Pages/Layout/Layout"));
 const Main = lazy(() => import("./Pages/Main"));
 const Home = lazy(() => import("./Pages/Home"));
 //const Terms = lazy(() => import("./Pages/Legal/Terms"));
-const Privacy = lazy(() => import("./Pages/Legal/Privacy"));
+const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const NewQuestion = lazy(() => import("./Pages/NewQuestion"));
 

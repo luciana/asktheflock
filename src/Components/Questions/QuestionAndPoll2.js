@@ -85,6 +85,7 @@ function QuestionAndPoll2({
         //user has not entered the tag to automatically setup the poll
         if (found === -1) {
           //TODO: #flocks not used
+          return;
         }
 
         let list = v.substring(found + TAG.length);

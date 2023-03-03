@@ -13,16 +13,15 @@ const Card = ({voteCounts}) => {
   const { user } = state;
 
   const userCount = (user.userTag) ? user.userTag.length : 1;
-
-  const canSeePushButton = isOwner(user.email);
+  const isModerator = isOwner(user.email);
   return (
 
     <>
-    
+    <WebNotification />
     <div className="border border-1  p-3 my-2">
    
        <h3 className="profile-name ">{user.name}</h3>  
-       <div className="">{user.email}   {canSeePushButton && (<span><WebNotification /></span>)}</div>
+       <div className="">{user.email}   {isModerator && (<span className="text-sm text-color-green"> (You are a moderator) </span>)}</div>
        <div className="border border-1  p-3 my-2">
         <div className="" >                    
           <div className=" fw-bolder"> 

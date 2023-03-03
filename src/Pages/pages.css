@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "BebasNeue";   /*Can be any text*/
+  src: local("BebasNeue-Regular"),
+    url("./../Assets/Fonts/BebasNeue-Regular.ttf") format("truetype");
+}
+
+.custom-font {
+  font-family: "BebasNeue";
+}
 
 
 #all-questions > div{
@@ -14,6 +23,10 @@
 
 .text-color-gray {
   color:  var(--bs-gray-600);
+}
+
+.text-color-green {
+  color:  var(--bs-green);
 }
 
 .text-color-red {

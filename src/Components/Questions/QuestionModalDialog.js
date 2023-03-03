@@ -25,7 +25,7 @@ function QuestionModalDialog(
  
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   //const [showOptionsModal, setShowOptionsModal] = useState(false);
-  const [votePeriod, setVotePeriod] = useState(1440);
+  const [votePeriod, setVotePeriod] = useState(43200);
   const [input, setInput] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [expertTag, setExpertTag] = useState("");
@@ -97,7 +97,7 @@ function QuestionModalDialog(
         <form  className=''>
         <Modal  fullscreen={true} show={showQuestionModal} >
               <Modal.Header closeButton onClick={() => {setShowQuestionModal(false)}}>
-                <Modal.Title>{LANGUAGES[user.locale].Questions.WhatisYourQuestion}</Modal.Title>
+                <Modal.Title><h2>{LANGUAGES[user.locale].Questions.WhatisYourQuestion}</h2></Modal.Title>
               </Modal.Header>
               <Modal.Body >               
                   <textarea
@@ -161,7 +161,7 @@ function QuestionModalDialog(
                     </div>
 
                   <div className="fs-5 text my-3">
-                    {LANGUAGES[user.locale].Questions.EnterOptions} 
+                    <h3>{LANGUAGES[user.locale].Questions.EnterOptions} </h3>
                     <span className="text-sm text-color-gray px-2">(min of {minQuestionOptions} and max of {maxQuestionOptions})</span> 
                     <div className="text-sm text-color-red"> {optionInvalidMessage}</div>
                   </div>
