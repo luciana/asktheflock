@@ -25,7 +25,7 @@ function QuestionModalDialog(
  
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   //const [showOptionsModal, setShowOptionsModal] = useState(false);
-  const [votePeriod, setVotePeriod] = useState(480);
+  const [votePeriod, setVotePeriod] = useState(1440);
   const [input, setInput] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [expertTag, setExpertTag] = useState("");
@@ -61,17 +61,6 @@ function QuestionModalDialog(
 
   const onSubmit = e => {
     e.preventDefault(); 
-    // addPostOptionsFromQuestion({
-    //   id: Math.floor(Math.random() * 10000),
-    //   text: input,
-    //   parentId: null,
-    //   userId: user.id,
-    //   createdAt: new Date().toISOString(),
-    //   voteEndAt: addMinutes(new Date(), parseFloat(votePeriod)),
-    //   sentiment: "",
-    //   options:todos,
-    //   questionTag: expertTag
-    // });
     handlePublishQuestion({
         id: Math.floor(Math.random() * 10000),
         text: input,
@@ -84,7 +73,6 @@ function QuestionModalDialog(
         questionTag: expertTag
       });
     
-    //setShowOptionsModal(true);
   }
   const minQuestionOptions = 2;
   const maxQuestionOptions = 5;
@@ -131,13 +119,13 @@ function QuestionModalDialog(
                       </div>
                       <div className="p-2">                  
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="10" name="votePeriod" value="10" defaultChecked={votePeriod === 10} /><label className=" "  htmlFor="10">10 min</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="1440" name="votePeriod" value="1440" defaultChecked={votePeriod === 1440} /><label className=" "  htmlFor="1440">1 day</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="120" name="votePeriod" value="120" defaultChecked={votePeriod === 120}/><label className=" " htmlFor="120">2 hours</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="21600" name="votePeriod" value="21600" defaultChecked={votePeriod === 21600}/><label className=" " htmlFor="21600">15 days</label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="480" name="votePeriod" value="480" defaultChecked={votePeriod === 480} /><label className=" " htmlFor="480">8 hours</label>
+                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="43200" name="votePeriod" value="43200" defaultChecked={votePeriod === 43200} /><label className=" " htmlFor="43200">30 days</label>
                         </div>
                       </div>             
                           
