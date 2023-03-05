@@ -68,15 +68,16 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
           .flat(1)
           .filter((l) => l.userId !== userId);
 
+      //console.log("thoseWhoHelpedMe",thoseWhoHelpedMe);
        // console.log("thoseWhoHelpedMe",thoseWhoHelpedMe);
       if (thoseWhoHelpedMe && thoseWhoHelpedMe.length > 0){
-         thoseWhoHelpedMeCount = findCounts(thoseWhoHelpedMe, "userId", "userName")
+         thoseWhoHelpedMeCount = findCounts(thoseWhoHelpedMe, "userID", "userName")
         .sort((a, b) => b.value - a.value)
         .filter((item, idx) => idx < maxNumberOfFriends);       
       }
     }
     //console.log("thoseWhoIHelpedCount",thoseWhoIHelpedCount);
-   // console.log("thoseWhoHelpedMeCount",thoseWhoHelpedMeCount);
+    //console.log("thoseWhoHelpedMeCount",thoseWhoHelpedMeCount);
     const showFriendsSection = (thoseWhoHelpedMeCount && thoseWhoHelpedMeCount.length >0) || 
                                 (thoseWhoIHelpedCount && thoseWhoIHelpedCount.length >0);
 
@@ -85,20 +86,20 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
       //fix issue with userID and userId as properties in the two merged arrays
       // this code can be deleted afterwhile.
       // this was created to fix an issue where stat model data used userId and question model data userID
-      const thoseWhoHelpedMeCountCorrected = thoseWhoHelpedMeCount.map(({ userId: userID, userName: userName, value: value }) => ({
-        userID,
-        userName,
-        value,
-      }));
+      // const thoseWhoHelpedMeCountCorrected = thoseWhoHelpedMeCount.map(({ userId: userID, userName: userName, value: value }) => ({
+      //   userID,
+      //   userName,
+      //   value,
+      // }));
       //console.log("thoseWhoHelpedMeCountCorrected",thoseWhoHelpedMeCountCorrected);
 
-      const mergeResult = [...thoseWhoIHelpedCount, ...thoseWhoHelpedMeCountCorrected];
+      const mergeResult = [...thoseWhoIHelpedCount, ...thoseWhoHelpedMeCount];
       //console.log("mergeResult",mergeResult);
       if( mergeResult && mergeResult.length > minNumberOfFriendsToDisplay){
         friends = findCounts(mergeResult, "userID", "userName")
-                .sort((a, b) => b.value - a.value)
+                .sort((a, b) => b.value - a.value)                
                 .filter((item, idx) => idx < maxNumberOfFriends);
-        //console.log("friends",friends);
+        console.log("friends",friends);
       }
       
     }
