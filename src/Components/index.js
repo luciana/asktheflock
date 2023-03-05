@@ -17,4 +17,4 @@ export { default as Switch } from "./Elements/Switch";
 export { default as DatePicker } from "./Elements/DatePicker";
 export { default as Friends } from "./Friends";
 export { default as WebNotification } from "./Notification/WebNotification";
-export { default as FacebookButton } from "./Social/FacebookButton";
+export { default as FacebookButton } from "./Social/FacebookButton-notinuse";

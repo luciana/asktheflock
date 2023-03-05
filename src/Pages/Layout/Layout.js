@@ -63,8 +63,7 @@ export default function Layout() {
        
 
       } catch (error) {
-        console.error("Layout.js Main error in isUserLoggedIn", error);
-        console.log("Layout location to navigate to pass to sign in", location);
+        console.error("Layout.js Main error in isUserLoggedIn", error);    
         if(location){
           if(location.search){
             console.log("storing in session storage location.state?.from?.pathname", location?.pathname, location?.search);

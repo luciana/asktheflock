@@ -1,4 +1,5 @@
 import { Auth as AmplifyAuth } from "aws-amplify";
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 const SignUp = async (email, password, name, gender, address, birthdate, locale) => {
   return await AmplifyAuth.signUp({
@@ -31,7 +32,7 @@ function SignInWithGoogle() {
  }
 
  function SignInWithFacebook() {
-    return AmplifyAuth.federatedSignIn({ provider: 'Facebook' });  
+    return AmplifyAuth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook });  
   }
 
 
