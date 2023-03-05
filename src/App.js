@@ -22,6 +22,7 @@ const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const NewQuestion = lazy(() => import("./Pages/NewQuestion"));
 
+
 function App() {
   const [searchParams] = useSearchParams();
   const { state, dispatch } = useContext(AppContext);

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useCallback } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../Contexts";
 import { ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
@@ -15,6 +15,7 @@ export default function Layout() {
   const { state, dispatch } = useContext(AppContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   const loadUser = useCallback(async ({force, email, locale, name, address, birthdate, gender, userTag}) => {        
     if ( !state.user || force === true) { 
@@ -53,12 +54,27 @@ export default function Layout() {
           birthdate: attributes.birthdate ? attributes.birthdate : null,
           userTag: "",
         });
+
+        const beforeLoginUrl = sessionStorage.getItem('redirect_to');     
+        if(beforeLoginUrl){
+          sessionStorage.removeItem('redirect_to');
+          navigate(beforeLoginUrl);
+        }
+       
+
       } catch (error) {
         console.error("Layout.js Main error in isUserLoggedIn", error);
+        console.log("Layout location to navigate to pass to sign in", location);
+        if(location){
+          if(location.search){
+            console.log("storing in session storage location.state?.from?.pathname", location?.pathname, location?.search);
+            sessionStorage.setItem('redirect_to',  location.pathname + location.search);
+          }          
+        }           
         if(String(error).includes("The user is not authenticated")){         
           //clear cookies         
           dispatch({ type: TYPES.UPDATE_USER, payload: "" });   
-        }
+        }      
        navigate(ROUTES[state.lang].HOME);
       }
     };
@@ -67,6 +83,7 @@ export default function Layout() {
   }, [loadUser, dispatch, navigate, state.lang]);
 
   if (!state.user) return <Loading />;
+  
 
   return (
     <section className="App profile mx-auto max-w-screen-lg h-screen">
@@ -74,7 +91,15 @@ export default function Layout() {
      
       <SideNav handleSignOut={handleSignOut} />
       <div className="">
-        <Outlet context={{ loadUser, setLoading }} />
+        {/* {state.user && (
+           <Outlet context={{ loadUser, setLoading }} />
+        )}
+        {!state.user && (
+          <Navigate to={ROUTES[state.lang].SIGN_IN} replace state={{ from: location.pathname }} />
+          
+        )} */}
+          <Outlet context={{ loadUser, setLoading }} />
+
       </div>     
      
     </section>

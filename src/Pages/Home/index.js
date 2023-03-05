@@ -14,22 +14,19 @@ function Home() {
     const { state } = useContext(AppContext);
     const navigate = useNavigate();
     const { user } = state;
+
     useEffect(() => {
         const isUserLoggedIn = async () => {
           try {
-            if( user ){
-              
+            if( user ){              
                 navigate(ROUTES[state.lang].MAIN);
-            }else {
-                           
-            }
-           
+            }          
           } catch (error) {
             console.error("Home.js error checking if user exists in state(AskTheFlockAppState)", error);    
            //navigate(ROUTES[state.lang].HOME);
           }
         };
-    
+       
         isUserLoggedIn();
       }, [navigate, user, state.lang]);
 

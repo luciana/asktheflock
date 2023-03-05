@@ -2,7 +2,7 @@
 import QuestionAndPoll2 from '../../Components/Questions/QuestionAndPoll2';
 import { useState, useContext } from "react";
 import { AppContext } from "../../Contexts";
-import { Alert, Title } from "../../Components";
+import { Alert } from "../../Components";
 
 
 const NewQuestion = (props) => {

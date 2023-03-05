@@ -25,7 +25,7 @@ const Questions = () => {
     const [filterList, setFilterList]= useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
-    const questionQueryId = query.get("id");
+    const questionQueryId = query.get("id");    
 
     useEffect(() => {
 
@@ -34,10 +34,9 @@ const Questions = () => {
         try{
           setLoading(true);       
          
-          if (questionQueryId){
-       
+          //direct link to question - queryString id
+          if (questionQueryId){                   
             const singleQuestion = await Queries.GetSingleQuestion(questionQueryId);
-  
             if(singleQuestion){
               setActiveQuestion(singleQuestion);  
               setShowSingleQuestionModal(true);        
@@ -56,7 +55,9 @@ const Questions = () => {
 
       const loadQuestions = async () => {
         try{
-          setLoading(true);       
+          setLoading(true);     
+         
+
           let q = await Queries.GetAllQuestions();
           if(q){
               setBackendQuestions(q.filter(

@@ -13,7 +13,7 @@ export default function AuthLayout() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState();
+  const [alert, setAlert] = useState(); 
 
   const startLoading = () => {
     setLoading(true);
@@ -37,13 +37,16 @@ export default function AuthLayout() {
 
   const signIn = async (email, pwd, remember) => {
     startLoading();
-    try {
+    try {     
       const { attributes } = await Auth.SignIn(email, pwd, remember);
        
       const locale =  attributes.locale ? attributes.locale : "en-US";
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();     
       navigate(ROUTES[locale].MAIN);
+
+
+      
     } catch (err) {
       stopLoading();
       console.error("AuthLayout.js signIn error calling Auth.Signin", err);
@@ -52,13 +55,13 @@ export default function AuthLayout() {
   };
 
   function signInWithGoogle() {
-      const user = Auth.SignInWithGoogle();
+      Auth.SignInWithGoogle();
       stopLoading();
      
    }
  
-   function signInWithFacebook() {
-      const user = Auth.SignInWithFacebook(); 
+   function signInWithFacebook() {     
+      Auth.SignInWithFacebook(); 
       stopLoading();
 
     }
@@ -205,8 +208,6 @@ export default function AuthLayout() {
     
     loadUser();
   }, [navigate, state.lang]);
-
- 
 
   return (
     <div className="App">      
