@@ -8,6 +8,7 @@ import Auth from "../../Services/auth";
 import Mutations from "../../Services/mutations";
 import { Alert, Button, DatePicker, Form, Input, Select, Title, Card } from "../../Components";
 import { isValidEmail, isValidZip } from "../../Helpers";
+import Queries from "../../Services/queries";
 
 
 export default function Profile() {
@@ -25,6 +26,7 @@ export default function Profile() {
   const [code, setCode] = useState("");
   const [tag, setTag] = useState("");
   const [voteCounts, setVoteCounts] = useState("");
+  const [questionCounts, setQuestionCounts] = useState(0);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -38,6 +40,7 @@ export default function Profile() {
     user && user.birthday && setBirthdate(user?.birthdate)  
     user && user.address && setAddress(user?.address)  
     userVoteCount();
+    userQuestionsAskedCount();
   }, [user]);
 
   
@@ -163,6 +166,18 @@ export default function Profile() {
    
   }
  
+  const userQuestionsAskedCount = async () => {
+    try{
+      const questions = await Queries.GetQuestionByUserId(user.id);
+      if ( questions ){
+      //  console.log("questions by this user ", questions);
+        setQuestionCounts(questions);
+      }
+    }catch(error){     
+      console.error("Questions by user error", error);
+    }
+   
+  }
 
   const renderEmail = () => (
     <>
@@ -373,6 +388,7 @@ export default function Profile() {
    <div className="container">     
       <Alert type={alert?.type} text={alert?.text} />
       <Card voteCounts={voteCounts} 
+            questionCounts={questionCounts}
            />
     
       <hr className="m-3"></hr>     

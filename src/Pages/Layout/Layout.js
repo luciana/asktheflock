@@ -81,6 +81,8 @@ export default function Layout() {
     isUserLoggedIn();
   }, [loadUser, dispatch, navigate, state.lang]);
 
+  
+
   if (!state.user) return <Loading />;
   
 

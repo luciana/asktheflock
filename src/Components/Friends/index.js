@@ -99,7 +99,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         friends = findCounts(mergeResult, "userID", "userName")
                 .sort((a, b) => b.value - a.value)                
                 .filter((item, idx) => idx < maxNumberOfFriends);
-        console.log("friends",friends);
+       // console.log("friends",friends);
       }
       
     }

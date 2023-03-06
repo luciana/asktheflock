@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Badge } from '..';
+import { Badge, QuestionBadge } from './../../Components/Votes';
 import { LANGUAGES } from "../../Constants";
 import { AppContext } from "../../Contexts";
 import './Card.css';
@@ -7,13 +7,15 @@ import { isOwner } from "../../Helpers/owner";
 import WebNotification from "../Notification/WebNotification";
 import {formatDateTime} from '../../Helpers';
 
-const Card = ({voteCounts}) => {
+const Card = ({voteCounts, questionCounts}) => {
 
   const { state } = useContext(AppContext);
   const { user } = state;
 
-  const userCount = (user.userTag) ? user.userTag.length : 1;
+ // const userCount = (user.userTag) ? user.userTag.length : 1;
   const isModerator = isOwner(user.email);
+
+  console.log("questionCounts", questionCounts);
   return (
 
     <>
@@ -54,16 +56,29 @@ const Card = ({voteCounts}) => {
         <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
         <div className="row" >
         <div className="col">
-         <Badge count={userCount} />
+         <Badge count={voteCounts} />
         </div>
         <div className="col">
           {voteCounts >0 && 
           ( 
             <div className="d-flex flex-row  mt-3"> 
-              <span className="number">{voteCounts} <span className="follow">helped decisions</span></span> 
+              <span className="number">{voteCounts} <span className="follow">{LANGUAGES[user.locale].Questions.Helped}</span></span> 
             </div>)
         }
         </div>
+        <div className="col">
+        {questionCounts &&  questionCounts > 0 && (
+           <QuestionBadge count={questionCounts} />        
+        )}
+         </div>
+        <div className="col">
+          {questionCounts && questionCounts > 0 && (            
+            <div className="d-flex flex-row  mt-3"> 
+            <span className="number">{questionCounts} <span className="follow">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
+          </div>
+          )}
+        </div>
+
         </div>
       </div>
       

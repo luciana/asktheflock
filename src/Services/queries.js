@@ -11,9 +11,9 @@ const GetUserByEmail = async (email) => {
 
 };
 
-const GetQuestionByUserId = async (email) => {
-  const data = await API.graphql(graphqlOperation(queries.questionByUserId, { email }));
-  return data.data.questionByUserId.items.length ? data.data.questionByUserId.items[0] : null;
+const GetQuestionByUserId = async (userID) => {
+  const data = await API.graphql(graphqlOperation(queries.questionByUserId, { userID }));
+  return data.data.questionByUserId.items.length ? data.data.questionByUserId.items.length : null;
 };
 
 const GetAllQuestions = async() => {

@@ -58,6 +58,8 @@ const en_us_lang = {
       InvalidNumberOfOptions: "invalid number of options",
       CopyLinkLabel: "Copy Link",
       CopyLabel: "Copy",
+      Helped: "questions helped",
+      Asked: "questions asdked",
 
     },
     PasswordRules: {
@@ -87,6 +89,15 @@ const en_us_lang = {
       Level8: "Puffin",
       Level9: "Makaw",
       Level10: "Ostrich",
+      QuestionLevel1: "Godwit",
+      QuestionLevel2: "Crane",
+      QuestionLevel3: "Goose ",
+      QuestionLevel4: "Egret",
+      QuestionLevel5: "Pelican",
+      QuestionLevel6: "Flamingo ",
+      QuestionLevel7: "Stork",
+      QuestionLevel8: "Blue Heron",
+      QuestionLevel9: "Gull",
     },
     NotFound: {
       Sorry: "Sorry",
