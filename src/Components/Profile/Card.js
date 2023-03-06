@@ -7,7 +7,7 @@ import { isOwner } from "../../Helpers/owner";
 import WebNotification from "../Notification/WebNotification";
 import {formatDateTime} from '../../Helpers';
 
-const Card = ({voteCounts, questionCounts}) => {
+const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
 
   const { state } = useContext(AppContext);
   const { user } = state;
@@ -15,7 +15,9 @@ const Card = ({voteCounts, questionCounts}) => {
  // const userCount = (user.userTag) ? user.userTag.length : 1;
   const isModerator = isOwner(user.email);
 
-  console.log("questionCounts", questionCounts);
+
+ 
+
   return (
 
     <>
@@ -75,6 +77,18 @@ const Card = ({voteCounts, questionCounts}) => {
           {questionCounts && questionCounts > 0 && (            
             <div className="d-flex flex-row  mt-3"> 
             <span className="number">{questionCounts} <span className="follow">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
+          </div>
+          )}
+        </div>
+        <div className="col">
+        {whoHelpedMeCounts &&  whoHelpedMeCounts > 0 && (
+           <QuestionBadge count={whoHelpedMeCounts} />        
+        )}
+         </div>
+        <div className="col">
+          {whoHelpedMeCounts && whoHelpedMeCounts > 0 && (            
+            <div className="d-flex flex-row  mt-3"> 
+            <span className="number">{whoHelpedMeCounts} <span className="follow">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
           </div>
           )}
         </div>

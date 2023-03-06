@@ -27,6 +27,7 @@ export default function Profile() {
   const [tag, setTag] = useState("");
   const [voteCounts, setVoteCounts] = useState("");
   const [questionCounts, setQuestionCounts] = useState(0);
+  const [whoHelpedMeCounts, setWhoHelpedMeCounts] = useState(0);  
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -41,6 +42,7 @@ export default function Profile() {
     user && user.address && setAddress(user?.address)  
     userVoteCount();
     userQuestionsAskedCount();
+    whoHelpedMe();
   }, [user]);
 
   
@@ -178,6 +180,26 @@ export default function Profile() {
     }
    
   }
+
+  const whoHelpedMe = async () => {
+    try{
+      const questions = await Queries.GetAllQuestions();     
+      if ( questions ){
+        const thoseWhoHelpedMeCounts = questions.filter((backendQuestion) => (
+          (backendQuestion.parentID === null) && backendQuestion.userID === user.id && backendQuestion.stats ))
+        .map((q) => JSON.parse(q.stats))
+        .flat(1)
+        .filter((l) => l.userID !== user.id).length;
+       
+        setWhoHelpedMeCounts(thoseWhoHelpedMeCounts);
+      }
+    }catch(error){     
+      console.error("Users who helped error", error);
+    }
+   
+  }
+              
+ 
 
   const renderEmail = () => (
     <>
@@ -389,6 +411,7 @@ export default function Profile() {
       <Alert type={alert?.type} text={alert?.text} />
       <Card voteCounts={voteCounts} 
             questionCounts={questionCounts}
+            whoHelpedMeCounts={whoHelpedMeCounts}
            />
     
       <hr className="m-3"></hr>     

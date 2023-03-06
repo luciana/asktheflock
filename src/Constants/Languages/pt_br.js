@@ -60,6 +60,7 @@ const pt_br_lang = {
       CopyLabel: "Copiar",
       Helped: "ajudas",
       Asked: "perguntas",
+      WhoHelped:" pessoas me ajudaram",
     },
     PasswordRules: {
       Chars: "Pelo menos 8 caracteres",

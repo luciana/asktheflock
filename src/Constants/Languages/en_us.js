@@ -59,7 +59,8 @@ const en_us_lang = {
       CopyLinkLabel: "Copy Link",
       CopyLabel: "Copy",
       Helped: "questions helped",
-      Asked: "questions asdked",
+      Asked: "questions asked",
+      WhoHelped:" people helped me",
 
     },
     PasswordRules: {
