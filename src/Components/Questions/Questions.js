@@ -6,6 +6,7 @@ import Mutations from "../../Services/mutations";
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
+import { inBoth } from "../../Helpers/arrayComparison";
 import { useLocation } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 
@@ -15,14 +16,15 @@ const Questions = () => {
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [votedList, setVotedList] = useState([]);
     const [votedOptionsList, setVoteOptionsdList] = useState([]);
+    const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [loading, setLoading] = useState(false);
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
     const [isQuestionFilterChecked, setIsQuestionFilterChecked] = useState(false);   
-    const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [isAlreadyVotedFilterChecked , setIsAlreadyVotedFilterChecked] = useState(false);
     const [questionFilteredList, setQuestionFilteredList] =    useState([]);
     const [voteFilteredList, setVoteFilteredList] =    useState([]);
     const [alreadyVotedFilterList, setAlreadyVotedFilterList] = useState([]);
+    const [myVotes, setMyVotes] = useState([]);
     
     const { state, dispatch } = useContext(AppContext);
     const { user } = state;
@@ -111,29 +113,25 @@ const Questions = () => {
         }
       };
 
+      const loadMyVotes = () => {
+        setMyVotes(JSON.parse(user.votes));
+      }
       
         loadQuestions();
         loadVotes();
-        loadSingleQuestion();                                    
-      }, [user ]);
-       
-        
-      const mergeArrayOfObjects = (original, newdata, selector = 'key') => {
-        newdata.forEach(dat => {
-          const foundIndex = original.findIndex(ori => ori[selector] == dat[selector]);
-          if (foundIndex >= 0) original.splice(foundIndex, 1, dat);
-              else original.push(dat);
-        });
+        loadSingleQuestion();    
+        loadMyVotes();                                
+      }, [user,setFilterList ]);
       
-        return original;
-      };
+
+      
 
       const handleAlreadyVotedFilterSwitch = () => {
         setIsAlreadyVotedFilterChecked(!isAlreadyVotedFilterChecked);  
              
         if(!isAlreadyVotedFilterChecked){
           // already voted switch is on
-          const myVotes = JSON.parse(user.votes);
+          //const myVotes = JSON.parse(user.votes);
           const myVotesList = myVotes.map((p) => p.questionId);      
           const haventVotedYet = filterList.filter(
                 (backendQuestion) => ( !myVotesList.includes(backendQuestion.id) &&
@@ -146,21 +144,21 @@ const Questions = () => {
           setFilterList(haventVotedYet);   
 
          
-          if(isQuestionFilterChecked && isVoteFilterChecked){  
-             //all three swithes are on 
-             console.log("all three swithes are on "); 
-             const filterListTwoArrays = mergeArrayOfObjects(voteFilteredList,questionFilteredList, 'id'); 
-             const filterListArray = mergeArrayOfObjects(filterListTwoArrays,haventVotedYet, 'id'); 
-             setFilterList(filterListArray);
+          if(isQuestionFilterChecked && isVoteFilterChecked){     
+            console.log("Already voted clicked - all three swithes are on "); 
+            const filterListTwoArrays = inBoth(voteFilteredList,questionFilteredList);              
+            const filterListArray = inBoth(filterListTwoArrays,haventVotedYet);        
+            setFilterList(filterListArray);
+           
           }else if(!isQuestionFilterChecked && isVoteFilterChecked){  
              //already voted switch and my questions are on, and open questions is off
-             console.log("already voted switch and my questions are on, and open questions is off"); 
-             const filterListArray = mergeArrayOfObjects(haventVotedYet,questionFilteredList, 'id'); 
+             console.log("already voted switch and open questions are on, and my question is off"); 
+             const filterListArray =  inBoth(haventVotedYet,voteFilteredList); 
              setFilterList(filterListArray);
           }else if(isQuestionFilterChecked && !isVoteFilterChecked){  
              //already voted switch and open questions are on, and my questionss is off
-             console.log("already voted switch and open questions are on, and my questionss is off"); 
-             const filterListArray = mergeArrayOfObjects(haventVotedYet,voteFilteredList, 'id'); 
+             console.log("already voted switch and my questions are on, and open questionss is off"); 
+             const filterListArray =  inBoth(haventVotedYet,questionFilteredList); 
              setFilterList(filterListArray);
           }else{
              //only already voted switch is on
@@ -172,7 +170,7 @@ const Questions = () => {
           //already voted switch is off         
           if(isQuestionFilterChecked && isVoteFilterChecked){  
             console.log("already voted switch is off, my questions and open questions switch are on");  
-            const filterListArray = mergeArrayOfObjects(voteFilteredList,questionFilteredList, 'id');          
+            const filterListArray =  inBoth(voteFilteredList,questionFilteredList);          
             //console.log("dfafilterListArray", filterListArray);
             setFilterList(filterListArray);
           }else if(!isQuestionFilterChecked && isVoteFilterChecked){  
@@ -204,32 +202,18 @@ const Questions = () => {
              ); 
              setVoteFilteredList(v);                      
           
-          if(isQuestionFilterChecked && isAlreadyVotedFilterChecked){   
-            //all three swithes are on 
-            console.log("all three swithes are on "); 
-            const filterListTwoArrays = mergeArrayOfObjects(voteFilteredList,questionFilteredList, 'id'); 
-            const filterListArray = mergeArrayOfObjects(filterListTwoArrays,alreadyVotedFilterList, 'id'); 
+          if(isQuestionFilterChecked && isAlreadyVotedFilterChecked){              
+            console.log("Open questions clicked - all three swithes are on "); 
+            const filterListTwoArrays =  inBoth(v,questionFilteredList);           
+            const filterListArray =  inBoth(filterListTwoArrays,alreadyVotedFilterList);                  
             setFilterList(filterListArray);
           } else if(isQuestionFilterChecked && !isAlreadyVotedFilterChecked){      
-            console.log("open questions and my questions swithes are on and already voted is off") ;    
-            // const filterFromTwoArrays = questionFilteredList.filter(
-            //   (backendQuestion) => ((backendQuestion.parentID === null) &&                               
-            //                         (new Date(backendQuestion.voteEndAt) - new Date() > 1 ) ) //open questions
-            //   ).sort(
-            //     (a, b) =>
-            //     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            //   );                         
-            //   console.log("both switches are on (my questions first then open questions next)");
-            //   if(filterFromTwoArrays){
-            //     setFilterList(filterFromTwoArrays);   
-            //    }else{
-            //     setFilterList([]);   
-            //    }
-              const filterListArray = mergeArrayOfObjects(questionFilteredList,voteFilteredList, 'id'); 
-              setFilterList(filterListArray);
+            console.log("open questions and my questions swithes are on and already voted is off") ;           
+            const filterListArray =  inBoth(questionFilteredList,v); 
+            setFilterList(filterListArray);
             } else if(!isQuestionFilterChecked && isAlreadyVotedFilterChecked){     
               console.log("open questions and already swithes are on and my questions is off");
-              const filterListArray = mergeArrayOfObjects(questionFilteredList,alreadyVotedFilterList, 'id'); 
+              const filterListArray =  inBoth(v,alreadyVotedFilterList); 
               setFilterList(filterListArray);
 
             }else if(!isQuestionFilterChecked && !isAlreadyVotedFilterChecked){  
@@ -241,8 +225,8 @@ const Questions = () => {
          }else{
           //vote switch is off
           if(isQuestionFilterChecked && isAlreadyVotedFilterChecked){
-            console.log("question switch and already voted switches are on and open questions is off");                   
-            const filterListArray = mergeArrayOfObjects(alreadyVotedFilterList,questionFilteredList, 'id');                     
+            console.log("question switch and already voted switches are on and open questions is off");                  
+            const filterListArray =  inBoth(alreadyVotedFilterList,questionFilteredList);                     
             setFilterList(filterListArray);
 
          }else if(isQuestionFilterChecked && !isAlreadyVotedFilterChecked){
@@ -275,48 +259,33 @@ const Questions = () => {
             setQuestionFilteredList(q);             
            
             if(isVoteFilterChecked && isAlreadyVotedFilterChecked){ 
-              console.log("all three swithes are on "); 
-              const filterListTwoArrays = mergeArrayOfObjects(voteFilteredList,q, 'id'); 
-              const filterListArray = mergeArrayOfObjects(filterListTwoArrays,alreadyVotedFilterList, 'id'); 
+              console.log("My questions clicked - all three swithes are on "); 
+              const filterListTwoArrays =  inBoth(voteFilteredList,q); 
+              const filterListArray =  inBoth(filterListTwoArrays,alreadyVotedFilterList);                
               setFilterList(filterListArray);
             }else if(!isVoteFilterChecked && isAlreadyVotedFilterChecked){ 
               console.log(" my question  and already voted questions switches are on, and open question switch is off"); 
-              const filterListArray = mergeArrayOfObjects(q,alreadyVotedFilterList, 'id'); 
+              const filterListArray =  inBoth(q,alreadyVotedFilterList); 
               setFilterList(filterListArray);
 
             }else if(isVoteFilterChecked && !isAlreadyVotedFilterChecked){     
-              console.log(" my question  and open questions switches are on, and already voted switch is off");                                     
-            //  const filterFromTwoArrays = voteFilteredList.filter(
-            //   (backendQuestion) => ((backendQuestion.parentID === null) && 
-            //                         ( backendQuestion.userID === user.id) ) //my questions
-            //                        // (new Date(backendQuestion.voteEndAt) - new Date() > 1 ))  //open questions
-            //   ).sort(
-            //     (a, b) =>
-            //     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            //   );             
-  
-            //  console.log("both switches are on (open questions first then my questions next)");
-            //  if(filterFromTwoArrays){
-            //   setFilterList(filterFromTwoArrays);   
-            //  }else{
-            //   setFilterList([]);   
-            //  }
-              const filterListArray = mergeArrayOfObjects(q,voteFilteredList, 'id'); 
-              setFilterList(filterListArray);
+              console.log(" my question  and open questions switches are on, and already voted switch is off");                                                
+             const filterListArray =  inBoth(q,voteFilteredList); 
+             setFilterList(filterListArray);
                     
             }else{
-              console.log("only this swith is on");
+              console.log("only my question swith is on");
               setFilterList(q); 
             }           
           }else{       
             //my questions switch is off        
             if(isVoteFilterChecked && isAlreadyVotedFilterChecked ){ 
               console.log("my questions swtich is off and open questions and already voted switch are on");  
-              const filterListArray = mergeArrayOfObjects(alreadyVotedFilterList,voteFilteredList, 'id');                     
+              const filterListArray =  inBoth(alreadyVotedFilterList,voteFilteredList);                     
               setFilterList(filterListArray);
 
             }else if(!isVoteFilterChecked && isAlreadyVotedFilterChecked ){    
-              console.log("my questions and open questions switches are off and already voted switch is on");     
+              console.log("my questions and open questions switches are off and already voted switch is on", alreadyVotedFilterList);     
               setFilterList(alreadyVotedFilterList);
 
             }else if(isVoteFilterChecked && !isAlreadyVotedFilterChecked ){
@@ -502,9 +471,6 @@ const Questions = () => {
       }
       
       const showNoQuestions = filterList.length === 0;
-
-
-
       return ( 
         <>
             {loading && <Loading />}
