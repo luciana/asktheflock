@@ -49,6 +49,7 @@ const pt_br_lang = {
       FlockOptionTipExample: "Por example, se a sua pergunta foi: Indo de férias para o exterior, product uma praia ou neve? Nesse caso as suas opções são praia e neve",
       FilterOpenQuestionLabel: "Perguntas em aberto",
       FilterMyQuestionsLabel: "Minhas Perguntas",
+      FilterAlreadyVotedLabel: "Ainda não votei",
       PlaceholderQuestion: "O que devo servir na festa de aniversário da minha filha? #flocks pizza, cachorro quente?",
       PollClosesIn: "Enquete fecha em ",
       ExpertCallOutTitle: "Especialista",

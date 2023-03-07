@@ -49,6 +49,7 @@ const en_us_lang = {
       FlockOptionTipExample: "i.e if your question is What do you prefer breakfast or brunch? Then your options to be entered here are: breakfast and brunch.",
       FilterOpenQuestionLabel: "Open Questions",
       FilterMyQuestionsLabel: "My Questions",
+      FilterAlreadyVotedLabel: "Not Voted Yet",
       PlaceholderQuestion: "What should I serve for my kids birthday? #flocks pizza, pasta, salad",
       PollClosesIn: "Poll closes in ",
       ExpertCallOutTitle: "Expert",
