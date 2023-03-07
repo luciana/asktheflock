@@ -482,16 +482,16 @@ const Questions = () => {
                     handleSwitch={handleVoteFilterSwitch}/> 
                   )}
               </div>
-              <div className=" col">             
-                { backendQuestions && backendQuestions.length > 0 && (   
-                  <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
-                    handleSwitch={handleQuestionFilterSwitch}/>   
-                )}
-              </div>     
-              <div className=" col">             
+              <div className=" col">                             
                 { backendQuestions && backendQuestions.length > 0 && (   
                   <Switch label={LANGUAGES[state.lang].Questions.FilterAlreadyVotedLabel}
                     handleSwitch={handleAlreadyVotedFilterSwitch}/>   
+                )}
+              </div>     
+              <div className=" col">             
+              { backendQuestions && backendQuestions.length > 0 && (   
+                  <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
+                    handleSwitch={handleQuestionFilterSwitch}/>   
                 )}
               </div>           
             </div>     

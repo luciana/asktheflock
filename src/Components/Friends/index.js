@@ -99,7 +99,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         friends = findCounts(mergeResult, "userID", "userName")
                 .sort((a, b) => b.value - a.value)                
                 .filter((item, idx) => idx < maxNumberOfFriends);
-       // console.log("friends",friends);
+      console.log("friends",friends);
       }
       
     }
@@ -116,7 +116,7 @@ return (
             <div className="row align-items-center ">         
               {friends.map((u, index) => (                
                       <div key={index} 
-                       onClick={() => handleClick(u.userID, index)}  
+                     //  onClick={() => handleClick(u.userID, index)}  
                        style={{
                         border:"1px 1px",
                         boxShadow: style[`${index}`] 
@@ -129,12 +129,13 @@ return (
                             <Avatar size="48" name={u.userName} 
                                 className="rounded-circle mx-auto mb-0 mx-1 align-items-center" 
                                 alt={u.userName} />
-                                <div className="ms-2 d-none d-lg-block">
-                                    <h6 className="mb-0">{formatName(u.userName, 15)}</h6>
-                                </div>
-                                </div>
-                                </div>                                                   
-                            </div>             
+                            <div className="ms-2 ">
+                                    <h6 className="mb-0 d-none d-lg-block">{formatName(u.userName, 15)}</h6>
+                                    <span className="badge rounded-pill bg-secondary">{u.value}</span>
+                            </div>                              
+                           </div>
+                        </div>                                                   
+                </div>             
                                                       
                 ))}
             </div>
