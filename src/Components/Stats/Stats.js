@@ -6,8 +6,7 @@ import { LANGUAGES } from "../../Constants";
 import { AppContext } from "../../Contexts";
 import { Alert, Loading } from "../../Components";
 import { findCounts } from './../../Helpers';
-import { GenderStats, GenerationStats, LanguageStats } from './';
-import { Bar } from './../../Components/Chart';
+import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats } from './';
 
 export default function Stats({data, options, text, questionTag}) {
   const { state } = useContext(AppContext);
@@ -20,25 +19,13 @@ export default function Stats({data, options, text, questionTag}) {
   }
   const minStatVoteCount = 2; 
   const maxNumberOfAddress = 5;
-  const maxNumberOfExpertTags = 5;
-  const maxNumberOfAge = 5;
   
   const optionList = options && JSON.parse(options);
   const checkOptionsListExists = optionList && optionList.length> 0;
   const isThereEnoughStats = data && options && data.length > minStatVoteCount ;
-
   const questionCallOut = questionTag ? questionTag : "";
 
   const statListFor = (optionId) => (data).filter((i) => i.optionId === optionId);
-  const expertsTags = findCounts(data, "userTag", "userTag")
-                        .sort((a, b) => b.value - a.value)
-                        .filter((item, idx) => idx < maxNumberOfExpertTags);
-
-
-  const expertsTagsFor = (optionId) => (findCounts(statListFor(optionId), "userTag", "userTag")
-                                    .sort((a, b) => b.value - a.value)
-                                    .filter((item, idx) => idx < maxNumberOfExpertTags));
-
   const addressList = findCounts(data, "userAddress", "userAddress")
                         .sort((a, b) => b.userAddress - a.userAddress)
                         .sort((a, b) => b.value - a.value)                        
@@ -49,37 +36,11 @@ export default function Stats({data, options, text, questionTag}) {
                     .sort((a, b) => b.value - a.value)                        
                     .filter((item, idx) => idx < maxNumberOfAddress));
 
-//   const allEnglishSpeaker = (data).filter((i) => i.userLanguage === 'en-US').length;
-//   const allPortugueseSpeaker = (data).filter((i) => i.userLanguage === 'pt-BR').length;
-//   const englishSpeakerFor = ((optionId) =>( data).filter((i) => i.optionId === optionId && i.userLanguage === 'en-US').length);
-//   const portugueseSpeakerFor = ((optionId) =>( data).filter((i) => i.optionId === optionId && i.userLanguage === 'pt-BR').length);
-
 
   const winningOption = Math.max(...optionList.map((o) => o.votes));  
   const wininingOptionItem = optionList.filter((i) => i.votes === winningOption ); 
   const winners = wininingOptionItem.map((i) => i.text + ' ');
   const winner = wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners;
-
-
-
-//  const generationList = findCounts(data, "userGen", "userGen")
-//             .sort((a, b) => b.userGen - a.userGen)
-//             .sort((a, b) => b.value - a.value);  
-
-//   const generationListFor = (optionId) => (findCounts(statListFor(optionId), "userGen", "userGen")
-//             .sort((a, b) => b.userGen - a.userGen)
-//             .sort((a, b) => b.value - a.value));  
- 
-  const ageList = findCounts(data, "userAge", "userAge")
-            .sort((a, b) => b.userAge - a.userAge)
-            .sort((a, b) => b.value - a.value)           
-            .filter((item, idx) => idx < maxNumberOfAge);
-  
-  const ageListFor = (optionId) => (findCounts(statListFor(optionId), "userAge", "userAge")
-            .sort((a, b) => b.userAge - a.userAge)
-            .sort((a, b) => b.value - a.value)           
-            .filter((item, idx) => idx < maxNumberOfAge));
-            
 
   const totalVotes = () =>{
     let totalVoteCount = 0;
@@ -110,18 +71,12 @@ export default function Stats({data, options, text, questionTag}) {
                 </div>
                 <div className="col-md-4">
                     <h5>Language:</h5>
-                    <LanguageStats dataInput={data} optionId={option.id} />
-                    {/* <div className="my-2"> English Speakers: {englishSpeakerFor(option.id)}</div>    
-                    <div className="my-2"> Portuguese Speakers: {portugueseSpeakerFor(option.id)}</div>    
-                    <div><Bar x={['English', 'Portuguese']} y={[englishSpeakerFor(option.id), portugueseSpeakerFor(option.id)]} /></div>                                        */}
+                    <LanguageStats dataInput={data} optionId={option.id} />                   
                 </div>
                 <div className="col-md-4">
                     <h5>Experts who answered:</h5>
-                    {expertsTagsFor(option.id).map((ex,index) => (                      
-                        <ul key={index} className="align-items-center">                        
-                            <li className=" lh-1 col">  {ex.userTag ? ex.userTag : 'not an expert'}: <span>{ex.value}</span></li>
-                        </ul>
-                    ))}
+                    
+                    <ExpertStats dataInput={data} optionId={option.id} callOut={questionCallOut}  statListFor={statListFor}/>                           
                 </div>  
             </div>
             <div className="row my-3">           
@@ -135,20 +90,11 @@ export default function Stats({data, options, text, questionTag}) {
                 </div>
                 <div className="col-md-4">
                     <h5>Generations:</h5>
-                    <GenerationStats dataInput={data} optionId={option.id} statListFor={statListFor} />
-                        {/* {generationListFor(option.id).map((ex,index) => (                      
-                        <ul key={index} className="align-items-center">                        
-                            <li className=" lh-1 col">  {ex.userGen ? ex.userGen : 'No data'}: <span>{ex.value}</span></li>
-                        </ul>
-                        ))}             */}
+                    <GenerationStats dataInput={data} optionId={option.id} statListFor={statListFor} />                      
                 </div>
                 <div className="col-md-4">
                     <h5>Age:</h5>
-                      {ageListFor(option.id).map((ex,index) => (                      
-                        <ul key={index} className="align-items-center">                        
-                            <li className=" lh-1 col">  {ex.userAge ? ex.userAge : 'No data'}: <span>{ex.value}</span></li>
-                        </ul>
-                        ))}                    
+                    <AgeStats dataInput={data} optionId={option.id} statListFor={statListFor} />                     
                 </div>
             </div>
         </div>
@@ -185,18 +131,11 @@ export default function Stats({data, options, text, questionTag}) {
             </div>  
             <div className="col-md-4">
                 <h5>Language:</h5>
-                <LanguageStats dataInput={data} optionId={null} />
-                {/* <div className="my-2"> English Speakers: {allEnglishSpeaker}</div>    
-                <div className="my-2"> Portuguese Speakers: {allPortugueseSpeaker}</div>   
-                <div><Bar x={['English', 'Portuguese']} y={[allEnglishSpeaker, allPortugueseSpeaker]} /></div>                                          */}
+                <LanguageStats dataInput={data} optionId={null} />                                                 
             </div>
             <div className="col-md-4">
                 <h5>Experts who answered:</h5>
-                {expertsTags.map((ex,index) => (                      
-                    <ul key={index} className="align-items-center">                        
-                        <li className=" lh-1 col">  {ex.userTag ? ex.userTag : 'not an expert'}: <span>{ex.value}</span></li>
-                    </ul>
-                ))}
+                <ExpertStats dataInput={data} optionId={null} callOut={questionCallOut} statListFor={statListFor} />                  
             </div>  
             </div>  
             <div className="row my-3">           
@@ -211,19 +150,12 @@ export default function Stats({data, options, text, questionTag}) {
                 <div className="col-md-4">
                     <h5>Generations:</h5>
                     <GenerationStats dataInput={data} optionId={null} statListFor={statListFor} />
-                        {/* {generationList.map((ex,index) => (                      
-                        <ul key={index} className="align-items-center">                        
-                            <li className=" lh-1 col">  {ex.userGen ? ex.userGen : 'No data'}: <span>{ex.value}</span></li>
-                        </ul>
-                        ))}             */}
+                       
                 </div>
                 <div className="col-md-4">
                     <h5>Age:</h5>
-                      {ageList.map((ex,index) => (                      
-                        <ul key={index} className="align-items-center">                        
-                            <li className=" lh-1 col">  {ex.userAge ? ex.userAge : 'No data'}: <span>{ex.value}</span></li>
-                        </ul>
-                        ))} 
+                    <AgeStats dataInput={data} optionId={null} statListFor={statListFor} />
+                     
                     
                 </div>
             </div>

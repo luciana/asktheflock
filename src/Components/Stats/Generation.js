@@ -35,7 +35,7 @@ export default function GenerationStats({dataInput, optionId, statListFor}) {
       .sort((a, b) => b.value - a.value);  
 
       const buildGenerationChart = () =>{
-    if( generationList && generationList.length > 0){
+        if( generationList && generationList.length > 0){
          const g = generationList.map((i) => buildGenerationData(i.userGen,i.value ));        
          setChartData(g);
         }

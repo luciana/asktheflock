@@ -1,6 +1,4 @@
 import ReactEcharts from "echarts-for-react"; 
-
-
 const Pie = ({ data }) => {
     const option = {
         legend: {
@@ -9,7 +7,7 @@ const Pie = ({ data }) => {
        },
        series: [
          {
-           name: 'Flocks Gender Pie',
+           name: 'Flocks',
            type: 'pie',
            radius: ['40%', '70%'],
            avoidLabelOverlap: false,

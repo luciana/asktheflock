@@ -325,29 +325,9 @@ const Questions = () => {
         );}
 
    
-    
-      const updateQuestion = async (question, option) => {
-       
-        if(! question.options) return; //TODO: alert
-
-        //Update Options
-        let optionsInQuestion = JSON.parse(question.options);
-        let optID = option.id;
-       
-    
-        try{        
-          if (optionsInQuestion && optionsInQuestion.length >0 ){
-            if (optID){
-              for (var i = 0, len = optionsInQuestion.length; i < len; i++) {               
-                if (optionsInQuestion[i].id === optID){
-                  optionsInQuestion[i] = option;      
-                  break;
-                }
-              }            
-            }
-          }
-
-        //Update Stats
+      const updateStats = async(question, optID, optionsInQuestion) => {
+        try{
+          //Update Stats
         let statsInQuestion = [];
         if (question.stats) {
           statsInQuestion = JSON.parse(question.stats);
@@ -370,23 +350,41 @@ const Questions = () => {
           stat.userGen ="";
         }
          stat.userLanguage = user.locale;
-
- 
-
          const newStatsArray = [...statsInQuestion];
-         newStatsArray.push(stat);      
-     
-
-
-
-          let q = await Mutations.UpdateQuestionOptions(
+         newStatsArray.push(stat);   
+         return await Mutations.UpdateQuestionOptions(
             question.id,
             JSON.stringify(optionsInQuestion),
             JSON.stringify(newStatsArray),
           );
+        }catch(err){
+          console.error("Mutations.UpdateQuestionOptions error", err);
+          return null;
+        } 
+        
 
+
+      }
+      const updateQuestion = async (question, option) => {       
+        if(! question.options) return; //TODO: alert
+
+        //Update Options
+        let optionsInQuestion = JSON.parse(question.options);
+        let optID = option.id;        
+        try{        
+          if (optionsInQuestion && optionsInQuestion.length >0 ){
+            if (optID){
+              for (var i = 0, len = optionsInQuestion.length; i < len; i++) {               
+                if (optionsInQuestion[i].id === optID){
+                  optionsInQuestion[i] = option;      
+                  break;
+                }
+              }            
+            }
+          }
           const newA = [];  
-          newA.push(q);          
+          const stats = updateStats(question, optID, optionsInQuestion);          
+          newA.push(stats);          
           const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
          // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
           setBackendQuestions(updatedBackendQuestions);
