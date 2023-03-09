@@ -80,6 +80,7 @@ export const createQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -101,6 +102,7 @@ export const updateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -122,6 +124,7 @@ export const deleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
