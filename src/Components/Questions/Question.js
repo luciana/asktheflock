@@ -57,8 +57,11 @@ function Question({
   //   activeQuestion.id === question.id &&
   //   activeQuestion.type === "replying";
 
-  const minStatVoteCount = 2; //statistically 100 is min value
-  const isThereEnoughStats =  question && user.id === question.userID && question.options && question.stats && JSON.parse(question.stats).length > minStatVoteCount ;
+  const minStatVoteCount = 5; //statistically 100 is min value
+  const isThereEnoughStats =  question && user.id === question.userID && 
+                              question.options && question.stats && 
+                              voteEnded &&
+                              JSON.parse(question.stats).length >= minStatVoteCount ;
 
 
   let alreadyVotedForQuestionList = votedList.filter(

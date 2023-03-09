@@ -1,28 +1,20 @@
 import ReactEcharts from "echarts-for-react"; 
 
 const Nightingale = ({ data }) => {
+  console.log("Nightingale data", data);
     const option = {
       legend: {
         top: 'top'
-      },
-      toolbox: {
-        show: true,
-        feature: {
-          mark: { show: true },
-          dataView: { show: true, readOnly: false },
-          restore: { show: true },
-          saveAsImage: { show: true }
-        }
-      },
+      },      
       series: [
         {
           name: 'Winner',
           type: 'pie',
-          radius: [50, 250],
+          radius: [30, 1500],
           center: ['50%', '50%'],
           roseType: 'area',
           itemStyle: {
-            borderRadius: 8
+            borderRadius: 12
           },
           data: data,
           label: {

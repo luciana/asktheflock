@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Loading }  from '../../Components';
-import { Nightingale } from './../../Components/Chart';
+import { Pie } from './../../Components/Chart';
 import { LANGUAGES } from "../../Constants";
 import { faSquareCaretDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -26,9 +26,12 @@ const WinningStats = ({dataInput, total})  => {
     const winners = wininingOptionItem.map((i) => i.text + ' ');
     const winner = wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners;
 
+
     const buildChartData = () => {
-      const g = wininingOptionItem.map((w) =>  buildData(w.text, w.votes ));
-      console.log("build winning hart data", g);       
+      const g = dataInput.map((w) =>  buildData(w.text, w.votes ))
+                        .filter(elements => {return elements !== null;});         
+      
+                            
       setChartData(g);
   
     }
@@ -36,15 +39,17 @@ const WinningStats = ({dataInput, total})  => {
     const buildData = (name, value) =>{   
       if(value){
           return { value: value, name: name };
+      }else{
+        return null;
       }
     }
 
   return (
     <>
     {loading && <Loading />}
-    <div className="my-2">Winning Option: {winner} </div>
+    <div className="my-2">Winning Option: <strong>{winner}</strong> </div>
     <div className="my-2"> Total Vote count: {total}</div>  
-    <Nightingale data={chartData} />                                      
+    <Pie data={chartData} />                                      
        
     </>
 

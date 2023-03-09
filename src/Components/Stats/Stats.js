@@ -17,7 +17,7 @@ export default function Stats({data, options, text, questionTag}) {
   }
 
   const minStatVoteCount = 2; 
-  const optionList = options && JSON.parse(options);
+  const optionList = options && JSON.parse(options); 
   const checkOptionsListExists = optionList && optionList.length> 0;
   const isThereEnoughStats = data && options && data.length > minStatVoteCount ;
   const questionCallOut = questionTag ? questionTag : "";
