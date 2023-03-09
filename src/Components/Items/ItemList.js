@@ -8,7 +8,7 @@ function ItemList() {
   const [isActive, setActive] = useState(false);
 
   const addTodo = todo => {
-    console.log('add Todo', todo);
+    //console.log('add Todo', todo);
     if (!todo.text || /^\s*$/.test(todo.text)) {
       return;
     }

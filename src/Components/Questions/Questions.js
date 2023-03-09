@@ -336,11 +336,11 @@ const Questions = () => {
          stat.optionId = optID;
          stat.userID = user.id;
          stat.userName = user.name;
-         stat.userTag = user.userTag;
-         stat.userGender = user.gender;       
-         stat.userAddress = user.address;
+         stat.userTag = user.userTag  ? user.userTag : '';      
+         stat.userGender = user.gender ? user.gender : '';       
+         stat.userAddress = user.address ? user.address : '';    
 
-         if(user.birthdate){
+         if(user.birthdate){        
          stat.userBirthdate = user.birthdate;
          stat.userAge =  findAge(new Date(user.birthdate));
          stat.userGen = findGeneration(new Date(user.birthdate));
@@ -383,12 +383,15 @@ const Questions = () => {
             }
           }
           const newA = [];  
-          const stats = updateStats(question, optID, optionsInQuestion);          
-          newA.push(stats);          
+          const stats = updateStats(question, optID, optionsInQuestion);   
+          if(stats){
+            newA.push(stats);                             
+          }       
           const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
-         // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
-          setBackendQuestions(updatedBackendQuestions);
-          setActiveQuestion(null);             
+          // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
+           setBackendQuestions(updatedBackendQuestions);
+           setActiveQuestion(null);     
+         
         }catch(err){
           console.error("Mutations.UpdateQuestion error", err);
         } 

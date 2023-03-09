@@ -48,7 +48,7 @@ function QuestionAndPoll2({
     };
     
       const addTodo = todo => {
-        console.log('add Todo', todo);
+        //console.log('add Todo', todo);
         if (!todo.text || /^\s*$/.test(todo.text)) {
           return;
         }
@@ -58,7 +58,7 @@ function QuestionAndPoll2({
           newArray.push(todo); 
           return newArray; 
         });
-        console.log('add Todo after adding it', todo);
+        //console.log('add Todo after adding it', todo);
       };
 
       const updateTodo = (todoId, newValue) => {

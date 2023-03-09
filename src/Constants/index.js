@@ -73,7 +73,7 @@ export const GENERATIONS = [
   },
   {
       label: "Gen Alpha",
-      start: 2023,
+      start: 2013,
       end: 2032,
   },
 ];
