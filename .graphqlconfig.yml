@@ -14,7 +14,7 @@ projects:
         apiId: znvkpugsu5cjtic2mrvfzmmc5u
         maxDepth: 2
   flock:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/flock/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

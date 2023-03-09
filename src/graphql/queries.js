@@ -65,7 +65,6 @@ export const getQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      owner
       createdAt
       updatedAt
     }
@@ -97,7 +96,6 @@ export const listQuestions = /* GraphQL */ `
         questionTag
         options
         stats
-        owner
         createdAt
         updatedAt
       }
@@ -199,7 +197,6 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
-        owner
         createdAt
         updatedAt
       }
