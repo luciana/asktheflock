@@ -3,6 +3,7 @@ import QuestionModalDialog from './QuestionModalDialog';
 import { useNavigate } from 'react-router-dom';
 import { Loading }  from '../../Components';
 import Mutations from "../../Services/mutations";
+import gtag from 'ga-gtag'
 
 const TAG = "#flocks";
 
@@ -139,7 +140,10 @@ function QuestionAndPoll2({
       
 
 
-      const handlePublishQuestion = (question) => {        
+      const handlePublishQuestion = (question) => {     
+        gtag('event', 'click_publish_question_button', {
+          //poll_title: 'some title',
+        });   
         addQuestion(question);     
       }
     return(

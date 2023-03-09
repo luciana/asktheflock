@@ -5,6 +5,7 @@ import { ROUTES, TYPES } from "./Constants";
 import { Loading } from "./Components";
 import './Assets/Fonts/BebasNeue-Regular.ttf';
 
+
 const NotFound = lazy(() => import("./Pages/NotFound"));
 const AuthLayout = lazy(() => import("./Pages/Auth/AuthLayout"));
 const SignIn = lazy(() => import("./Pages/Auth/SignIn"));

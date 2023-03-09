@@ -7,6 +7,7 @@ import Item from '../Items/Item';
 import ItemForm from '../Items/ItemForm';
 import { TAGS, LANGUAGES } from '../../Constants';
 import { Button } from './../../Components';
+import gtag from 'ga-gtag';
 
 function QuestionModalDialog(
   {
@@ -32,6 +33,7 @@ function QuestionModalDialog(
   const inputRef = useRef(null);
   const isTextareaEmpty = input.length === 0;
   const initModal = () => {
+    gtag('event', 'click_new_question_button', {}); 
     return setShowQuestionModal(!false)
   }  
 
