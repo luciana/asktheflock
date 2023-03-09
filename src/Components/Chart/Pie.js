@@ -1,4 +1,5 @@
 import ReactEcharts from "echarts-for-react"; 
+
 const Pie = ({ data }) => {
     const option = {
         legend: {

@@ -27,7 +27,7 @@ export default function GenerationStats({dataInput, optionId, statListFor}) {
     const generationList = findCounts(data, "userGen", "userGen")
       .map((item) => {
           Object.keys(item).map((key) => {
-            item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+            item[key] = (item[key] === '' ? 'No data' : item[key]); return item[key]
           });
           return item;
       })
@@ -44,7 +44,7 @@ export default function GenerationStats({dataInput, optionId, statListFor}) {
   const generationListFor = (optionId) => (findCounts(statListFor(optionId), "userGen", "userGen")
         .map((item) => {
           Object.keys(item).map((key) => {
-            item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+            item[key] = (item[key] === '' ? 'No data' : item[key]); return item[key]
           });
           return item;
       })
