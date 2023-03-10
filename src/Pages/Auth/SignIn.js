@@ -3,6 +3,7 @@ import { useOutletContext, useLocation } from "react-router-dom";
 import { AppContext } from "../../Contexts";
 import { LANGUAGES, ROUTES } from "../../Constants";
 import { isValidEmail } from "../../Helpers";
+import gtag from 'ga-gtag';
 
 import {
     Button,
@@ -25,7 +26,11 @@ export default function SignIn() {
     }, [location?.state?.alert, setAlert]);
   
     const disabled = () => email === "" || !isValidEmail(email) || pwd === "";
-    //console.log("Signin.js state context", state);
+    
+    const signInHandler = () => {
+      gtag('event', 'click_sign_in_button', {}); 
+      signIn(email, pwd, remember);
+    }
 
   
     return (
@@ -77,8 +82,8 @@ export default function SignIn() {
         </div>
         <Button
         text={LANGUAGES[state.lang].Auth.SignInButton}
-        disabled={disabled()}
-        handler={() => signIn(email, pwd, remember)}       
+        disabled={disabled()}        
+        handler={signInHandler}
       />
         <div className="w-full text-center mt-5">
         <AuthLink

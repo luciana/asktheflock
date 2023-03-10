@@ -3,7 +3,7 @@ import QuestionModalDialog from './QuestionModalDialog';
 import { useNavigate } from 'react-router-dom';
 import { Loading }  from '../../Components';
 import Mutations from "../../Services/mutations";
-import gtag from 'ga-gtag'
+import gtag from 'ga-gtag';
 
 const TAG = "#flocks";
 
