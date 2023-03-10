@@ -8,6 +8,8 @@ import ItemForm from '../Items/ItemForm';
 import { TAGS, LANGUAGES } from '../../Constants';
 import { Button } from './../../Components';
 import gtag from 'ga-gtag';
+import Picker from 'emoji-picker-react';
+import emojiIcon from '../../Assets/Images/smile-beam-svgrepo-com.svg';
 
 function QuestionModalDialog(
   {
@@ -30,6 +32,7 @@ function QuestionModalDialog(
   const [input, setInput] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [expertTag, setExpertTag] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef(null);
   const isTextareaEmpty = input.length === 0;
   const initModal = () => {
@@ -82,6 +85,14 @@ function QuestionModalDialog(
   const optionInvalidMessage =  (disabledPublishButton && todos.length !== 0) ? LANGUAGES[user.locale].Questions.InvalidNumberOfOptions : "";
   
   const maxQuestionCharacter = process.env.REACT_APP_MAX_QUESTION_CHARACTER;
+
+  const onEmojiClick = (event, emojiObject) => { 
+    setInput(prevInput => prevInput + emojiObject.emoji);
+    setShowPicker(false);
+  };
+
+
+
   return (
     <>
       <div className="p-2 row align-items-start"> 
@@ -113,6 +124,10 @@ function QuestionModalDialog(
                     className='form-control'
                     ref={inputRef}
                   />
+                  <img className="emoji-icon"  src={emojiIcon} onClick={() => setShowPicker(val => !val)} />
+                  {showPicker && <Picker
+                      pickerStyle={{ width: '100%' }}                     
+                      onEmojiClick={onEmojiClick} />}                 
                   <span className="text-sm text-color-gray">{characterCount}/{maxQuestionCharacter}</span>
             
                   <div className="d-flex flex-row mb-3">

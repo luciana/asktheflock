@@ -38,6 +38,19 @@
   font-size: .875rem;
 }
 
+.picker-container {
+  position: relative;
+  width: 300px;
+}
+ 
+.emoji-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  width: 30px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
