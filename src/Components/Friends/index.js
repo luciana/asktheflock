@@ -131,7 +131,8 @@ return (
                                 alt={u.userName} />
                             <div className="ms-2 ">
                                     <h6 className="mb-0 d-none d-lg-block">{formatName(u.userName, 20)}</h6>
-                                    <span className="badge rounded-pill bg-secondary">{u.value}</span> <span className="text-sm ">interations</span>
+                                    <span className="badge rounded-pill bg-secondary">{u.value}</span> 
+                                    <span className="text-sm d-none d-lg-block">interations</span>
                             </div>                              
                            </div>
                         </div>                                                   
