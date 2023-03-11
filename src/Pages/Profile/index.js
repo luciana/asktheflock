@@ -138,7 +138,6 @@ export default function Profile() {
       });
       navigate(ROUTES[language].PROFILE);
       setAlert({ type: "success", text: LANGUAGES[user.locale].Profile.ProfileUpdatedMessage});
-
     } catch (error) {
       console.error("handleProfileInfo error", error);
       setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
