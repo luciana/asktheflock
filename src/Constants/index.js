@@ -20,22 +20,28 @@ export const ROUTES = {
 
 
 export const TAGS = [
-  "", 
-  "parent",
+  "general",
+  "accounting",
   "architect",
-  "nutricionist",
-  "technologist",
   "cook",
-  "mechanic",
-  "teacher",
   "fashion_designer",
-  "interion_designer",
+  "financial_analyst",
+  "fitness",
+  "interior_designer",
+  "journalist",
   "lawyer",
   "life_coach",
-  "financial_analyst",
+  "marketing",
+  "mechanic",
+  "nutricionist",
+  "parent",
   "photographer",
-  "fitness",
+  "physiotherapist",
   "sports",
+  "student",
+  "teacher",
+  "technologist",
+  "therapist",
 ];
 
 export const GENDER = [
