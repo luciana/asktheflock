@@ -184,6 +184,7 @@ const en_us_lang = {
     CompleteProfile: "Please, complete your profile!",
     Joined: "Joined",
     ProfileUpdatedMessage: "Your profiles has been updated",
+    SetExpertiseMessage: "Don't forget to set your expertise",
   },
   Tags: {
     general:"#general",

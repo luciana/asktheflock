@@ -116,16 +116,36 @@ export default function Profile() {
     setLoading(false);
   };
 
+  const handleChangeUserTag = (value) => {
+    console.log("setTag", value);
+    
+    if ( value && value.length > 0){
+      setTag(value);
+    }else{
+      setAlert({
+        type: "error",
+        text: LANGUAGES[user.locale].Profile.SetExpertiseMessage,
+      }); 
+    }
+   
+  }
+  
 
   const handleProfileInfo = async () => {
     loading();
     try {
       const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null; 
-      if (validBirthDate){
+     
+      if (validBirthDate && tag){
+        console.log("birthday and tag exist");
         await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
-      }else{
+      }else if (!validBirthDate && tag){
         await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, userTag: tag });
-      }
+      }else if (validBirthDate && !tag){
+        await Mutations.UdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate });
+      } else { //if (!validBirthDate && !tag){
+        await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address});
+      } 
      
       loadUser({ force: true, 
         email: user.email,
@@ -351,15 +371,14 @@ export default function Profile() {
   const renderChangeTag = () => (
     
       <div className="mb-4 w-full flex flex-col gap-4 justify-center">
-      <label className="form-label py-1"> {LANGUAGES[user.locale].Profile.YourExpertise}</label>
-        <Select value={tag} handler={setTag}>            
+      <label className="form-label py-1"> {LANGUAGES[user.locale].Profile.YourExpertise}</label> <span className="req">*</span>
+        <Select value={tag} handler={handleChangeUserTag}>            
           {TAGS.map((l) => (
             <option key={l} value={l}>
               {LANGUAGES[user.locale].Tags[l]}
             </option>
           ))}
-        </Select>
-       
+        </Select>     
         {/* <Button
           text={LANGUAGES[user.locale].Profile.ChangeTag}
           disabled={disabledTag()}

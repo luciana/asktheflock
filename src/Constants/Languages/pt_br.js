@@ -186,6 +186,7 @@ const pt_br_lang = {
     CompleteProfile: "Por favor, preencha as informações do seu perfil!",
     Joined: "Membro desde",  
     ProfileUpdatedMessage: "Seu perfil foi atualizado",
+    SetExpertiseMessage: "Don't forget to set your expertise",
   },
   Tags: {
     general:"#geral",
