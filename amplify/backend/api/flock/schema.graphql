@@ -5,7 +5,7 @@
 # 1 User has many Votes
 type User @model @auth(rules: [
       { allow: owner, operations: [ read, create, update, delete]}
-      { allow: private, operations: [create, read, update] }        
+      { allow: private, operations: [read, update] }        
       ]) 
  @aws_cognito_user_pools{
   id: ID! @primaryKey
@@ -24,8 +24,10 @@ type User @model @auth(rules: [
 # 1 Question has many options
 type Question @model            
              @auth(rules: [       
-                  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
-                  { allow: private, operations: [read, create, update] }                  
+                 # { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
+                 # { allow: private, operations: [read, create, update] }                  
+                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
+                   { allow: private, operations: [read, update] }                  
                   ])
               {
   id: ID!  @primaryKey

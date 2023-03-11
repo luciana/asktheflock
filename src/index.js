@@ -5,6 +5,7 @@ import Amplify from '@aws-amplify/core';
 import './index.css';
 import App from './App';
 import { AppProvider } from "./Contexts";
+import { AmazonAIPredictionsProvider } from '@aws-amplify/predictions';
 import reportWebVitals from './reportWebVitals';
 import awsConfig from './aws-exports';
 //https://www.linkedin.com/pulse/part-3-complete-login-flow-using-react-aws-amplify-s3-jos%C3%A9-augusto/?trk=pulse-article_more-articles_related-content-card
@@ -42,6 +43,7 @@ const updatedAwsConfig = {
   }
 }
 Amplify.configure({ ...updatedAwsConfig, ssr: true });
+Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

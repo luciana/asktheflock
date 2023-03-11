@@ -15,9 +15,6 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
  // const userCount = (user.userTag) ? user.userTag.length : 1;
   const isModerator = isOwner(user.email);
 
-
- 
-
   return (
 
     <>
@@ -58,7 +55,7 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
         <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
         <div className="row" >
         <div className="col">
-         <Badge count={voteCounts} />
+        {voteCounts >0 && <Badge count={voteCounts} />}
         </div>
         <div className="col">
           {voteCounts >0 && 

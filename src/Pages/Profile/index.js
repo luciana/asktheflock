@@ -121,18 +121,24 @@ export default function Profile() {
     loading();
     try {
       const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null; 
-      const results = await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: validBirthDate, userTag: tag });
-
+      if (validBirthDate){
+        await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
+      }else{
+        await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, userTag: tag });
+      }
+     
       loadUser({ force: true, 
         email: user.email,
         name: name, 
         locale: language  ? language : "en-US",         
         gender: gender ? gender : "",
         address: address ? address : "",
-        birthdate: validBirthDate,
-        userTag: tag,      
+        birthdate: validBirthDate ? birthdate : "",
+        userTag: tag ? tag : "",     
       });
       navigate(ROUTES[language].PROFILE);
+      setAlert({ type: "success", text: LANGUAGES[user.locale].Profile.ProfileUpdatedMessage});
+
     } catch (error) {
       console.error("handleProfileInfo error", error);
       setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});

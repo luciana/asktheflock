@@ -17,5 +17,11 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolId": "string",
       "UserPoolName": "string"
     }
+  },
+  "predictions": {
+    "askTheFlockSpeechToText": {
+      "language": "string",
+      "region": "string"
+    }
   }
 }

@@ -85,8 +85,8 @@ const Badge = (count) => {
     if (count){
         const userCount = count.count;  
         if (userCount){
-        const id = translateToBadgeId(userCount);        
-            selectBadge = badges.filter((l) => l.id === id)
+          const id = translateToBadgeId(userCount);        
+          selectBadge = badges.filter((l) => l.id === id)
         }
     }
     return (        

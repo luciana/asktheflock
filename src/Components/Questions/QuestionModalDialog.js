@@ -11,6 +11,7 @@ import gtag from 'ga-gtag';
 import Picker from 'emoji-picker-react';
 import emojiIcon from '../../Assets/Images/smile-beam-svgrepo-com.svg';
 
+
 function QuestionModalDialog(
   {
     addFlocksToOptions,
@@ -91,7 +92,7 @@ function QuestionModalDialog(
     setShowPicker(false);
   };
 
-
+ 
 
   return (
     <>
@@ -128,8 +129,7 @@ function QuestionModalDialog(
                   {showPicker && <Picker
                       pickerStyle={{ width: '100%' }}                     
                       onEmojiClick={onEmojiClick} />}                 
-                  <span className="text-sm text-color-gray">{characterCount}/{maxQuestionCharacter}</span>
-            
+                  <span className="text-sm text-color-gray">{characterCount}/{maxQuestionCharacter}</span>      
                   <div className="d-flex flex-row mb-3">
                       <div className="p-2">
                         <label htmlFor="votePeriod" className=" px-2"><RiTimeLine size={24}/> {LANGUAGES[user.locale].Questions.PollClosesIn}</label>

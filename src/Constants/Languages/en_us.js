@@ -184,8 +184,10 @@ const en_us_lang = {
       ChangeProfileInfo: "Your Profile Info",
       CompleteProfile: "Please, complete your profile!",
       Joined: "Joined",
+      ProfileUpdatedMessage: "Your profiles has been updated",
     },
     Tags: {
+      general:"#general",
       parent: "#parent",
       architect: "#architect",
       nutricionist: "#nutricionist",
@@ -194,7 +196,7 @@ const en_us_lang = {
       mechanic: "#mechanic",
       teacher: "#teacher",
       fashion_designer: "#fashion_designer",
-      interion_designer: "#interion_designer",
+      interior_designer: "#interior_designer",
       lawyer:"#lawyer",
       life_coach: "#life_coach",
       financial_analyst: "#financial_analyst",
@@ -203,6 +205,12 @@ const en_us_lang = {
       photographer: "#photographer",
       fitness:"#fitness",
       sports:"#sports",
+      accounting: "#accounting",
+      student: "#student",
+      journalist: "#journalist",
+      physiotherapist: "#physiotherapist",
+      therapist: "#therapist",
+      marketing: "#marketing",
     }
   };
   
