@@ -33,7 +33,6 @@ function Home() {
   return (
     <div className="App">    
 
-        <WebNotification />
         <HomeNav locale={state.lang}/>     
         <div>       
         <header className="masthead d-flex align-items-center">

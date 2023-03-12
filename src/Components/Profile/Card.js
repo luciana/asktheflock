@@ -18,7 +18,6 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
   return (
 
     <>
-    <WebNotification />
     <div className="border border-1  p-3 my-2">
    
        <h3 className="profile-name ">{user.name}</h3>  
