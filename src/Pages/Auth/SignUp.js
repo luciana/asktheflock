@@ -4,6 +4,7 @@ import { isValidEmail, isValidZip, isValidPassword } from "../../Helpers";
 import { AuthLink, AuthTitle, Input, Title, Select, DatePicker, Button } from "../../Components";
 import { AppContext } from "../../Contexts";
 import { LANGUAGES, ROUTES, GENDER } from "../../Constants";
+import gtag from 'ga-gtag';
 
 export default function SignUp() {
   const location = useLocation();
@@ -87,6 +88,12 @@ export default function SignUp() {
         setAlert();
       }   
     }    
+
+    const signUpHandler = () => {
+      gtag('event', 'click_sign_up_button', {});     
+      signUp(email, pwd, name, gender, address, birthdate);
+    }
+
   return (
     <>
    
@@ -210,7 +217,7 @@ export default function SignUp() {
           disabled={disabled()}
           className="btn btn-outline-primary rounded-pill mx-3 p-3"
           type="button"
-          onClick={() => signUp(email, pwd, name, gender, address, birthdate)}
+          onClick={signUpHandler}
           
         >{LANGUAGES[state.lang].Auth.SignUpButton} </button>
       </div>

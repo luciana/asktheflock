@@ -6,7 +6,8 @@ import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
 import { Alert, Loading, HomeNav } from "../../Components";
 import '../../Pages/pages.css';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+import gtag from 'ga-gtag';
+
 
 
 export default function AuthLayout() {
@@ -55,12 +56,14 @@ export default function AuthLayout() {
   };
 
   function signInWithGoogle() {
+      gtag('event', 'click_sign_with_google_button', {}); 
       Auth.SignInWithGoogle();
       stopLoading();
      
    }
  
-   function signInWithFacebook() {     
+   function signInWithFacebook() {   
+      gtag('event', 'click_sign_with_facebook_button', {});   
       Auth.SignInWithFacebook(); 
       stopLoading();
 

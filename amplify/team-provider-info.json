@@ -41,6 +41,9 @@
       },
       "api": {
         "flock": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
       }
     }
   }
