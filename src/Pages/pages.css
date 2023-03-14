@@ -51,6 +51,9 @@
   width: 30px;
 }
 
+.opacity-2 {
+  opacity: 0.2;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

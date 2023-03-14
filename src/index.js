@@ -28,7 +28,7 @@ const [
   localRedirectSignIn,
   productionRedirectSignIn,
 ] = awsConfig.oauth.redirectSignIn.split(",");
-console.log("aws Config redirect url", awsConfig.oauth.redirectSignIn.split(","));
+//console.log("aws Config redirect url", awsConfig.oauth.redirectSignIn.split(","));
 const [
   localRedirectSignOut,
   productionRedirectSignOut,
