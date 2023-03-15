@@ -149,7 +149,7 @@ function QuestionAndPoll2({
     return(
         <>
           {loading && <Loading />}
-           <div className="white-bg container border border-1 p-2 ">
+           <div className="white-bg border border-1 p-2 my-2 ">
               <QuestionModalDialog  
                   addFlocksToOptions={addFlocksToOptions}   
                   handlePublishQuestion={handlePublishQuestion}                 

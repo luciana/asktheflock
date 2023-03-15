@@ -10,6 +10,7 @@ import { Button } from './../../Components';
 import gtag from 'ga-gtag';
 import Picker from 'emoji-picker-react';
 import emojiIcon from '../../Assets/Images/smile-beam-svgrepo-com.svg';
+import { formatName } from './../../Helpers';
 
 
 function QuestionModalDialog(
@@ -95,18 +96,20 @@ function QuestionModalDialog(
  
 
   return (
-    <>
-      <div className="p-2 row align-items-start"> 
-            <div className="col-2 px-1 d-grid  "> <Avatar size="42" name={user.name} className=" img-profile rounded-circle mx-auto mb-0" alt="{Luciana Bruscino}" /></div>
-            <div className="col-10 d-grid  py-3">
-                <div className="text-sm lh-1"><span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {user.name} </span> </div>                                                                   
-            </div>  
-            <Button handler={initModal}
-                    text={LANGUAGES[user.locale].Questions.EnterNewQuestion}
-                    disabled={false} /> 
-                      
-      </div>
-
+    <>      
+      <h4 className="mb-0"><span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {formatName(user.name, 50)}</span></h4>    
+        <div className="p-2 d-flex align-items-center">
+              <Avatar size="42" 
+                    name={user.name} 
+                    className=" img-profile rounded-circle mx-auto my-auto" alt={user.name} />                                         
+              <button
+                    type="button"
+                    onClick={initModal}                   
+                    className="btn btn-outline-primary rounded-pill mx-3 p-2 my-1 px-3 form-control"
+                  >
+                    {LANGUAGES[user.locale].Questions.EnterNewQuestion}                    
+                  </button>                           
+        </div>
       <div>
         <form  className=''>
         <Modal  fullscreen={true} show={showQuestionModal} >

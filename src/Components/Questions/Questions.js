@@ -7,7 +7,7 @@ import { AppContext} from '../../Contexts';
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
-import { useLocation } from "react-router-dom";
+import { Routes, useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 
 
@@ -25,7 +25,7 @@ const Questions = () => {
     const [voteFilteredList, setVoteFilteredList] =    useState([]);
     const [alreadyVotedFilterList, setAlreadyVotedFilterList] = useState([]);
     const [myVotes, setMyVotes] = useState([]);
-    
+    const navigate = useNavigate();
     const { state, dispatch } = useContext(AppContext);
     const { user } = state;
     const [filterList, setFilterList]= useState([]);
@@ -40,7 +40,7 @@ const Questions = () => {
         try{
           setLoading(true);       
          
-          //direct link to question - queryString id
+          //direct link to question - queryString id - URL paramenters
           if (questionQueryId){                   
             const singleQuestion = await Queries.GetSingleQuestion(questionQueryId);
             if(singleQuestion){
@@ -441,6 +441,13 @@ const Questions = () => {
         }      
       }
 
+      const clearUrlParamsAfterVote = () => {
+        console.log("there is a id param after vote, must clear it");
+        if (questionQueryId ){
+          navigate(ROUTES[user.locale].MAIN);
+        }
+      }
+
       const handleVote = async (question, option, userVote) =>{                     
         try{
         
@@ -449,6 +456,7 @@ const Questions = () => {
          updateQuestion(question, option);
          updateUserVotes(userVote);
          setLoading(false);     
+         clearUrlParamsAfterVote();
          
         }catch(err){
           console.error("Error on handleVote ", err);
@@ -471,36 +479,50 @@ const Questions = () => {
         });        
       }
       
+      const handleSingleQuestionClose = () => {
+        setShowSingleQuestionModal(false);
+        navigate(ROUTES[user.locale].MAIN);
+      }
+      
       const showNoQuestions = filterList.length === 0;
       return ( 
         <>
             {loading && <Loading />}
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
-            <div className="row border border-1 ">
-              <div className=" col">
+            
+            {/* Question Filter Section */}
+            <div className="white-bg border border-1 my-1 ">
+                <div className="d-flex align-items-start">
+                <div className="p-2 flex-fill">
                 { backendQuestions && backendQuestions.length > 0 && (
                   <Switch label={LANGUAGES[state.lang].Questions.FilterOpenQuestionLabel}
                     handleSwitch={handleVoteFilterSwitch}/> 
-                  )}
-              </div>
-              <div className=" col">                             
+                  )}        
+               </div>      
+               <div className="p-2 flex-fill">                         
                 { backendQuestions && backendQuestions.length > 0 && (   
                   <Switch label={LANGUAGES[state.lang].Questions.FilterAlreadyVotedLabel}
                     handleSwitch={handleAlreadyVotedFilterSwitch}/>   
-                )}
-              </div>     
-              <div className=" col">             
-              { backendQuestions && backendQuestions.length > 0 && (   
-                  <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
-                    handleSwitch={handleQuestionFilterSwitch}/>   
-                )}
+                )} 
+                </div>       
+                <div className="p-2 flex-fill">                   
+                { backendQuestions && backendQuestions.length > 0 && (   
+                    <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
+                      handleSwitch={handleQuestionFilterSwitch}/>   
+                  )}
+                </div> 
               </div>           
-            </div>     
-            <div className=" ">{(!loading) && <Friends votedList={votedList} 
+            </div>  
+
+            {/* Friends Sections    */}
+              <div className="white-bg px-2 my-1 ">
+                {(!loading) && <Friends votedList={votedList} 
                                         backendQuestions={backendQuestions} 
                                         userId={user.id}
                                         handleSwitch={handleFriendsQuestionFilterSwitch}/>}
               </div>
+
+            {/* Question List Section */}
               <div id="all-questions" className=" ">
                   {filterList.map((rootQuestion) => (
                       <Question 
@@ -547,7 +569,7 @@ const Questions = () => {
                           <button
                             type="button"
                             className="btn btn-outline-dark rounded-pill"
-                            onClick={()=> {setShowSingleQuestionModal(false)}}
+                            onClick={handleSingleQuestionClose}
                           >
                             Close
                           </button>                  

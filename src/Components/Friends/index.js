@@ -108,7 +108,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
    
    
 return (
-  <div className="container">   
+  <div className="">   
 
     {showFriendsSection && (
       <>          
