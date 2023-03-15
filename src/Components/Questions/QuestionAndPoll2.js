@@ -136,10 +136,6 @@ function QuestionAndPoll2({
 
       
       } 
-
-      
-
-
       const handlePublishQuestion = (question) => {     
         gtag('event', 'click_publish_question_button', {
           //poll_title: 'some title',

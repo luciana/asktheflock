@@ -17,7 +17,7 @@ function SideNav({ handleSignOut }) {
         icon: faHome,
         label: LANGUAGES[user.locale].Home
       },{
-        route: "/New",
+        route: ROUTES[user.locale].MAIN,
         icon: faPlus,
         label: LANGUAGES[user.locale].Questions.New
       },{
@@ -81,7 +81,8 @@ function SideNav({ handleSignOut }) {
                 <span className="d-block d-lg-none">{process.env.REACT_APP_TITLE}</span>
                 <span className="d-none d-lg-block text-wrap">    
                     <p><img src={logo} className="img-fluid" alt={process.env.REACT_APP_TITLE} /> </p>
-                    <Avatar  className=" img-profile rounded-circle mx-auto mb-2" />
+                    <Avatar  name={user.name}  
+                    className="  rounded-circle mx-auto mb-2" />
                     <div className="text-white my-3 profile-name">{user.name}</div>   
                 </span>          
             </div>

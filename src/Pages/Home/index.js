@@ -144,7 +144,8 @@ function Home() {
                             <div className="caption">
                                 <div className="caption-content">
                                     <div className="h1">{LANGUAGES[state.lang].HomePage.Badges}</div>
-                                    <p className="mb-0">{LANGUAGES[state.lang].HomePage.BadgesDetails} <a href="/#badges">{LANGUAGES[state.lang].HomePage.SeeMore} </a></p>
+                                    <p className="mb-0">{LANGUAGES[state.lang].HomePage.BadgesDetails} 
+                                   </p>
                                 </div>
                             </div>
                             <img className="img-fluid opacity-2" src={portfolio4} alt="..." />

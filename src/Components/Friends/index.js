@@ -126,13 +126,13 @@ return (
                       className="col card p-1 m-1">                                
                           <div className=" d-flex align-items-center">
                             <div className="p-2 d-flex">
-                            <Avatar size="48" name={u.userName} 
+                            <Avatar size="42" name={u.userName} 
                                 className="rounded-circle mx-auto mb-0 mx-1 align-items-center" 
                                 alt={u.userName} />
                             <div className="ms-2 ">
-                                    <h6 className="mb-0 d-none d-lg-block">{formatName(u.userName, 20)}</h6>
-                                    <span className="badge rounded-pill bg-secondary">{u.value}</span> 
-                                    <span className="text-sm d-none d-lg-block">interations</span>
+                              <h6 className="mb-0 d-none d-lg-block">{formatName(u.userName, 20)}</h6>
+                              <div className="badge rounded-pill bg-secondary">{u.value}</div> 
+                              <span className="text-sm d-none d-lg-block">interations</span>
                             </div>                              
                            </div>
                         </div>                                                   

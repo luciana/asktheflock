@@ -142,22 +142,27 @@ function Question({
   return (
     <>
         {loading && <Loading />}
-       <div key={question.id} className="container border border-1 p-1 my-2" >           
-        <div className="p-2 row align-items-start"> 
-            <div className="col-2"> <Avatar size="42" name={question.userName} className=" img-profile rounded-circle mx-auto mb-0" alt="{question.userName}" /></div>
-            <div className="col-7">
-              <div className="text-sm lh-1"><span><strong>{formatName(question.userName, 20)}</strong></span><span aria-hidden="true"> · </span> <span className="d-none">  {createdAt} </span></div>
-              <div className="text-sm">
+       <div key={question.id} className=" " >           
+        <div className="py-1 d-flex align-items-center">    
+          <div className="py-2 me-auto d-flex align-items-center">
+            <div className="ms-2 ">
+            <Avatar size="42" name={question.userName} 
+                className=" img-profile rounded-circle mx-auto mb-0" 
+                alt={question.userName} />    
+                </div>
+            <div className="ms-2">
+                <h5 className="mb-0 "><strong>{formatName(question.userName, 20)}</strong></h5>
+                <span className="d-none">  {createdAt} </span> 
+                <div className="text-sm">
                 {!isAReply && voteEnded && (<span > Closed <FaCircle /> </span>)}
                 {!isAReply && !voteEnded && (<span> Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
-                {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}
-                
-              </div>
-              
-            </div>
-            <div className="col-2">
-             
-              {canDelete && (
+                {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}                
+                </div>  
+            </div>                   
+        </div>
+        <div className="ms-2 ">
+        <div className="d-flex ">
+            {canDelete && (
                 <button className="btn btn-sm  mx-1" onClick={()=> deleteQuestion(question.id)}>
                   <FaTrashAlt alt="Delete question" /></button>
               )}
@@ -176,8 +181,10 @@ function Question({
               <SocialShare 
                   message={"Help me with a decision - " + formatName(question.text, 80)}
                   url={questionLink} />
+              </div>
             </div>
-        </div>      
+        </div>
+                   
         <div className="p-2"> 
             {question.text} 
         </div>
@@ -245,7 +252,7 @@ function Question({
         </div> 
       
       { alreadyVotedForQuestionListBool && (       
-       <div className="container  text-sm lh-3">
+       <div className="container text-sm lh-3">
         <span className="p-2">{LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
       </div>   )}
 

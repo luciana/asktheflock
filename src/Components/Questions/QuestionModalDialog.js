@@ -11,7 +11,7 @@ import gtag from 'ga-gtag';
 import Picker from 'emoji-picker-react';
 import emojiIcon from '../../Assets/Images/smile-beam-svgrepo-com.svg';
 import { formatName } from './../../Helpers';
-
+import { QuestionBadge } from './../../Components/Votes';
 
 function QuestionModalDialog(
   {
@@ -37,6 +37,7 @@ function QuestionModalDialog(
   const [showPicker, setShowPicker] = useState(false);
   const inputRef = useRef(null);
   const isTextareaEmpty = input.length === 0;
+  const [questionCounts, setQuestionCounts] = useState(0);
   const initModal = () => {
     gtag('event', 'click_new_question_button', {}); 
     return setShowQuestionModal(!false)
@@ -93,15 +94,16 @@ function QuestionModalDialog(
     setShowPicker(false);
   };
 
- 
+  
 
   return (
     <>      
       <h4 className="mb-0"><span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {formatName(user.name, 50)}</span></h4>    
-        <div className="p-2 d-flex align-items-center">
+        <div className="p-2 d-flex align-items-center">                                                 
               <Avatar size="42" 
                     name={user.name} 
-                    className=" img-profile rounded-circle mx-auto my-auto" alt={user.name} />                                         
+                    className="rounded-circle mx-auto my-auto" alt={user.name} />                                         
+              
               <button
                     type="button"
                     onClick={initModal}                   

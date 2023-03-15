@@ -9,6 +9,7 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { Routes, useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const Questions = () => {
@@ -493,24 +494,25 @@ const Questions = () => {
             {/* Question Filter Section */}
             <div className="white-bg border border-1 my-1 ">
                 <div className="d-flex align-items-start">
-                <div className="p-2 flex-fill">
-                { backendQuestions && backendQuestions.length > 0 && (
-                  <Switch label={LANGUAGES[state.lang].Questions.FilterOpenQuestionLabel}
-                    handleSwitch={handleVoteFilterSwitch}/> 
-                  )}        
-               </div>      
-               <div className="p-2 flex-fill">                         
-                { backendQuestions && backendQuestions.length > 0 && (   
-                  <Switch label={LANGUAGES[state.lang].Questions.FilterAlreadyVotedLabel}
-                    handleSwitch={handleAlreadyVotedFilterSwitch}/>   
-                )} 
-                </div>       
-                <div className="p-2 flex-fill">                   
-                { backendQuestions && backendQuestions.length > 0 && (   
-                    <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
-                      handleSwitch={handleQuestionFilterSwitch}/>   
-                  )}
-                </div> 
+                  <div className="p-2 flex-fill">
+                  { backendQuestions && backendQuestions.length > 0 && (
+                    <Switch label={LANGUAGES[state.lang].Questions.FilterOpenQuestionLabel}
+                      handleSwitch={handleVoteFilterSwitch}/> 
+                    )}        
+                </div>      
+                <div className="p-2 flex-fill">                         
+                  { backendQuestions && backendQuestions.length > 0 && (   
+                    <Switch label={LANGUAGES[state.lang].Questions.FilterAlreadyVotedLabel}
+                      handleSwitch={handleAlreadyVotedFilterSwitch}/>   
+                  )} 
+                  </div>       
+                  <div className="p-2 flex-fill">                   
+                  { backendQuestions && backendQuestions.length > 0 && (   
+                      <Switch label={LANGUAGES[state.lang].Questions.FilterMyQuestionsLabel}
+                        handleSwitch={handleQuestionFilterSwitch}/>   
+                    )}
+                  </div>                
+                  
               </div>           
             </div>  
 
@@ -523,7 +525,7 @@ const Questions = () => {
               </div>
 
             {/* Question List Section */}
-              <div id="all-questions" className=" ">
+              <div id="all-questions" className="border border-1 p-1 my-1">
                   {filterList.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}
