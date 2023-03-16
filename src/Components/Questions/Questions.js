@@ -525,7 +525,7 @@ const Questions = () => {
               </div>
 
             {/* Question List Section */}
-              <div id="all-questions" className="border border-1 p-1 my-1">
+              <div id="all-questions" className=" p-1 my-1">
                   {filterList.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}

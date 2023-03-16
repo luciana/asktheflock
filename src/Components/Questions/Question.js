@@ -142,7 +142,7 @@ function Question({
   return (
     <>
         {loading && <Loading />}
-       <div key={question.id} className=" " >           
+       <div key={question.id} className="my-3 border border-1" >           
         <div className="py-1 d-flex align-items-center">    
           <div className="py-2 me-auto d-flex align-items-center">
             <div className="ms-2 ">
