@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app'
-import { getMessaging, getToken, onMessage } from 'firebase/messaging'
+//import { initializeApp } from 'firebase/app'
+//import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 //https://github.com/AudreyHal/React-Firebase-Cloud-Messaging-Demo
 
 // const firebaseConfig = {

@@ -4,8 +4,8 @@ import { LANGUAGES } from "../../Constants";
 import { AppContext } from "../../Contexts";
 import './Card.css';
 import { isOwner } from "../../Helpers/owner";
-import WebNotification from "../Notification/WebNotification";
 import {formatDateTime} from '../../Helpers';
+
 
 const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
 
@@ -52,34 +52,31 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
       </div>
       <div className="border border-1 p-3 my-2"> 
         <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
-        <div className="row" >
-          <div className="col">
-              {voteCounts >0 && (
-                 <div className="p-2 d-flex align-items-center border border-1">                  
-                  {<Badge count={voteCounts} />}                  
-                  <span className="number">{voteCounts} <br/> <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Helped}</span></span> 
-                 </div>
-
-              )}           
-          </div>  
-        <div className="col">
-            {voteCounts >0 && (
-                 <div className="p-2 d-flex align-items-center border border-1">                  
-                  {<QuestionBadge count={questionCounts} />}                  
-                  <span className="number">{questionCounts} <br/> <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
-                 </div>
-
-              )}       
-         </div>     
+       
+         <div className="row">
          <div className="col">
-            {whoHelpedMeCounts >0 && (
-                 <div className="p-2 d-flex align-items-center border border-1">                  
-                  {<QuestionBadge count={whoHelpedMeCounts} />}                  
-                  <span className="number">{whoHelpedMeCounts} <br/><span className="follow text-sm">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
-                 </div>
+            {voteCounts >0 && (
+               <Badge count={voteCounts} label={LANGUAGES[user.locale].Questions.Helped}/>             
+            )}           
+         </div><div className="col">
+            {questionCounts >0 && (            
+                <QuestionBadge count={questionCounts} label={LANGUAGES[user.locale].Questions.Asked}/>   
+                //  <div className="py-2 d-flex align-items-center border border-1">                  
+                //   {<QuestionBadge count={questionCounts} />}                  
+                //   <span className="number">{questionCounts}  <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
+                //  </div>
 
               )}       
-         </div>                
+        </div><div className="col">
+            {whoHelpedMeCounts >0 && (
+               <QuestionBadge count={whoHelpedMeCounts} label={LANGUAGES[user.locale].Questions.WhoHelped}/>   
+                //  <div className="py-2 d-flex align-items-center border border-1">                  
+                //   {<QuestionBadge count={whoHelpedMeCounts} />}                  
+                //   <span className="number">{whoHelpedMeCounts} <br/><span className="follow text-sm">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
+                //  </div>
+
+              )}    
+              </div>   
         </div>
       </div>
       

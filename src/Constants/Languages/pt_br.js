@@ -112,6 +112,7 @@ const pt_br_lang = {
     QuestionLevel7: "Stork",
     QuestionLevel8: "Blue Heron",
     QuestionLevel9: "Gull",
+    ProgressToNextLevel: "Até o próximo nível",
   },
   NotFound: {
     Sorry: "Desculpe",

@@ -5,3 +5,4 @@ export { default as Scatter } from "./Scatter";
 export { default as BarCustom } from "./BarCustom";
 export { default as Map } from "./Map";
 export { default as Nightingale } from "./Nightingale";
+export { default as ProgressBar } from "./ProgressBar";

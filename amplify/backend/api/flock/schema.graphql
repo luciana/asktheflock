@@ -4,9 +4,8 @@
 
 # 1 User has many Votes
 type User @model @auth(rules: [
-      { allow: owner, operations: [ read, create, update, delete]}
-     # { allow: private, operations: [read, update] }     
-      { allow: private, operations: [update] }   
+      { allow: owner, operations: [ read, create, update, delete]}     
+      { allow: private, operations: [update] }   # update was needed to vote
       ]) 
  @aws_cognito_user_pools{
   id: ID! @primaryKey
@@ -28,7 +27,7 @@ type Question @model
                  # { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
                  # { allow: private, operations: [read, create, update] }                  
                    { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
-                   { allow: private, operations: [read, update] }                  
+                   { allow: private, operations: [read, update, delete] } # delete was needed here for the owner to delete a question                 
                   ])
               {
   id: ID!  @primaryKey

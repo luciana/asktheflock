@@ -72,7 +72,7 @@ const en_us_lang = {
     InvalidNumberOfOptions: "invalid number of options",
     CopyLinkLabel: "Copy Link",
     CopyLabel: "Copy",
-    Helped: "questions helped",
+    Helped: "questions answered",
     Asked: "questions asked",
     WhoHelped:" people helped me",
   },
@@ -112,6 +112,7 @@ const en_us_lang = {
     QuestionLevel7: "Stork",
     QuestionLevel8: "Blue Heron",
     QuestionLevel9: "Gull",
+    ProgressToNextLevel: "Progress to next level",
   },
   NotFound: {
     Sorry: "Sorry",
