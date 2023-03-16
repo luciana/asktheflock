@@ -11,38 +11,38 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 //       appId: process.env.REACT_APP_FIREBASE_APP_ID,
 //   };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCg7YYpq7Uz-tVHft-_oRvAn8g9GYLMds0",
-  authDomain: "flock-71ac2.firebaseapp.com",
-  projectId: "flock-71ac2",
-  storageBucket: "flock-71ac2.appspot.com",
-  messagingSenderId: "899073372499",
-  appId: "1:899073372499:web:c99c2daac89bcee503f1a6"
-};
+// const firebaseConfig = {
+//   apiKey: "key",
+//   authDomain: "project.firebaseapp.com",
+//   projectId: "project",
+//   storageBucket: "project.appspot.com",
+//   messagingSenderId: "id",
+//   appId: "1:id:web:c99c2daac89bcee503f1a6"
+// };
 
-initializeApp(firebaseConfig);
-const messaging = getMessaging();
-const vapidKey =process.env.REACT_APP_FIREBASE_VAPI_KEY;
+// initializeApp(firebaseConfig);
+// const messaging = getMessaging();
+// const vapidKey =process.env.REACT_APP_FIREBASE_VAPI_KEY;
 
-export const requestForToken = () => {
-    return getToken(messaging, { vapidKey: vapidKey })
-      .then((currentToken) => {
-        if (currentToken) {
-        //  console.log('current token for client: ', currentToken);
-          // Perform any other neccessary action with the token         
-        } else {
-          // Show permission request UI
-        //  console.log('No registration token available. Request permission to generate one.');
-        }
-      })
-      .catch((err) => {
-        console.error('An error occurred while retrieving token. ', err);
-      });
-  };
+// export const requestForToken = () => {
+//     return getToken(messaging, { vapidKey: vapidKey })
+//       .then((currentToken) => {
+//         if (currentToken) {
+//         //  console.log('current token for client: ', currentToken);
+//           // Perform any other neccessary action with the token         
+//         } else {
+//           // Show permission request UI
+//         //  console.log('No registration token available. Request permission to generate one.');
+//         }
+//       })
+//       .catch((err) => {
+//         console.error('An error occurred while retrieving token. ', err);
+//       });
+//   };
 
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    });
-  });
+// export const onMessageListener = () =>
+//   new Promise((resolve) => {
+//     onMessage(messaging, (payload) => {
+//       resolve(payload);
+//     });
+//   });
