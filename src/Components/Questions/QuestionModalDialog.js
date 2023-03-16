@@ -80,6 +80,7 @@ function QuestionModalDialog(
         options:todos,
         questionTag: expertTag
       });
+      setShowQuestionModal(false);
     
   }
   const minQuestionOptions = 2;
