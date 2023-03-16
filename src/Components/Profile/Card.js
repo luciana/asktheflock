@@ -50,45 +50,36 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
         <div className="fw-bolder text-sm">{LANGUAGES[user.locale].Profile.Joined} {formatDateTime(user.createdAt)}</div>
       </div>
       </div>
-      <div className="border border-1 d-flex p-3 my-2"> 
+      <div className="border border-1 p-3 my-2"> 
         <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
         <div className="row" >
-        <div className="col">
-        {voteCounts >0 && <Badge count={voteCounts} />}
-        </div>
-        <div className="col">
-          {voteCounts >0 && 
-          ( 
-            <div className="d-flex flex-row  mt-3"> 
-              <span className="number">{voteCounts} <span className="follow">{LANGUAGES[user.locale].Questions.Helped}</span></span> 
-            </div>)
-        }
-        </div>
-        <div className="col">
-        {questionCounts &&  questionCounts > 0 && (
-           <QuestionBadge count={questionCounts} />        
-        )}
-         </div>
-        <div className="col">
-          {questionCounts && questionCounts > 0 && (            
-            <div className="d-flex flex-row  mt-3"> 
-            <span className="number">{questionCounts} <span className="follow">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
-          </div>
-          )}
-        </div>
-        <div className="col">
-        {whoHelpedMeCounts &&  whoHelpedMeCounts > 0 && (
-           <QuestionBadge count={whoHelpedMeCounts} />        
-        )}
-         </div>
-        <div className="col">
-          {whoHelpedMeCounts && whoHelpedMeCounts > 0 && (            
-            <div className="d-flex flex-row  mt-3"> 
-            <span className="number">{whoHelpedMeCounts} <span className="follow">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
-          </div>
-          )}
-        </div>
+          <div className="col">
+              {voteCounts >0 && (
+                 <div className="p-2 d-flex align-items-center border border-1">                  
+                  {<Badge count={voteCounts} />}                  
+                  <span className="number">{voteCounts} <br/> <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Helped}</span></span> 
+                 </div>
 
+              )}           
+          </div>  
+        <div className="col">
+            {voteCounts >0 && (
+                 <div className="p-2 d-flex align-items-center border border-1">                  
+                  {<QuestionBadge count={questionCounts} />}                  
+                  <span className="number">{questionCounts} <br/> <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
+                 </div>
+
+              )}       
+         </div>     
+         <div className="col">
+            {whoHelpedMeCounts >0 && (
+                 <div className="p-2 d-flex align-items-center border border-1">                  
+                  {<QuestionBadge count={whoHelpedMeCounts} />}                  
+                  <span className="number">{whoHelpedMeCounts} <br/><span className="follow text-sm">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
+                 </div>
+
+              )}       
+         </div>                
         </div>
       </div>
       

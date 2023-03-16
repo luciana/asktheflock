@@ -10,7 +10,7 @@ const en_us_lang = {
   Birth: "Date of Birth",
   Expertise: "Expertise",
   ZipCode: "Zip",
-  BadgesLabel: "Badges",
+  BadgesLabel: "Accomplishments",
   HomePage: {
     TagLine: "We Help with Simple decisions in life.",
     HowItWorks: "How does it work?",
