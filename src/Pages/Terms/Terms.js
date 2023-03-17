@@ -25,9 +25,9 @@ function Terms() {
         
             <p>We may employ third party companies and individuals to facilitate our Service ("Service Providers"), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used. </p>
         
-            <p>All personal information entered on Flock App Services is safe, private and secure. We do not disclose ANY information to outside sources as we respect the importance of security and confidentiality of your data. NO information is shared with any third parties, except with verified and secure payment processors.</p>
+            <p>All personal information entered on Ask The Flock Services is safe, private and secure. We do not disclose ANY information to outside sources as we respect the importance of security and confidentiality of your data. NO information is shared with any third parties, except with verified and secure payment processors.</p>
         
-            <p>Flock App uses the collected data for various purposes:</p>
+            <p>Ask The Flock uses the collected data for various purposes:</p>
             <ul>
                 <li>To provide and maintain the Service</li>
                 <li>To provide customer care and support</li>

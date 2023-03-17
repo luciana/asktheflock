@@ -25,7 +25,7 @@ function ReplyModalDialog(replies) {
               <Modal.Footer>                           
                 <FacebookShareButton
                     url={"http://www.flockapp.com"}
-                    quote={"Flock App just helped with a simple decision in my life.."}
+                    quote={"Ask The Flock just helped with a simple decision in my life.."}
                     hashtag="#flockapp"
                     className="btn btn-light"
                   >
@@ -33,7 +33,7 @@ function ReplyModalDialog(replies) {
                   </FacebookShareButton>
                   <TwitterShareButton
                     url={"http://www.flockapp.com"}
-                    title={"flockapp - World is yours to explore"}
+                    title={"Ask The Flock - World is yours to explore"}
                     hashtag="#camperstribe"
                     className="btn btn-light"
                   >

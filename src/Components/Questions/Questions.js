@@ -400,8 +400,7 @@ const Questions = () => {
 
       const deleteQuestion = async (id) => {
         if (window.confirm("Are you sure you want to remove question?")) {
-          try{
-        
+          try{        
             setLoading(true);  
             await Mutations.DeleteQuestion(
               id             
@@ -411,6 +410,7 @@ const Questions = () => {
                   (backendQuestion) => backendQuestion.id !== id
                 );
             setBackendQuestions(updatedBackendQuestions);
+            setFilterList(updatedBackendQuestions);
             setLoading(false);  
 
           } catch (err){
