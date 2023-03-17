@@ -119,7 +119,7 @@ const Badge = ({count, label}) => {
             if ( b.length > 0 ){
               let denominator = b[0].max;
               if( denominator ){        
-                setProgress((count/denominator)*100);            
+                setProgress(Math.round((count/denominator)*100));            
               } 
                   } 
         }else{

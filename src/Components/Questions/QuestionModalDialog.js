@@ -1,11 +1,11 @@
 import React, {useState, useRef} from 'react';
 import { Modal } from 'react-bootstrap';
 import { RiTimeLine, RiMagicLine }  from 'react-icons/ri';
-import { FaPhoneVolume }  from 'react-icons/fa';
+import { FaPhoneVolume, FaTrophy }  from 'react-icons/fa';
 import Avatar from 'react-avatar';
 import Item from '../Items/Item';
 import ItemForm from '../Items/ItemForm';
-import { TAGS, LANGUAGES } from '../../Constants';
+import { TAGS, LANGUAGES, ROUTES } from '../../Constants';
 import { Button } from './../../Components';
 import gtag from 'ga-gtag';
 import Picker from 'emoji-picker-react';
@@ -98,8 +98,21 @@ function QuestionModalDialog(
 
   return (
     <>      
-      <h4 className="mb-0"><span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {formatName(user.name, 50)}</span></h4>    
-        <div className="p-2 d-flex align-items-center">                                                 
+      <h4 className="mb-0">
+        <span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {formatName(user.name, 50)} </span>
+        <span className="mx-2 text-color-gray" aria-hidden="true"> • </span>
+       { JSON.parse(user.votes).length > 0  && (
+         <a href={`${ROUTES[user.locale].PROFILE}#badges`} aria-label="Achievements" >    
+          <span  style={{
+                      color:'#f5c135'
+                    }}>                                             
+              <FaTrophy size={18}/>  
+          </span>
+        </a>
+        )}
+      </h4>    
+     
+      <div className="p-2 d-flex align-items-center">                                                 
               <Avatar size="42" 
                     name={user.name} 
                     className="rounded-circle mx-auto my-auto" alt={user.name} />                                         

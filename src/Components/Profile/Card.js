@@ -50,7 +50,7 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
         <div className="fw-bolder text-sm">{LANGUAGES[user.locale].Profile.Joined} {formatDateTime(user.createdAt)}</div>
       </div>
       </div>
-      <div className="border border-1 p-3 my-2"> 
+      <div className="border border-1 p-3 my-2" id="badges"> 
         <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
        
          <div className="row">
