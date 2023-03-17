@@ -7,7 +7,6 @@ const pt_br_routes = {
     MAIN: "/main",
     HOME: "/",
     PROFILE: "/profile",
-    NEW_QUESTION: "/new",
     PRIVACY: "/privacy",
     STATS: "/Stats",
   };

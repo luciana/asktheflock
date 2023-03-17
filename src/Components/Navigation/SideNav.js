@@ -6,7 +6,7 @@ import { AppContext } from "../../Contexts";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Nav, NavItem} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faHome, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSignOut, faHome, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 function SideNav({ handleSignOut }) {
     const { state } = useContext(AppContext);
@@ -17,15 +17,12 @@ function SideNav({ handleSignOut }) {
         icon: faHome,
         label: LANGUAGES[user.locale].Home
       },{
-        route: ROUTES[user.locale].MAIN,
-        icon: faPlus,
-        label: LANGUAGES[user.locale].Questions.New
-      },{
         route: "/Profile",
         icon: faUserCircle,
         label: LANGUAGES[user.locale].Profile.Profile
       }]
 
+   
   return(
       <>       
      {/* Top Bar Filtering*/}
@@ -72,6 +69,19 @@ function SideNav({ handleSignOut }) {
                 </NavItem>
               ))
             }
+
+            <div className="row d-flex flex-column align-items-center">
+              <button onClick={() => handleSignOut()} className="btn nav-link js-scroll-trigger">
+                      <FontAwesomeIcon size="lg" icon={faSignOut} className="bg-company-white"/>
+                      <div className="bottom-tab-label d-flex flex-column align-items-center bg-company-white">
+                      {LANGUAGES[user.locale].Profile.SignOut}
+                      </div>
+                </button>
+             </div>
+             
+                        
+             
+
           </div>
         </Nav>
       </nav>

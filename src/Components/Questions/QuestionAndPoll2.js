@@ -3,6 +3,7 @@ import QuestionModalDialog from './QuestionModalDialog';
 import { useNavigate } from 'react-router-dom';
 import { Loading }  from '../../Components';
 import Mutations from "../../Services/mutations";
+import { ROUTES } from "../../Constants";
 import gtag from 'ga-gtag';
 
 const TAG = "#flocks";
@@ -10,6 +11,7 @@ const TAG = "#flocks";
 function QuestionAndPoll2({
     parentId = null,
     user,
+    addQuestion,
 }){
 
     const [todos, setTodos] = useState([]); 
@@ -17,36 +19,35 @@ function QuestionAndPoll2({
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const addQuestion = async (question) => {       
-      try{
-        setLoading(true);
+    // const addQuestion = async (question) => {       
+    //   try{
+       
+    //     const text = question.text;
+    //     const parentID = question.parentId;
+    //     const questionTag = question.questionTag;
+    //     const userID = question.userId;
+    //     const voteEndAt = question.voteEndAt;
+    //     const sentiment = question.sentiment;
+    //     const options  = JSON.stringify(question.options);
+    //     const userName = user.name;
 
-        const text = question.text;
-        const parentID = question.parentId;
-        const questionTag = question.questionTag;
-        const userID = question.userId;
-        const voteEndAt = question.voteEndAt;
-        const sentiment = question.sentiment;
-        const options  = JSON.stringify(question.options);
-        const userName = user.name;
-
-        let q = await Mutations.CreateQuestion(
-          text, 
-          userID,
-          voteEndAt,
-          sentiment,
-          userName,
-          parentID,
-          questionTag,
-          options
-        );
-        //setQuestion(question);            
-        navigate('/Main');        
+    //     let q = await Mutations.CreateQuestion(
+    //       text, 
+    //       userID,
+    //       voteEndAt,
+    //       sentiment,
+    //       userName,
+    //       parentID,
+    //       questionTag,
+    //       options
+    //     );
+           
+    //     navigate(ROUTES[user.locale].MAIN);        
  
-      }catch(err){
-        console.error("Error on Mutations.CreateQuestion ", err);
-      }        
-    };
+    //   }catch(err){
+    //     console.error("Error on Mutations.CreateQuestion ", err);
+    //   }        
+    // };
     
       const addTodo = todo => {
         //console.log('add Todo', todo);

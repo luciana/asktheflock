@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import Question from "./Question";
 import { Loading, Alert, Switch, Friends }  from '../../Components';
+import QuestionAndPoll2 from '../../Components/Questions/QuestionAndPoll2';
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
 import { AppContext} from '../../Contexts'; 
@@ -9,7 +10,7 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { Routes, useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 
 const Questions = () => {
@@ -398,6 +399,38 @@ const Questions = () => {
         } 
       };
 
+      const addQuestion = async (question) => {       
+        try{
+          setLoading(true);  
+          const text = question.text;
+          const parentID = question.parentId;
+          const questionTag = question.questionTag;
+          const userID = question.userId;
+          const voteEndAt = question.voteEndAt;
+          const sentiment = question.sentiment;
+          const options  = JSON.stringify(question.options);
+          const userName = user.name;
+                      
+          let q = await Mutations.CreateQuestion(
+            text, 
+            userID,
+            voteEndAt,
+            sentiment,
+            userName,
+            parentID,
+            questionTag,
+            options
+          );
+             
+          
+          setLoading(false);  
+          window.location.reload();      
+   
+        }catch(err){
+          console.error("Error on Mutations.CreateQuestion ", err);
+        }        
+      };
+
       const deleteQuestion = async (id) => {
         if (window.confirm("Are you sure you want to remove question?")) {
           try{        
@@ -491,6 +524,8 @@ const Questions = () => {
             {loading && <Loading />}
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             
+            <QuestionAndPoll2 user={user} addQuestion={addQuestion} />
+
             {/* Question Filter Section */}
             <div className="white-bg border border-1 my-1 ">
                 <div className="d-flex align-items-start">

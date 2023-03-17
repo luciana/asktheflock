@@ -11,7 +11,6 @@ import gtag from 'ga-gtag';
 import Picker from 'emoji-picker-react';
 import emojiIcon from '../../Assets/Images/smile-beam-svgrepo-com.svg';
 import { formatName } from './../../Helpers';
-import { QuestionBadge } from './../../Components/Votes';
 
 function QuestionModalDialog(
   {

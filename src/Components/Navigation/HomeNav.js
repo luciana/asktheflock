@@ -2,7 +2,7 @@ import logo from'../../Assets/Images/logos/Flock-App-logo-black-small.png';
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSignIn, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSignIn, faSignOut, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import {  LANGUAGES, ROUTES } from "../../Constants";
 import Flags  from '../Flags';
 
@@ -20,7 +20,7 @@ const HomeNav = ({locale}) => {
   }
   ,{
     route: "/signup",
-    icon: faSignOut,
+    icon: faUserPlus,
     label: LANGUAGES[locale].Auth.SignUpTitle
   }]
 
