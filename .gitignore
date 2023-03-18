@@ -43,6 +43,9 @@ amplifytools.xcconfig
 .env.production
 .eslintignore
 
+.graphqlconfig.yml
+.eslintignore
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
