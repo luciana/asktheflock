@@ -13,3 +13,4 @@ const shortenURL = async (input) => {
 };
 
 export default shortenURL;
+// module.exports = shortenURL;
