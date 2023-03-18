@@ -38,10 +38,6 @@ const formatYYYYMMDD = (cvLength, currentValue) => {
   )}-${currentValue.slice(6, 8)}`;
 };
 
-
-
-
 const FormatDate = { Show, Format };
 
 export default FormatDate;
-
