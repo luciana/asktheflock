@@ -39,6 +39,9 @@ amplifytools.xcconfig
 .env.test.local
 .env.production.local
 .env
+.env.development
+.env.production
+.eslintignore
 
 npm-debug.log*
 yarn-debug.log*
