@@ -71,10 +71,18 @@ const pt_br_lang = {
     SpecialCallOutFor: "Preciso de ajuda na especialidade #",
     InvalidNumberOfOptions: "número inválido de opções",
     CopyLinkLabel: "Copiar Link",
+    LinkedSharedLabel: "Link copiado. Pode compartilhar!",
     CopyLabel: "Copiar",
     Helped: "ajudas",
     Asked: "perguntas",
     WhoHelped:" pessoas me ajudaram",
+    CloseVote: "Fechar enquete",
+    Discard: "Fechar",
+    VoteIsClosedLabel: "Votação encerrada",
+    VoteIsClosedLabelMore: "Aperte no gráfico de pizza para ver o resultado. ",
+    VoteIsClosedLabelMessage: "Isso vai encerrar votação para a sua pergunta agora. As pessoas não vão poder mais votar.",
+    VoteIsClosedLabelMessageMore: "Quando o voto é encerrado, você poder ver a análise do resultado. ",
+    VoteIsClosedLabelTitle: "Encerrar Voto",
   },
   PasswordRules: {
     Chars: "Pelo menos 8 caracteres",
@@ -125,7 +133,7 @@ const pt_br_lang = {
       "Não foi possível redefinir a senha, e-mail, código ou nova senha estão errados!",
     SignUp:
       "Não foi possível registrar. O e-mail já existe ou a senha está errada!",
-    SignUpAuthentication: "Conta inda nao autenticada.",
+    SignUpAuthentication: "Conta inda não autenticada.",
     ConfirmSignUp:
       "Não foi possível confirmar o registro, e-mail ou código estão errados!",
     CodeError: "Código de verificação inválido. Tente novamente.",

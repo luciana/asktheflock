@@ -223,7 +223,7 @@ function QuestionModalDialog(
                       className="btn btn-outline-dark rounded-pill"
                       onClick={()=> {setShowQuestionModal(false)}}
                     >
-                      Discard
+                      {LANGUAGES[user.locale].Questions.Discard}
                     </button>                    
                   )}         
                   {/* <Button handler={onSubmit} 

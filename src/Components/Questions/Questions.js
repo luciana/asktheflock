@@ -367,6 +367,30 @@ const Questions = () => {
 
 
       }
+
+      const updateQuestionVoteTime = async (question, voteEndAt) => {
+
+        try{
+          
+          const updatedQuestions = await Mutations.UpdateQuestionVoteEndAt(
+            question.id,
+            voteEndAt,
+          );
+                  
+          const newA = [];             
+          if(updatedQuestions){
+            newA.push(updatedQuestions);                             
+          }       
+          const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
+          setBackendQuestions(updatedBackendQuestions);
+          setFilterList(updatedBackendQuestions);
+
+        }catch(err){
+          console.error("Mutations.UpdateQuestion voteEndAt error", err);
+          return null;        
+        }
+      }
+
       const updateQuestion = async (question, option) => {       
         if(! question.options) return; //TODO: alert
 
@@ -421,10 +445,27 @@ const Questions = () => {
             questionTag,
             options
           );
-             
           
-          setLoading(false);  
-          window.location.reload();      
+
+          const updatedBackendQuestions = [...backendQuestions];
+          updatedBackendQuestions.push(q);          
+
+
+          setBackendQuestions(updatedBackendQuestions.filter(
+            (backendQuestion) => ((backendQuestion.parentID === null) )
+          ).sort(
+          (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          ));
+
+          setFilterList(updatedBackendQuestions.filter(
+            (backendQuestion) => ((backendQuestion.parentID === null) )
+          ).sort(
+          (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          ));
+        
+          setLoading(false);    
    
         }catch(err){
           console.error("Error on Mutations.CreateQuestion ", err);
@@ -573,7 +614,8 @@ const Questions = () => {
                           updateVotedOptionsList={updateVotedOptionsList}
                           votedList={votedList}
                           votedOptionsList={votedOptionsList}
-                          //openQuestion={openQuestion}                                              
+                          //openQuestion={openQuestion}      
+                          updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}                        
                           user={user}

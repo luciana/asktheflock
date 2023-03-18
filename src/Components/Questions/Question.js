@@ -20,6 +20,7 @@ function Question({
   updateVotedList,
   votedOptionsList,
   updateVotedOptionsList,
+  updateQuestionVoteTime,
   handleVote,
   //activeQuestion,
   deleteQuestion,
@@ -29,6 +30,8 @@ function Question({
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
+  const [showCloseVoteDialog, setShowCloseVoteDialog] = useState(false);
+  const [disableCloseVoteButton, setDisableCloseVoteButton] =useState(false);
   const [alert, setAlert] = useState();
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
@@ -52,6 +55,7 @@ function Question({
   const replyId = parentId ? parentId : question.id;
   const voteEnded = new Date() - new Date(question.voteEndAt) > 1;
   const canRepost = user.id === question.userID  && voteEnded; 
+  const canClose = user.id === question.userID  && !isAReply && !voteEnded; 
   // const isReplying =
   //   activeQuestion &&
   //   activeQuestion.id === question.id &&
@@ -121,6 +125,7 @@ function Question({
         setShowQuestionCopyLink(true);
         setLoading(false);
       }else{
+        console.warning("shorten URL didn't return link");
         setShowQuestionCopyLink(true);
         setQuestionLink(url);
         setLoading(false);
@@ -135,7 +140,25 @@ function Question({
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(questionLink);
-    setAlert({ type: "success", text:"Link copied. Start sharing!"});  
+    setAlert({ type: "success", text: LANGUAGES[user.locale].Questions.LinkedSharedLabel});  
+  }
+
+  
+  const terminateVote = () => { 
+
+    if (isThereEnoughStats) {
+      setAlert({ type: "success", text:LANGUAGES[user.locale].Questions.VoteIsClosedLabel + LANGUAGES[user.locale].Questions.VoteIsClosedLabelMore});  
+    }else{
+      setAlert({ type: "success", text:LANGUAGES[user.locale].Questions.VoteIsClosedLabel});  
+    }        
+    try{
+      updateQuestionVoteTime(question, new Date()); 
+      setDisableCloseVoteButton(true);
+    }catch(error){
+      setDisableCloseVoteButton(false);
+      console.error("Error updateQuestionVoteTime", error);
+    }
+           
   }
 
 
@@ -162,8 +185,12 @@ function Question({
         </div>
         <div className="ms-2 ">
         <div className="d-flex ">
+           {canClose && (
+                <button className="btn btn-sm  mx-1" title="close vote" onClick={()=> setShowCloseVoteDialog(true)}>
+                  <FaCircle alt="Close Vote" /></button>
+              )}
             {canDelete && (
-                <button className="btn btn-sm  mx-1" onClick={()=> deleteQuestion(question.id)}>
+                <button className="btn btn-sm  mx-1" title="delete question" onClick={()=> deleteQuestion(question.id)}>
                   <FaTrashAlt alt="Delete question" /></button>
               )}
               {canRepost && (
@@ -175,7 +202,7 @@ function Question({
                 <StatsDialog question={question}
                             locale={user.locale}/>
               )}
-              <button className="btn btn-sm  mx-1"  onClick={displayCopyLinkDialog}>
+              <button className="btn btn-sm  mx-1" title="copy link" onClick={displayCopyLinkDialog}>
                   <FaLink alt="Link to Question" /></button>
 
               <SocialShare 
@@ -257,6 +284,34 @@ function Question({
       </div>   )}
 
 
+      <Modal  fullscreen={false} show={showCloseVoteDialog} >
+          <Modal.Header closeButton onClick={() => setShowCloseVoteDialog(false)}>
+            <Modal.Title>{LANGUAGES[user.locale].Questions.VoteIsClosedLabelTitle}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body >    
+              <Alert type={alert?.type} text={alert?.text} />                      
+                <p>{LANGUAGES[user.locale].Questions.VoteIsClosedLabelMessage}</p>
+               {isThereEnoughStats && (              
+                <p> {LANGUAGES[user.locale].Questions.VoteIsClosedLabelMessageMore}</p>                                            
+              )}                            
+          </Modal.Body>   
+          <Modal.Footer>                                     
+                 <button
+                      type="button"
+                      className="btn btn-outline-dark rounded-pill"
+                      onClick={()=> {setShowCloseVoteDialog(false)}}
+                    >
+                      {LANGUAGES[user.locale].Questions.Discard}
+                    </button>  
+              <Button
+                    text= {LANGUAGES[user.locale].Questions.CloseVote}
+                    className="btn btn-outline-dark rounded-pill"    
+                    disabled={disableCloseVoteButton}                 
+                    handler={terminateVote}
+                />  
+          </Modal.Footer>                   
+          </Modal>
+          
         <Modal  fullscreen={false} show={showQuestionCopyLink} >
           <Modal.Header closeButton onClick={() => {setShowQuestionCopyLink(false)}}>
             <Modal.Title>  {LANGUAGES[user.locale].Questions.CopyLinkLabel}</Modal.Title>

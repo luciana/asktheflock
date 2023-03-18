@@ -15,7 +15,7 @@ function StatsDialog({question, locale}) {
   return (
     <>
                            
-      <button className="btn btn-sm  mx-1" onClick={()=> initModal()}>
+      <button title="results" className="btn btn-sm  mx-1" onClick={()=> initModal()}>
         <FaChartPie alt={LANGUAGES[locale].Stats.QuestionStats} />
       </button>
       <div>    

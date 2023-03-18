@@ -125,6 +125,17 @@ const UpdateQuestionOptions = async ( id, options, stats ) => {
   return updateQuestion;
 };
 
+const UpdateQuestionVoteEndAt = async ( id, voteEndAt ) => { 
+  const {
+    data: { updateQuestion },
+  } = await API.graphql(
+    graphqlOperation(mutations.updateQuestion, {
+      input: { id, voteEndAt },
+    })
+  );
+  return updateQuestion;
+};
+
 const CreateQuestion = async (
   text, 
   userID,
@@ -170,6 +181,7 @@ const Mutations = {
   CreateQuestion,
   DeleteQuestion,
   UpdateQuestionOptions,
+  UpdateQuestionVoteEndAt,
   UpdateUserVotes,
   UpdateUserTag,
   UpdateUserGender,
