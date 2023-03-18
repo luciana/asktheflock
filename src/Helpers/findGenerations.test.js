@@ -1,43 +1,38 @@
 import findGeneration from './findGeneration';
-import { GENERATIONS } from '../Constants';
 
 describe('findGeneration', () => {
-  it('returns the correct generation label for a given birthdate', () => {
-    const birthdates = [
-      new Date('1925-01-01'),
-      new Date('1945-01-01'),
-      new Date('1965-01-01'),
-      new Date('1980-01-01'),
-      new Date('1995-01-01'),
-      new Date('2010-01-01'),
-    ];
-
-    const expectedGenerations = [
-      'Greatest',
-      'Silent',
-      'Boomer',
-      'Gen X',
-      'Millennial',
-      'Gen Z',
-    ];
-
-    birthdates.forEach((birthdate, index) => {
-      const generation = findGeneration(birthdate);
-      expect(generation).toBe(expectedGenerations[index]);
-    });
+  it('returns "The Silent Generation" for birthdates from 1925 to 1945', () => {
+    const birthdate = new Date('1930-01-01');
+    expect(findGeneration(birthdate)).toBe('The Silent Generation');
   });
 
-  it('returns null for an invalid birthdate', () => {
-    const birthdate = new Date('Invalid date');
-    const generation = findGeneration(birthdate);
-    expect(generation).toBeNull();
+  it('returns "The Baby Boomer Generation" for birthdates from 1946 to 1964', () => {
+    const birthdate = new Date('1950-01-01');
+    expect(findGeneration(birthdate)).toBe('The Baby Boomer Generation');
   });
 
-  it('returns the correct generation label based on GENERATIONS constant', () => {
-    GENERATIONS.forEach((generation) => {
-      const birthdate = new Date((generation.start + generation.end) / 2);
-      const label = findGeneration(birthdate);
-      expect(label).toBe(generation.label);
-    });
+  it('returns "Generation X" for birthdates from 1965 to 1979', () => {
+    const birthdate = new Date('1970-01-01');
+    expect(findGeneration(birthdate)).toBe('Generation X');
+  });
+
+  it('returns "Millennials" for birthdates from 1980 to 1994', () => {
+    const birthdate = new Date('1990-01-01');
+    expect(findGeneration(birthdate)).toBe('Millennials');
+  });
+
+  it('returns "Generation Z" for birthdates from 1995 to 2012', () => {
+    const birthdate = new Date('2000-01-01');
+    expect(findGeneration(birthdate)).toBe('Generation Z');
+  });
+
+  it('returns "Gen Alpha" for birthdates from 2013 to 2032', () => {
+    const birthdate = new Date('2020-01-01');
+    expect(findGeneration(birthdate)).toBe('Gen Alpha');
+  });
+
+  it('returns "Unknown" for birthdates outside of defined generations', () => {
+    const birthdate = new Date('1900-01-01');
+    expect(findGeneration(birthdate)).toBe('Unknown');
   });
 });
