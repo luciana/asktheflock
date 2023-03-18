@@ -1,13 +1,12 @@
- const formatDateTime = (date_input)  => {
-    let date = new Date(date_input);
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + " at " + strTime;
-  }
+import moment from 'moment-timezone';
 
-  export default formatDateTime;
+const formatDateTime = (date_input, timezone) => {
+  const date = moment(date_input).tz(timezone || moment.tz.guess());
+  const hours = date.format('h');
+  const minutes = date.format('mm');
+  const ampm = date.format('a').toLowerCase();
+  const formattedDate = date.format('M/D/YYYY [at] h:mm A');
+  return `${formattedDate} (${moment.tz(moment.tz.guess()).zoneAbbr()})`;
+};
+
+export default formatDateTime;
