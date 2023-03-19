@@ -22,13 +22,13 @@ type User @model @auth(rules: [
 }
 
 # 1 Question belongs to 1 User #UserID
-# 1 Question has many options
+# 1 Question has many options F
 type Question @model            
              @auth(rules: [       
                  # { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
                  # { allow: private, operations: [read, create, update] }                  
                    { allow: owner, operations: [ read, create, update, delete]},
-                   { allow: private, operations: [read, update] } # delete was needed here for the owner to delete a question                 
+                   { allow: private, operations: [read, update, delete] } # delete was needed here for the owner to delete a question                 
                   ])
               {
   id: ID!  @primaryKey

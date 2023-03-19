@@ -70,18 +70,16 @@ const Questions = () => {
           if(q){
               setBackendQuestions(q.filter(
                 (backendQuestion) => ((backendQuestion.parentID === null) )
-              ).sort(
-              (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            ));
+              )            
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
           
           // initial setFilter list is the same as backendquestions retrieved from the server.
               setFilterList(q.filter(
                 (backendQuestion) => ((backendQuestion.parentID === null) )
-              ).sort(
-              (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            ));
+              )
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));           
           }
          
           
@@ -453,17 +451,15 @@ const Questions = () => {
 
           setBackendQuestions(updatedBackendQuestions.filter(
             (backendQuestion) => ((backendQuestion.parentID === null) )
-          ).sort(
-          (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          ));
+          )
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
 
           setFilterList(updatedBackendQuestions.filter(
             (backendQuestion) => ((backendQuestion.parentID === null) )
-          ).sort(
-          (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          ));
+          )
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
         
           setLoading(false);    
    
