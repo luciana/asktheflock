@@ -67,9 +67,9 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateQuestion = /* GraphQL */ `
   subscription OnCreateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $owner: String
+    $userID: String
   ) {
-    onCreateQuestion(filter: $filter, owner: $owner) {
+    onCreateQuestion(filter: $filter, userID: $userID) {
       id
       text
       userID
@@ -80,7 +80,6 @@ export const onCreateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      owner
       createdAt
       updatedAt
     }
@@ -89,9 +88,9 @@ export const onCreateQuestion = /* GraphQL */ `
 export const onUpdateQuestion = /* GraphQL */ `
   subscription OnUpdateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $owner: String
+    $userID: String
   ) {
-    onUpdateQuestion(filter: $filter, owner: $owner) {
+    onUpdateQuestion(filter: $filter, userID: $userID) {
       id
       text
       userID
@@ -102,7 +101,6 @@ export const onUpdateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      owner
       createdAt
       updatedAt
     }
@@ -111,9 +109,9 @@ export const onUpdateQuestion = /* GraphQL */ `
 export const onDeleteQuestion = /* GraphQL */ `
   subscription OnDeleteQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $owner: String
+    $userID: String
   ) {
-    onDeleteQuestion(filter: $filter, owner: $owner) {
+    onDeleteQuestion(filter: $filter, userID: $userID) {
       id
       text
       userID
@@ -124,7 +122,6 @@ export const onDeleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      owner
       createdAt
       updatedAt
     }

@@ -25,9 +25,9 @@ type User @model @auth(rules: [
 # 1 Question has many options F
 type Question @model            
              @auth(rules: [       
-                 # { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
+                  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
                  # { allow: private, operations: [read, create, update] }                  
-                   { allow: owner, operations: [ read, create, update, delete]},
+                  # { allow: owner, operations: [ read, create, update, delete]},
                    { allow: private, operations: [read, update, delete] } # delete was needed here for the owner to delete a question                 
                   ])
               {
@@ -41,6 +41,8 @@ type Question @model
   questionTag: String  #@index(name: "byQuestionTag", sortKeyFields: ["id"])
   options: AWSJSON #need to make this mandatory
   stats: AWSJSON
-  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }, { allow: private, operations: [read, update] }])
-}
+#   owner: String @auth(rules: [
+#       { allow: owner, operations: [read, delete] },
+#       { allow: private, operations: [read, update, delete] }]) #needed to show questions, vote and delete question
+ }
  
