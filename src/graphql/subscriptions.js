@@ -16,9 +16,9 @@ export const onCreateUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -37,9 +37,9 @@ export const onUpdateUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -58,18 +58,18 @@ export const onDeleteUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onCreateQuestion = /* GraphQL */ `
   subscription OnCreateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onCreateQuestion(filter: $filter, userID: $userID) {
+    onCreateQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -80,6 +80,7 @@ export const onCreateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -88,9 +89,9 @@ export const onCreateQuestion = /* GraphQL */ `
 export const onUpdateQuestion = /* GraphQL */ `
   subscription OnUpdateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onUpdateQuestion(filter: $filter, userID: $userID) {
+    onUpdateQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -101,6 +102,7 @@ export const onUpdateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -109,9 +111,9 @@ export const onUpdateQuestion = /* GraphQL */ `
 export const onDeleteQuestion = /* GraphQL */ `
   subscription OnDeleteQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onDeleteQuestion(filter: $filter, userID: $userID) {
+    onDeleteQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -122,6 +124,7 @@ export const onDeleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }

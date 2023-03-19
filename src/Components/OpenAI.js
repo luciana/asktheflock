@@ -11,7 +11,7 @@ const Open = async () => {
 
         const resp = await openai.createCompletion({
             model: "text-davinci-003",
-            prompt: "Should I go to the beach or the mountains for a Spring Break vacation?",
+            prompt: "Out on a happy hour with a friend eating sushi, what should I drink? #flocks Sapporo beer, vodka cranberry, wine",
             temperature: 0.5,
             max_tokens: 60,
             top_p: 1,

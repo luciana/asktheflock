@@ -94,14 +94,12 @@ function QuestionModalDialog(
     setShowPicker(false);
   };
 
-  
-
   return (
     <>      
-      <h4 className="mb-0">
+      <h4 className="mb-0">        
         <span>{LANGUAGES[user.locale].Questions.NewQuestionGreeting} {formatName(user.name, 50)} </span>
         <span className="mx-2 text-color-gray" aria-hidden="true"> • </span>
-       { JSON.parse(user.votes).length > 0  && (
+       { JSON.parse(user.votes) && JSON.parse(user.votes).length > 0  && (
          <a href={`${ROUTES[user.locale].PROFILE}#badges`} aria-label="Achievements" >    
           <span  style={{
                       color:'#f5c135'

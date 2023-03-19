@@ -12,13 +12,14 @@ type User @model @auth(rules: [
   locale: String!
   email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail") @aws_cognito_user_pools
   name: String
-  userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])  
+  userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])
   birthdate: AWSDate
   gender: String
   address: String
-  votes: AWSJSON #make it empty [] at creation
+  votes: AWSJSON
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  #prevent owners to reassign the owner of their existing record to another user.
 }
-
 
 # 1 Question belongs to 1 User #UserID
 # 1 Question has many options
@@ -26,13 +27,13 @@ type Question @model
              @auth(rules: [       
                  # { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
                  # { allow: private, operations: [read, create, update] }                  
-                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
-                   { allow: private, operations: [read, update, delete] } # delete was needed here for the owner to delete a question                 
+                   { allow: owner, operations: [ read, create, update, delete]},
+                   { allow: private, operations: [read, update] } # delete was needed here for the owner to delete a question                 
                   ])
               {
   id: ID!  @primaryKey
-  text: String!  #@index(name: "allQuestions", queryField: "getAllQuestions")
-  userID: ID! @index(name:"byUserId", queryField: "questionByUserId")
+  text: String!
+  userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
   userName: String
   voteEndAt: AWSDateTime
   sentiment: String
@@ -40,6 +41,6 @@ type Question @model
   questionTag: String  #@index(name: "byQuestionTag", sortKeyFields: ["id"])
   options: AWSJSON #need to make this mandatory
   stats: AWSJSON
- # owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }, { allow: private, operations: [read, update] }])
 }
  

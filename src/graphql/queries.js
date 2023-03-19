@@ -13,9 +13,9 @@ export const getUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -44,9 +44,9 @@ export const listUsers = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -65,6 +65,7 @@ export const getQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -96,6 +97,7 @@ export const listQuestions = /* GraphQL */ `
         questionTag
         options
         stats
+        owner
         createdAt
         updatedAt
       }
@@ -128,9 +130,9 @@ export const userByEmail = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -163,9 +165,9 @@ export const usersByUserTagAndId = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -197,6 +199,7 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
+        owner
         createdAt
         updatedAt
       }

@@ -16,9 +16,9 @@ export const createUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -37,9 +37,9 @@ export const updateUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -58,9 +58,9 @@ export const deleteUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -80,6 +80,7 @@ export const createQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -101,6 +102,7 @@ export const updateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -122,6 +124,7 @@ export const deleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
