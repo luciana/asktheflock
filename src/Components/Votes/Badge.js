@@ -146,7 +146,7 @@ const Badge = ({count, label}) => {
                   </div>
                 ) }                
               {count && selectBadge.length > 0 && selectBadge.map((badge, index) =>(  
-                <div className=" border border-1" key={`badge-${index}`}>
+                <div className=" border border-1 my-2" key={`badge-${index}`}>
                 <div className="py-2 d-flex align-items-center" key={`badge-${index}`}>  
                   <div className="main-badge-wrapper">                  
                         <div className={badge.color} >            
