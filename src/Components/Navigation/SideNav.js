@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import Avatar from 'react-avatar';
-import logo from'../../Assets/Images/logos/Flock-App-logo-black-small.png';
+import logo from'../../Assets/Images/logos/Ask-The-Flock-logo_transparent-smaller.png';
 import { LANGUAGES, ROUTES } from "../../Constants";
 import { AppContext } from "../../Contexts";
 import { useNavigate, NavLink } from "react-router-dom";
