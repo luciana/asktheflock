@@ -69,15 +69,16 @@ function SideNav({ handleSignOut }) {
                 </NavItem>
               ))
             }
-
-            <div className="row d-flex flex-column align-items-center">
-              <button onClick={() => handleSignOut()} className="btn nav-link js-scroll-trigger">
+            <li className="nav-item">
+              <button onClick={() => handleSignOut()} className="btn nav-link bottom-nav-link none js-scroll-trigger">
+                <div class="row d-flex flex-column align-items-center">
                       <FontAwesomeIcon size="lg" icon={faSignOut} className="bg-company-white"/>
                       <div className="bottom-tab-label d-flex flex-column align-items-center bg-company-white">
                       {LANGUAGES[user.locale].Profile.SignOut}
                       </div>
+                </div>
                 </button>
-             </div>
+             </li>
              
                         
              
