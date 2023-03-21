@@ -272,16 +272,21 @@ function Question({
         { expertNeeded && (       
           <span className="p-2"><FaPhoneVolume /> {LANGUAGES[user.locale].Questions.SpecialCallOutFor}<strong>{question.questionTag}</strong></span>
         )}
-      { expertNeededWithYourSkill && (       
-        
-        <span className="p-2">· {LANGUAGES[user.locale].Questions.YouCanHelp}</span>
+         { expertNeeded && expertNeededWithYourSkill && (       
+         <span className="mx-2 text-color-gray" aria-hidden="true"> • </span> 
         )}
+        { expertNeededWithYourSkill && !alreadyVotedForQuestionListBool && (        
+        <span className="p-2"> {LANGUAGES[user.locale].Questions.YouCanHelp}</span>
+        )}
+         { expertNeededWithYourSkill && alreadyVotedForQuestionListBool && (       
+         <span className="mx-2 text-color-gray" aria-hidden="true"> • </span> 
+        )}
+        { alreadyVotedForQuestionListBool && (             
+          <span className="p-2">  {LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
+          )}
         </div> 
       
-      { alreadyVotedForQuestionListBool && (       
-       <div className="container text-sm lh-3">
-        <span className="p-2">{LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
-      </div>   )}
+      
 
 
       <Modal  fullscreen={false} show={showCloseVoteDialog} >
