@@ -1,5 +1,5 @@
 //import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../../Assets/Images/logos/Ask The Flock-square-blue-smaller.png';
+import logo from '../../Assets/Images/logos/Ask-The-Flock-square-blue-smaller.png';
 
 
 const NotFound = () => {
