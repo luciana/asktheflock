@@ -2,10 +2,11 @@ import { useContext } from "react";
 import { Badge, QuestionBadge } from './../../Components/Votes';
 import { LANGUAGES } from "../../Constants";
 import { AppContext } from "../../Contexts";
+import { RiMapPin2Line, RiFlag2Line, RiMedal2Line }  from 'react-icons/ri';
+import { FaRegCircle, FaBirthdayCake }  from 'react-icons/fa';
 import './Card.css';
 import { isOwner } from "../../Helpers/owner";
-import {formatDateTime} from '../../Helpers';
-
+import {formatDateTime, flagImage, findGeneration} from '../../Helpers';
 
 const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
 
@@ -22,32 +23,39 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
    
        <h3 className="profile-name ">{user.name}</h3>  
        <div className="">{user.email}   {isModerator && (<span className="text-sm text-color-green"> (You are a moderator) </span>)}</div>
+       <div className="fw-lighter text-sm text-color-gray">{LANGUAGES[user.locale].Profile.Joined} {formatDateTime(user.createdAt)}</div>
        <div className="border border-1  p-3 my-2">
-        <div className="" >                    
-          <div className=" fw-bolder"> 
+        <div className="" >    
+          <div className="row py-2" >     
+          <div className="col fw-lighter"> 
+            {user.address && user.address.length > 0 && (   
+            <div className=""><RiMapPin2Line size={18}/> {user.address}</div>
+            )}
+          </div>   
+          <div className="col fw-lighter">  <RiFlag2Line size={18}/> {LANGUAGES[user.locale].Languages[user.locale]  } {flagImage(user.locale)}</div>                    
+          </div>          
+          <div className="row py-2" >    
+            <div className="col fw-lighter"> 
+            {user.gender && user.gender.length > 0 && (              
+              <div className=""><FaRegCircle size={15}/> {user.gender}</div>
+            )} 
+            </div>  
+            <div className="col fw-ligther"> 
              {user.userTag && user.userTag.length > 0 && (
-                <span className="">
-                {LANGUAGES[user.locale].Expertise + " : "}  #{user.userTag}
+                <span className=""><RiMedal2Line size={18} /> #{user.userTag}
                 </span>           
                 )} 
-          </div>  
-          <div className="fw-bolder"> 
-          {user.gender && user.gender.length > 0 && (              
-             <div className="">{LANGUAGES[user.locale].Gender + " : "} {user.gender}</div>
-           )} 
-          </div>  
-          <div className="fw-bolder"> 
-          {user.address && user.address.length > 0 && (   
-            <div className="">{LANGUAGES[user.locale].ZipCode + " : "}{user.address}</div>
-            )}
-          </div>  
-          <div className="fw-bolder"> 
-          {user.birthdate && user.birthdate.length > 0 && (   
-            <div className="">{LANGUAGES[user.locale].Birth + " : "}{user.birthdate}</div>
-          )}
-          </div>  
-          <div className="fw-bolder">   {LANGUAGES[user.locale].Profile.LanguagePreference + " : "} {LANGUAGES[user.locale].Languages[user.locale]  }</div>       
-        <div className="fw-bolder text-sm">{LANGUAGES[user.locale].Profile.Joined} {formatDateTime(user.createdAt)}</div>
+            </div> 
+             
+          </div>
+          <div className="row" >    
+            <div className="col fw-lighter"> 
+            {user.birthdate && user.birthdate.length > 0 && (   
+              <div className=""><FaBirthdayCake size={18} />  {LANGUAGES[user.locale].Birth + " : "}{user.birthdate}  <span className="mx-2 text-color-gray" aria-hidden="true"> • </span>  {findGeneration(new Date(user.birthdate))} </div>
+            )}                       
+            </div> 
+          </div>
+       
       </div>
       </div>
       <div className="border border-1 p-3 my-2" id="badges"> 
@@ -60,20 +68,13 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
             )}           
          </div><div className="col">
             {questionCounts >0 && (            
-                <QuestionBadge count={questionCounts} label={LANGUAGES[user.locale].Questions.Asked}/>   
-                //  <div className="py-2 d-flex align-items-center border border-1">                  
-                //   {<QuestionBadge count={questionCounts} />}                  
-                //   <span className="number">{questionCounts}  <span className="follow text-sm">{LANGUAGES[user.locale].Questions.Asked}</span></span> 
-                //  </div>
+                <QuestionBadge count={questionCounts} label={LANGUAGES[user.locale].Questions.Asked}/>                  
 
               )}       
         </div><div className="col">
             {whoHelpedMeCounts >0 && (
                <QuestionBadge count={whoHelpedMeCounts} label={LANGUAGES[user.locale].Questions.WhoHelped}/>   
-                //  <div className="py-2 d-flex align-items-center border border-1">                  
-                //   {<QuestionBadge count={whoHelpedMeCounts} />}                  
-                //   <span className="number">{whoHelpedMeCounts} <br/><span className="follow text-sm">{LANGUAGES[user.locale].Questions.WhoHelped}</span></span> 
-                //  </div>
+                
 
               )}    
               </div>   

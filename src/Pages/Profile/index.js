@@ -161,6 +161,8 @@ export default function Profile() {
     } catch (error) {
       console.error("handleProfileInfo error", error);
       setAlert({ type: "error", text: LANGUAGES[user.locale].CommonError.UpdateUser});
+      //navigate(ROUTES[user.locale].SIGN_IN);
+
     }
     setLoading(false);
   };

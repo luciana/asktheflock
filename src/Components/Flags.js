@@ -2,9 +2,10 @@ import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../Contexts";
 import { LANGUAGES, ROUTES, TYPES } from "../Constants";
-import BR from "../Assets/Images/flags/pt-BR.svg";
-import EN from "../Assets/Images/flags/en-US.svg";
+//import BR from "../Assets/Images/flags/pt-BR.svg";
+//import EN from "../Assets/Images/flags/en-US.svg";
 import { Dropdown } from 'bootstrap';
+import {flagImage} from './../Helpers';
 
 export default function Flags() {
   const location = useLocation();
@@ -19,11 +20,11 @@ export default function Flags() {
   });
 
   
-  function showFlag(lang) {
-    if (lang === "pt-BR")
-      return <img src={BR} alt="Português" height="20" className="" /> ;
-    return <img src={EN} alt="English" height="20" className="" />;
-  }
+  // function showFlag(lang) {
+  //   if (lang === "pt-BR")
+  //     return <img src={BR} alt="Português" height="20" className="" /> ;
+  //   return <img src={EN} alt="English" height="20" className="" />;
+  // }
 
   function showLanguageName(lang){
     if (lang === "pt-BR") 
@@ -48,7 +49,7 @@ export default function Flags() {
           
             id="dropdownMenuButton1"          
             data-bs-toggle="dropdown" aria-expanded="false">
-      {showFlag(state.lang)}  
+      {flagImage(state.lang)}  
     </button>
     <ul       
       aria-labelledby="dropdownMenuButton1"
@@ -59,7 +60,7 @@ export default function Flags() {
         .map((l) => (
           <li key={l}>
             <button type="button" className="dropdown-item" onClick={() => handleChangeLanguage(l)}>
-              {showFlag(l)}  {showLanguageName(l)}
+              {flagImage(l)}  {showLanguageName(l)}
             </button>
           </li>
         ))}

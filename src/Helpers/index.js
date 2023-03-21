@@ -7,3 +7,4 @@ export { default as findAge } from "./findAge";
 export { default as formatDateTime } from "./formatDateTime";
 export { default as formatName } from "./formatName";
 export { default as findStateFromZip } from "./findStateFromZip";
+export { default as flagImage } from "./showFlagImage";
