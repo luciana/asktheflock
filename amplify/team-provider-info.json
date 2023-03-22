@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "asktheflock589370c8": {}
+        "asktheflock589370c8": {},
+        "userPoolGroups": {}
       },
       "api": {
         "flock": {}
