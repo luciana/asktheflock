@@ -9,6 +9,7 @@ const en_us_routes = {
     PROFILE: "/profile",
     PRIVACY: "/privacy",
     STATS: "/Stats",
+    ADMIN: "/Admin",
   };
   
   export default en_us_routes;

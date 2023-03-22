@@ -50,6 +50,14 @@ const GetUser = async () => {
 
 };
 
+const IsAdminUser = async() => {
+  const result = await AmplifyAuth.currentAuthenticatedUser();
+  const g = result.signInUserSession.accessToken.payload["cognito:groups"];
+  const adminGroup = process.env.REACT_APP_ADMIN;
+  console.log("tes", adminGroup, g);
+  return g.includes(adminGroup);
+}
+
 const SignOut = async () => {
   try{
     await AmplifyAuth.signOut({ global: true })
@@ -95,6 +103,7 @@ const Auth = {
   ForgotPassword,
   RedefinePassword,
   GetUser,
+  IsAdminUser,
   SignOut,
   ChangeEmail,
   ConfirmChangeEmail,

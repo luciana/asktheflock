@@ -16,6 +16,7 @@ const ConfirmSignUp = lazy(() => import("./Pages/Auth/ConfirmSignUp"));
 
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
 const Main = lazy(() => import("./Pages/Main"));
+const Admin = lazy(() => import("./Pages/Admin"));
 const Home = lazy(() => import("./Pages/Home"));
 const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
 const Profile = lazy(() => import("./Pages/Profile"));
@@ -32,13 +33,9 @@ function App() {
 
   return (
     <Suspense fallback={<Loading />}>
-      <Routes>
-        
-        
+      <Routes>              
         <Route path={ROUTES[state.lang].HOME} element={<Home />} />     
-        <Route path={ROUTES[state.lang].PRIVACY} element={<Privacy />} />
-       
-        
+        <Route path={ROUTES[state.lang].PRIVACY} element={<Privacy />} />              
         <Route element={<AuthLayout />}>
           <Route path={ROUTES[state.lang].SIGN_IN} element={<SignIn />} />
           <Route path={ROUTES[state.lang].FORGOT_PASSWORD} element={<ForgotPassword />} />
@@ -46,11 +43,10 @@ function App() {
           <Route path={ROUTES[state.lang].SIGN_UP} element={<SignUp />} />
           <Route path={ROUTES[state.lang].CONFIRM_SIGN_UP} element={<ConfirmSignUp />}/>
         </Route>
-        <Route element={<Layout />}>
-         
+        <Route element={<Layout />}>         
           <Route path={ROUTES[state.lang].MAIN} element={<Main />} />
           <Route path={ROUTES[state.lang].PROFILE} element={<Profile />} />         
-    
+          <Route path={ROUTES[state.lang].ADMIN} element={<Admin />} /> 
         </Route>
         <Route path="*" element={<NotFound />} />
        

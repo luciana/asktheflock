@@ -5,8 +5,7 @@ import { AppContext } from "../../Contexts";
 import { RiMapPin2Line, RiFlag2Line, RiMedal2Line }  from 'react-icons/ri';
 import { FaRegCircle, FaBirthdayCake }  from 'react-icons/fa';
 import './Card.css';
-import { isOwner } from "../../Helpers/owner";
-import {formatDateTime, flagImage, findGeneration} from '../../Helpers';
+import {formatDateTime, flagImage, findGeneration, isAdmin} from '../../Helpers';
 
 const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
 
@@ -14,7 +13,7 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
   const { user } = state;
 
  // const userCount = (user.userTag) ? user.userTag.length : 1;
-  const isModerator = isOwner(user.email);
+  const isModerator = isAdmin(user.email);
 
   return (
 

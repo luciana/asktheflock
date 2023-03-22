@@ -8,3 +8,4 @@ export { default as formatDateTime } from "./formatDateTime";
 export { default as formatName } from "./formatName";
 export { default as findStateFromZip } from "./findStateFromZip";
 export { default as flagImage } from "./showFlagImage";
+export { default as isAdmin } from "./isAdmin";
