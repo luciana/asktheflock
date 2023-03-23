@@ -47,7 +47,7 @@ const QuestionForm2 = ({
             onChange={handleChange}
             name='textarea'
             rows="4"
-            maxLength="124"
+            maxLength={process.env.REACT_APP_MAX_QUESTION_CHARACTER}
             className='form-control '
             ref={inputRef}
           />         
