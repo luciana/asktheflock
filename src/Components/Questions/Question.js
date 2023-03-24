@@ -33,6 +33,7 @@ function Question({
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
   const [showCloseVoteDialog, setShowCloseVoteDialog] = useState(false);
   const [disableCloseVoteButton, setDisableCloseVoteButton] =useState(false);
+  const [expertVoteCount, setExpertVoteCount] =useState(null);
   const [alert, setAlert] = useState();
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ function Question({
 
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
+    getExpertVoteCount();
   }, []);
 
 
@@ -77,16 +79,28 @@ function Question({
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
   let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
   const myOwnQuestion = question.userID === user.id;
-  const expertsTags = findCounts(JSON.parse(question.stats), "userTag", "userTag")
-  .map((item) => {
-        Object.keys(item).map((key) => {
-          item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
-        });
-        return item;
-    })
-    .sort((a, b) => b.value - a.value)
-    .filter((fil) => fil.userTag === question.questionTag);
-    const expertsTagsMatchingCount = expertsTags.length > 0 ? expertsTags[0].value  : null;                
+
+
+  const getExpertVoteCount = () => {
+    const findExpertCounts = findCounts(JSON.parse(question.stats), "userTag", "userTag");
+    if(findExpertCounts){
+      const expertsTags = findExpertCounts
+      .map((item) => {
+            Object.keys(item).map((key) => {
+              item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+            });
+            return item;
+        })
+        .sort((a, b) => b.value - a.value)
+        .filter((fil) => fil.userTag === question.questionTag);
+      const expertsTagsMatchingCount = expertsTags && expertsTags.length > 0 ? expertsTags[0].value  : null;  
+      setExpertVoteCount(expertsTagsMatchingCount);
+    }
+  }
+  
+  
+    
+                
     
 
 
@@ -194,14 +208,14 @@ function Question({
                 {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}                
                 </div>  
                 
-                { expertsTagsMatchingCount && expertsTagsMatchingCount ===1 && (
+                { expertVoteCount && expertVoteCount ===1 && (
                   <div className="">
-                  <span className="text-sm"> <GrUserExpert /> {expertsTagsMatchingCount} {LANGUAGES[user.locale].Questions.ExpertVoted}</span>
+                  <span className="text-sm"> <GrUserExpert /> {expertVoteCount} {LANGUAGES[user.locale].Questions.ExpertVoted}</span>
                   </div>
                 )}
-                { expertsTagsMatchingCount && expertsTagsMatchingCount > 1 && (
+                { expertVoteCount && expertVoteCount > 1 && (
                   <div className="">
-                  <span className="text-sm"> <GrUserExpert /> {expertsTagsMatchingCount} {LANGUAGES[user.locale].Questions.ExpertsVoted}</span>
+                  <span className="text-sm"> <GrUserExpert /> {expertVoteCount} {LANGUAGES[user.locale].Questions.ExpertsVoted}</span>
                   </div>
                 )}
                
