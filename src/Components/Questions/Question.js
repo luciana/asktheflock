@@ -1,12 +1,13 @@
 import React, {useState,useEffect} from 'react';
 import Vote from '../Votes/Vote';
-import { FaCircleNotch , FaLink, FaSyncAlt, FaCircle, FaTrashAlt, FaGrinHearts, FaPhoneVolume} from 'react-icons/fa';
+import { FaCircleNotch , FaLink, FaSyncAlt, FaCircle, FaTrashAlt, FaRegHandshake, FaPhoneVolume} from 'react-icons/fa';
+import { GrUserExpert } from 'react-icons/gr';
 import Avatar from 'react-avatar';
 //import ReplyModalDialog from './ReplyModalDialog';
 //import QuestionForm from './QuestionForm';
 import StatsDialog from '../Stats/StatsDialog';
 import { SocialShare } from '../Social';
-import { formatDateTime, formatName } from '../../Helpers';
+import { formatDateTime, formatName, findCounts } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
@@ -76,7 +77,18 @@ function Question({
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
   let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
   const myOwnQuestion = question.userID === user.id;
-  //console.log("Can I vote up", myOwnQuestion);
+  const expertsTags = findCounts(JSON.parse(question.stats), "userTag", "userTag")
+  .map((item) => {
+        Object.keys(item).map((key) => {
+          item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+        });
+        return item;
+    })
+    .sort((a, b) => b.value - a.value)
+    .filter((fil) => fil.userTag === question.questionTag);
+    const expertsTagsMatchingCount = expertsTags.length > 0 ? expertsTags[0].value  : null;                
+    
+
 
   const voteUp = (item) => {
 
@@ -177,10 +189,22 @@ function Question({
                 <h5 className="mb-0 "><strong>{formatName(question.userName, 20)}</strong></h5>
                 <span className="d-none">  {createdAt} </span> 
                 <div className="text-sm">
-                {!isAReply && voteEnded && (<span > Closed <FaCircle /> </span>)}
-                {!isAReply && !voteEnded && (<span> Open < FaCircleNotch /> until {formatDateTime(question.voteEndAt)}</span>)}
+                {!isAReply && voteEnded && (<span > <FaCircle /> {LANGUAGES[user.locale].Questions.Closed}  </span>)}
+                {!isAReply && !voteEnded && (<span> < FaCircleNotch /> {LANGUAGES[user.locale].Questions.OpenUntil} {formatDateTime(question.voteEndAt)}</span>)}
                 {isAReply && (<span><FaCircle color="green"/> {question.sentiment}</span>)}                
                 </div>  
+                
+                { expertsTagsMatchingCount && expertsTagsMatchingCount ===1 && (
+                  <div className="">
+                  <span className="text-sm"> <GrUserExpert /> {expertsTagsMatchingCount} {LANGUAGES[user.locale].Questions.ExpertVoted}</span>
+                  </div>
+                )}
+                { expertsTagsMatchingCount && expertsTagsMatchingCount > 1 && (
+                  <div className="">
+                  <span className="text-sm"> <GrUserExpert /> {expertsTagsMatchingCount} {LANGUAGES[user.locale].Questions.ExpertsVoted}</span>
+                  </div>
+                )}
+               
             </div>                   
         </div>
         <div className="ms-2 ">
@@ -272,18 +296,16 @@ function Question({
         { expertNeeded && (       
           <span className="p-2"><FaPhoneVolume /> {LANGUAGES[user.locale].Questions.SpecialCallOutFor}<strong>{question.questionTag}</strong></span>
         )}
-         { expertNeeded && expertNeededWithYourSkill && (       
+         { expertNeeded && (expertNeededWithYourSkill || alreadyVotedForQuestionListBool) && (       
          <span className="mx-2 text-color-gray" aria-hidden="true"> • </span> 
         )}
         { expertNeededWithYourSkill && !alreadyVotedForQuestionListBool && (        
-        <span className="p-2"> {LANGUAGES[user.locale].Questions.YouCanHelp}</span>
-        )}
-         { expertNeededWithYourSkill && alreadyVotedForQuestionListBool && (       
-         <span className="mx-2 text-color-gray" aria-hidden="true"> • </span> 
-        )}
-        { alreadyVotedForQuestionListBool && (             
-          <span className="p-2">  {LANGUAGES[user.locale].Questions.YouHelped} {question.userName} <FaGrinHearts /></span>
+        <span className="p-2"> <FaRegHandshake /> {LANGUAGES[user.locale].Questions.YouCanHelp}</span>
+        )}        
+         { expertNeededWithYourSkill && alreadyVotedForQuestionListBool && (              
+          <span className="p-2"> <GrUserExpert /> {LANGUAGES[user.locale].Questions.YouHelped} </span>
           )}
+       
         </div> 
       
       

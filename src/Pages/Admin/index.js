@@ -72,6 +72,9 @@ function Admin() {
     const wininingOptionItem = statOptionData && winningOption &&  statOptionData.filter((i) => i.votes === winningOption ); 
     const winners = wininingOptionItem &&  wininingOptionItem.map((i) => i.text + ' ');
     const winner = wininingOptionItem && wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners;
+
+    const optionId = wininingOptionItem && wininingOptionItem.length>0 && wininingOptionItem[0].id;
+
     const allMaleGender = (statData).filter((i) => i.userGender === 'male');
     const allFemaleGender = (statData).filter((i) => i.userGender === 'female');
     const allNonBinaryGender = (statData).filter((i) => i.userGender === 'non-binary');
@@ -80,7 +83,26 @@ function Admin() {
 
     console.log("winning values", wininingOptionItem);
 
-    const optionId = wininingOptionItem && wininingOptionItem.length>0 && wininingOptionItem[0].id;
+
+    let expertOverallMessage = null;
+    const userQuestionTag = activeQuestion && activeQuestion.questionTag;
+    const expertsTags = findCounts(statData, "userTag", "userTag")
+    .map((item) => {
+          Object.keys(item).map((key) => {
+            item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+          });
+          return item;
+      })
+      .sort((a, b) => b.value - a.value)
+      .filter((fil) => fil.userTag === userQuestionTag)
+
+      console.log("expertsTags", expertsTags);
+      if( expertsTags && expertsTags.length > 0  ){          
+            expertOverallMessage = ` You asked for #${userQuestionTag} and ${expertsTags[0].value} people with this expertise helped! `;   
+               
+      }
+
+    
     const noneGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && (i.userGender === '' || !i.userGender)));
     const maleGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && i.userGender === 'male'));
     const femaleGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && i.userGender === 'female'));
@@ -113,10 +135,11 @@ function Admin() {
             genderWinningMessage = `The winning choice got all votes from ${w[0].userGender} users! Total of ${w[0].value}`;
         }else if (w.length > 1){
             
-            genderWinningMessage = `Most of the votes for the winning choice     were from ${w[0].userGender} users!`;
+            genderWinningMessage = `Most of the votes for the winning choice were from ${w[0].userGender} users!`;
         }
       }
  
+      console.log("activeQuestion", activeQuestion);
     return (
     <section className="App ">
      {loading && <Loading />}
@@ -131,7 +154,7 @@ function Admin() {
                     <>
                     <h5>Email Template</h5>
 
-                    <div className="border border-1">
+                    <div className="container m-2 border border-1">
                         <p className="align-center" >We are here to help you with your decision:</p>
                         <p>  {activeQuestion.text} </p>
                         <p>  <img src={logo} /></p>
@@ -140,10 +163,10 @@ function Admin() {
                         {winner && (
                              <li>The winning choice was “{winner}” with {(winningOption/tv)*100}% of the total votes ({winningOption}/{tv})</li>
                         )}   
-                        {activeQuestion && activeQuestion.questionTag && (
-                            <li> You asked for #{activeQuestion.questionTag} and xx people with this expertise helped!</li>
+                        { expertOverallMessage &&(
+                            <li> {expertOverallMessage}</li>
                         )}  
-                         {activeQuestion && activeQuestion.questionTag && (
+                         { expertOverallMessage &&(
                             <li>A total of xx #parents experts answered. xxx%  of them AGREED with the winning option.</li>
                         )}   
                         {genderOverallMessage && (
@@ -155,6 +178,9 @@ function Admin() {
                         )}                   
                             
                         </ul> 
+                        <button className="btn btn-primary my-2">Dig into the results details</button>
+                        <p className="py-3">Thank you for ASKing THE FLOCK!  We  are looking forward to helping you with your next question.</p>
+                        <p>Ask The Flock Team<br/><a href="http://www.asktheflock.com">http://www.asktheflock.com</a></p>
                     </div>
                    
                   

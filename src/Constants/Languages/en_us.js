@@ -83,6 +83,10 @@ const en_us_lang = {
     VoteIsClosedLabelMessage: "This will close the voting for your question now. People won't be able to vote anymore.",
     VoteIsClosedLabelMessageMore: "Once voting is closed, you will get the detailed results of the voting thus far. ",
     VoteIsClosedLabelTitle: "Close voting",
+    Closed: "Closed",
+    OpenUntil: "Open until ",
+    ExpertVoted: "expert voted.",
+    ExpertsVoted: "experts voted.",
 
   },
   PasswordRules: {
