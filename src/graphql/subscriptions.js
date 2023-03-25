@@ -127,3 +127,99 @@ export const onDeleteQuestion = /* GraphQL */ `
     }
   }
 `;
+export const onCreateStat = /* GraphQL */ `
+  subscription OnCreateStat(
+    $filter: ModelSubscriptionStatFilterInput
+    $userID: String
+  ) {
+    onCreateStat(filter: $filter, userID: $userID) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStat = /* GraphQL */ `
+  subscription OnUpdateStat(
+    $filter: ModelSubscriptionStatFilterInput
+    $userID: String
+  ) {
+    onUpdateStat(filter: $filter, userID: $userID) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStat = /* GraphQL */ `
+  subscription OnDeleteStat(
+    $filter: ModelSubscriptionStatFilterInput
+    $userID: String
+  ) {
+    onDeleteStat(filter: $filter, userID: $userID) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateOption = /* GraphQL */ `
+  subscription OnCreateOption(
+    $filter: ModelSubscriptionOptionFilterInput
+    $userID: String
+  ) {
+    onCreateOption(filter: $filter, userID: $userID) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateOption = /* GraphQL */ `
+  subscription OnUpdateOption(
+    $filter: ModelSubscriptionOptionFilterInput
+    $userID: String
+  ) {
+    onUpdateOption(filter: $filter, userID: $userID) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteOption = /* GraphQL */ `
+  subscription OnDeleteOption(
+    $filter: ModelSubscriptionOptionFilterInput
+    $userID: String
+  ) {
+    onDeleteOption(filter: $filter, userID: $userID) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;

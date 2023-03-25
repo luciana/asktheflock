@@ -103,6 +103,88 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
+export const getStat = /* GraphQL */ `
+  query GetStat($id: ID!) {
+    getStat(id: $id) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStats = /* GraphQL */ `
+  query ListStats(
+    $id: ID
+    $filter: ModelStatFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listStats(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        stats
+        questionID
+        userID
+        userName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getOption = /* GraphQL */ `
+  query GetOption($id: ID!) {
+    getOption(id: $id) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listOptions = /* GraphQL */ `
+  query ListOptions(
+    $id: ID
+    $filter: ModelOptionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listOptions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        options
+        questionID
+        userID
+        userName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: AWSEmail!
@@ -197,6 +279,62 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const statByQuestionId = /* GraphQL */ `
+  query StatByQuestionId(
+    $questionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelStatFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    statByQuestionId(
+      questionID: $questionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        stats
+        questionID
+        userID
+        userName
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const optionByQuestionId = /* GraphQL */ `
+  query OptionByQuestionId(
+    $questionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelOptionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    optionByQuestionId(
+      questionID: $questionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        options
+        questionID
+        userID
+        userName
         createdAt
         updatedAt
       }

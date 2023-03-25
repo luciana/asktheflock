@@ -21,8 +21,6 @@ type User @model @auth(rules: [
   #prevent owners to reassign the owner of their existing record to another user.
 }
 
-# 1 Question belongs to 1 User #UserID
-# 1 Question has many options F
 type Question @model            
              @auth(rules: [       
                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
@@ -46,7 +44,7 @@ type Question @model
 #       { allow: owner, operations: [read, delete] },
 #       { allow: private, operations: [read, update, delete] }]) #needed to show questions, vote and delete question
  }
- 
+
  type Stat @model
             @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
                           { allow: private, operations: [update]},

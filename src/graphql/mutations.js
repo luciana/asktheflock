@@ -127,3 +127,99 @@ export const deleteQuestion = /* GraphQL */ `
     }
   }
 `;
+export const createStat = /* GraphQL */ `
+  mutation CreateStat(
+    $input: CreateStatInput!
+    $condition: ModelStatConditionInput
+  ) {
+    createStat(input: $input, condition: $condition) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStat = /* GraphQL */ `
+  mutation UpdateStat(
+    $input: UpdateStatInput!
+    $condition: ModelStatConditionInput
+  ) {
+    updateStat(input: $input, condition: $condition) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStat = /* GraphQL */ `
+  mutation DeleteStat(
+    $input: DeleteStatInput!
+    $condition: ModelStatConditionInput
+  ) {
+    deleteStat(input: $input, condition: $condition) {
+      id
+      stats
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createOption = /* GraphQL */ `
+  mutation CreateOption(
+    $input: CreateOptionInput!
+    $condition: ModelOptionConditionInput
+  ) {
+    createOption(input: $input, condition: $condition) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateOption = /* GraphQL */ `
+  mutation UpdateOption(
+    $input: UpdateOptionInput!
+    $condition: ModelOptionConditionInput
+  ) {
+    updateOption(input: $input, condition: $condition) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteOption = /* GraphQL */ `
+  mutation DeleteOption(
+    $input: DeleteOptionInput!
+    $condition: ModelOptionConditionInput
+  ) {
+    deleteOption(input: $input, condition: $condition) {
+      id
+      options
+      questionID
+      userID
+      userName
+      createdAt
+      updatedAt
+    }
+  }
+`;
