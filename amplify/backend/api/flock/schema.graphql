@@ -26,9 +26,10 @@ type User @model @auth(rules: [
 type Question @model            
              @auth(rules: [       
                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
-                 # { allow: private, operations: [read, create, update] }                  
-                  # { allow: owner, operations: [ read, create, update, delete]},
-                   { allow: private, operations: [read, update, delete] } # delete was needed here for the owner to delete a question                 
+                # { allow: private, operations: [read, create, update] }                  
+                # { allow: owner, operations: [ read, create, update, delete]},
+                  { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
+                  { allow: groups, groups: ["asktheflockadmin"] }                
                   ])
               {
   id: ID!  @primaryKey
@@ -46,3 +47,26 @@ type Question @model
 #       { allow: private, operations: [read, update, delete] }]) #needed to show questions, vote and delete question
  }
  
+ type Stat @model
+            @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
+                          { allow: private, operations: [update]},
+                          { allow: groups, groups: ["asktheflockadmin"] }]) 
+  {
+      id: ID! @primaryKey
+      stats: AWSJSON!
+      questionID: ID! @index(name:"byQuestionId", queryField: "statByQuestionId") 
+      userID: ID!
+      userName: String 
+  }
+
+  type Option @model
+            @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
+                          { allow: private, operations: [read, update]},
+                          { allow: groups, groups: ["asktheflockadmin"] }]) 
+  {
+      id: ID! @primaryKey
+      options: AWSJSON!
+      questionID: ID! @index(name:"byQuestionId", queryField: "optionByQuestionId") 
+      userID: ID!
+      userName: String 
+  }
