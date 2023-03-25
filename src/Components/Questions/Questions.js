@@ -563,8 +563,17 @@ const Questions = () => {
             
             <QuestionAndPoll2 user={user} addQuestion={addQuestion} />
 
+             {/* Friends Sections    */}
+             <div className="white-bg px-2 ">
+                {(!loading) && <Friends votedList={votedList} 
+                                        backendQuestions={backendQuestions} 
+                                        userId={user.id}
+                                        handleSwitch={handleFriendsQuestionFilterSwitch}/>}
+              </div>
+
+
             {/* Question Filter Section */}
-            <div className="white-bg border border-1 my-1 ">
+            <div className="white-bg border border-1 mt-2 ">
                 <div className="d-flex align-items-start">
                   <div className="p-2 flex-fill">
                   { backendQuestions && backendQuestions.length > 0 && (
@@ -588,16 +597,9 @@ const Questions = () => {
               </div>           
             </div>  
 
-            {/* Friends Sections    */}
-              <div className="white-bg px-2 my-1 ">
-                {(!loading) && <Friends votedList={votedList} 
-                                        backendQuestions={backendQuestions} 
-                                        userId={user.id}
-                                        handleSwitch={handleFriendsQuestionFilterSwitch}/>}
-              </div>
-
+           
             {/* Question List Section */}
-              <div id="all-questions" className=" p-1 my-1">
+              <div id="all-questions" className="py-1 my-1">
                   {filterList.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}

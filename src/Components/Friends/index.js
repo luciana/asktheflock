@@ -1,29 +1,50 @@
 import React, {useState} from "react";
 import { findCounts, formatName } from './../../Helpers';
 import Avatar from 'react-avatar';
+import FriendModalDialog from './FriendModalDialog';
+
 
 const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     const [style, setStyle] = useState({});
     const [active, setActive] = useState();
-    const maxNumberOfFriends = 3;   
-    const minNumberOfFriendsToDisplay = 3;
+    const [showRelationshipDialog, setShowRelationshipDialog] = useState(false);
+    const [showFriendInfo, setShowFriendInfo] = useState([]);
+    const maxNumberOfFriends = 4;   
+    const minNumberOfFriendsToDisplay = 4;
     let thoseWhoIHelpedCount =[];
     let thoseWhoHelpedMeCount=[];
     let friends=[];
 
-    const handleClick = (userID, index) => {
+    const handleClick = (u, index) => {
 
-      // console.log("active", active);
-      // console.log("index", index);
+      setShowRelationshipDialog(true);
+     
+      const iHelped = getThoseWhoIHelpedCountFor(u.userID);
+      const iWasHelped = getThoseWhoHelpedMeCountFor(u.userID);
       
+      if( iHelped && iHelped.length > 0 ){
+        u.iHelped = iHelped[0].value;
+      }else{
+        u.iHelped = 0;
+      }      
+      if( iWasHelped  && iWasHelped.length > 0){
+        u.iWasHelped = iWasHelped[0].value;
+      }else{
+        u.iWasHelped = 0;
+      }
+
+      setShowFriendInfo(u);
+      //console.log("setShowFriendInfo", u);
+      //console.log("handle click on a friend", u, iHelped, iWasHelped );
       if (active === index) {
-        //console.log("item already clicked, set active to blank", active);       
-        setStyle(prevState => ({
-          ...style,
-          [index]: !prevState[index]
-        }));
-        setActive();
-        handleSwitch(userID);
+        //console.log("item already clicked, set active to blank", active);    
+        //this will highlight the box    
+        // setStyle(prevState => ({
+        //   ...style,
+        //   [index]: !prevState[index]
+        // }));
+        // setActive();
+       // handleSwitch(u.id);
       } else { 
         if(active){
           //console.log("an item is already clicked on", index);
@@ -35,12 +56,13 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
           // setActive(index); 
         }else{
          // console.log("item is clicked on for the first time", active);
-          setStyle(prevState => ({
-            ...style,
-            [index]: !prevState[index]
-          }));
-          setActive(index);
-          handleSwitch(userID);
+         //this is toggle the highlight in the box
+          // setStyle(prevState => ({
+          //   ...style,
+          //   [index]: !prevState[index]
+          // }));
+          // setActive(index);
+        //  handleSwitch(u.id);
         }       
        
       }
@@ -55,6 +77,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
                 });
             });            
       
+       // console.log("votedOnQuestions", votedOnQuestions);
         thoseWhoIHelpedCount = findCounts(votedOnQuestions, "userID", "userName")
                             .sort((a, b) => b.value - a.value)
                             .filter((item, idx) => idx < maxNumberOfFriends)
@@ -76,8 +99,8 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         .filter((item, idx) => idx < maxNumberOfFriends);       
       }
     }
-    //console.log("thoseWhoIHelpedCount",thoseWhoIHelpedCount);
-    //console.log("thoseWhoHelpedMeCount",thoseWhoHelpedMeCount);
+   // console.log("thoseWhoIHelpedCount",thoseWhoIHelpedCount);
+  //  console.log("thoseWhoHelpedMeCount",thoseWhoHelpedMeCount);
     const showFriendsSection = (thoseWhoHelpedMeCount && thoseWhoHelpedMeCount.length >0) || 
                                 (thoseWhoIHelpedCount && thoseWhoIHelpedCount.length >0);
 
@@ -98,15 +121,21 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
       if( mergeResult && mergeResult.length > minNumberOfFriendsToDisplay){
         friends = findCounts(mergeResult, "userID", "userName")
                 .sort((a, b) => b.value - a.value)                
-                .filter((item, idx) => idx < maxNumberOfFriends);
-     // console.log("friends",friends);
-      }
-      
+                .filter((item, idx) => idx < maxNumberOfFriends);       
+     
+      }      
     }
 
+    const getThoseWhoIHelpedCountFor = (id) =>{  
+      return thoseWhoIHelpedCount.filter((item) => item.userID === id);;
 
-   
-   
+    }
+
+    const getThoseWhoHelpedMeCountFor = (id) =>{
+      return  thoseWhoHelpedMeCount.filter((item) => item.userID === id);
+    }
+
+    //console.log("friends",friends);   
 return (
   <div className="">   
 
@@ -114,9 +143,9 @@ return (
       <>          
           {friends && friends.length > 0  && (
             <div className="row align-items-center ">         
-              {friends.map((u, index) => (                
+              {friends.map((friend, index) => (                
                       <div key={index} 
-                     //  onClick={() => handleClick(u.userID, index)}  
+                      onClick={() => handleClick(friend, index)}  
                        style={{
                         border:"1px 1px",
                         boxShadow: style[`${index}`] 
@@ -126,13 +155,13 @@ return (
                       className="col card p-1 m-1">                                
                           <div className=" d-flex align-items-center">
                             <div className="p-2 d-flex">
-                            <Avatar size="42" name={u.userName} 
+                            <Avatar size="42" name={friend.userName} 
                                 className="rounded-circle mx-auto mb-0 mx-1 align-items-center" 
-                                alt={u.userName} />
+                                alt={friend.userName} />
                             <div className="ms-2 ">
-                              <h6 className="mb-0 d-none d-lg-block">{formatName(u.userName, 20)}</h6>
-                              <div className="badge rounded-pill bg-secondary">{u.value}</div> 
-                              <span className="text-sm d-none d-lg-block">interations</span>
+                              <h6 className="mb-0 d-none d-lg-block">{formatName(friend.userName, 20)}</h6>
+                              <div className="badge rounded-pill bg-secondary">{friend.value}</div> 
+                              <span className="text-sm d-none d-lg-block"></span>
                             </div>                              
                            </div>
                         </div>                                                   
@@ -141,8 +170,20 @@ return (
                 ))}
             </div>
           )}
+          {showRelationshipDialog && ( <FriendModalDialog
+                            modelClose={()=>setShowRelationshipDialog(false)}
+                            modelShow={showRelationshipDialog}                           
+                            item={showFriendInfo}
+                         />
+                         
+          )}
+
           </>
     )}
+
+
+
+   
   </div>
   )
 }
