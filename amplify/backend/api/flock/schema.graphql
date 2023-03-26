@@ -21,50 +21,64 @@ type User @model @auth(rules: [
   #prevent owners to reassign the owner of their existing record to another user.
 }
 
+# type Question @model            
+#              @auth(rules: [       
+#                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
+#                 # { allow: private, operations: [read, create, update] }                  
+#                 # { allow: owner, operations: [ read, create, update, delete]},
+#                   { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
+#                   { allow: groups, groups: ["asktheflockadmin"] }                
+#                   ])
+#               {
+#   id: ID!  @primaryKey
+#   text: String!
+#   userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
+#   userName: String
+#   voteEndAt: AWSDateTime
+#   sentiment: String
+#   parentID: ID 
+#   questionTag: String  #@index(name: "byQuestionTag", sortKeyFields: ["id"])
+#   options: AWSJSON #need to make this mandatory
+#   stats: AWSJSON
+# #   owner: String @auth(rules: [
+# #       { allow: owner, operations: [read, delete] },
+# #       { allow: private, operations: [read, update, delete] }]) #needed to show questions, vote and delete question
+#  }
+
 type Question @model            
              @auth(rules: [       
-                  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},
-                # { allow: private, operations: [read, create, update] }                  
-                # { allow: owner, operations: [ read, create, update, delete]},
-                  { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
-                  { allow: groups, groups: ["asktheflockadmin"] }                
+                #  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},               
+                #  { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
+                #  { allow: groups, groups: ["asktheflockadmin"] }    
+                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},               
+                   { allow: private, operations: [read, update] }, 
+                   { allow: groups, groups: ["asktheflockadmin"] }
                   ])
               {
-  id: ID!  @primaryKey
-  text: String!
-  userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
-  userName: String
-  voteEndAt: AWSDateTime
-  sentiment: String
-  parentID: ID 
-  questionTag: String  #@index(name: "byQuestionTag", sortKeyFields: ["id"])
-  options: AWSJSON #need to make this mandatory
-  stats: AWSJSON
-#   owner: String @auth(rules: [
-#       { allow: owner, operations: [read, delete] },
-#       { allow: private, operations: [read, update, delete] }]) #needed to show questions, vote and delete question
+  id: ID!  @primaryKey @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  text: String! @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  userID: ID! @index(name:"byUserId", queryField: "questionByUserId") @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  userName: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  voteEndAt: AWSDateTime @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  sentiment: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  parentID: ID @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  questionTag: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  options: AWSJSON! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  stats: AWSJSON @auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
  }
 
- type Stat @model
-            @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
-                          { allow: private, operations: [update]},
-                          { allow: groups, groups: ["asktheflockadmin"] }]) 
-  {
-      id: ID! @primaryKey
-      stats: AWSJSON!
-      questionID: ID! @index(name:"byQuestionId", queryField: "statByQuestionId") 
-      userID: ID!
-      userName: String 
-  }
-
-  type Option @model
-            @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
-                          { allow: private, operations: [read, update]},
-                          { allow: groups, groups: ["asktheflockadmin"] }]) 
-  {
-      id: ID! @primaryKey
-      options: AWSJSON!
-      questionID: ID! @index(name:"byQuestionId", queryField: "optionByQuestionId") 
-      userID: ID!
-      userName: String 
-  }
+#  type Stat @model
+#             @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
+#                           { allow: private, operations: [read]},
+#                           { allow: groups, groups: ["asktheflockadmin"] }]) 
+#   {
+#       id: ID! @primaryKey @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]},{ allow: groups, groups: ["asktheflockadmin"] }])
+#       userName: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }])
+#       questionID: ID! @index(name:"byQuestionId", queryField: "statByQuestionId") @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]},{ allow: groups, groups: ["asktheflockadmin"] }])
+#       userID: ID! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]},{ allow: groups, groups: ["asktheflockadmin"] }])      
+#       options: AWSJSON! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }])
+#       stats: AWSJSON @auth(rules: [{ allow: owner },{ allow: private, operations: [update]}, { allow: groups, groups: ["asktheflockadmin"] }])
+#       owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
+#       #prevent owners to reassign the owner of their existing record to another user.
+#   }

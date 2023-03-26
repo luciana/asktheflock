@@ -125,6 +125,17 @@ const UpdateQuestionOptions = async ( id, options, stats ) => {
   return updateQuestion;
 };
 
+// const UpdateStat = async ( id, options, stats ) => { 
+//   const {
+//     data: { updateStat },
+//   } = await API.graphql(
+//     graphqlOperation(mutations.updateStat, {
+//       input: { id, options, stats },
+//     })
+//   );
+//   return updateStat;
+// };
+
 const UpdateQuestionVoteEndAt = async ( id, voteEndAt ) => { 
   const {
     data: { updateQuestion },
@@ -164,6 +175,28 @@ const CreateQuestion = async (
 
 }
 
+// const CreateStat = async (
+//   userName,   
+//   questionID, 
+//   userID,                   
+//   options,
+//   stats,
+//     ) => {
+//   const {
+//     data: { createStat },
+//   } = await API.graphql(
+//     graphqlOperation(mutations.createStat, { input: 
+//       {   userName,   
+//         questionID, 
+//         userID,                   
+//         options,
+//         stats,
+//       } })
+//   );
+//   return createStat;
+
+// }
+
 const DeleteQuestion = async ( id ) => {
   const {
     data: { deleteQuestion },
@@ -179,6 +212,8 @@ const Mutations = {
   CreateUser,
   UpdateUser,
   CreateQuestion,
+  //CreateStat,
+  //UpdateStat,
   DeleteQuestion,
   UpdateQuestionOptions,
   UpdateQuestionVoteEndAt,

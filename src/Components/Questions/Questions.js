@@ -67,7 +67,8 @@ const Questions = () => {
          
 
           let q = await Queries.GetAllQuestions();
-          if(q){
+         
+          if(q){                     
               setBackendQuestions(q.filter(
                 (backendQuestion) => ((backendQuestion.parentID === null) )
               )            
@@ -325,7 +326,8 @@ const Questions = () => {
         );}
 
    
-      const updateStats = async(question, optID, optionsInQuestion) => {
+      const prepStatData = (question, user, optID) => {
+
         try{
           //Update Stats
         let statsInQuestion = [];
@@ -351,18 +353,58 @@ const Questions = () => {
         }
          stat.userLanguage = user.locale;
          const newStatsArray = [...statsInQuestion];
-         newStatsArray.push(stat);   
-         return await Mutations.UpdateQuestionOptions(
+         newStatsArray.push(stat); 
+         return newStatsArray;
+
+        }catch(error){
+          console.error("Error in prep Stat data for update", error);
+          return null;
+        }
+
+      }
+
+      const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
+        try{
+          //once validate that the stats and options were added to the new Stat table
+          //then clear the options in the Question table below.
+          return await Mutations.UpdateQuestionOptions(
             question.id,
             JSON.stringify(optionsInQuestion),
-            JSON.stringify(newStatsArray),
-          );
-        }catch(err){
-          console.error("Mutations.UpdateQuestionOptions error", err);
-          return null;
-        } 
-        
+            JSON.stringify(statsInQuestion),
+          );                   
+          }catch(error){
+            console.error("Mutations.UpdateQuestionOptions error", error);
+            return null;
+          }   
 
+      }
+
+      const updateStatsAndOptionsInStatTable = async(question, optionsInQuestion, statsInQuestion) => {     
+        try{
+          console.log("updateStat await about to ");
+          const updateStat =  await Mutations.UpdateStat(
+            question.id,
+            JSON.stringify(optionsInQuestion),
+            JSON.stringify(statsInQuestion),
+          );
+          console.log("updateStat await ", updateStat);
+          return updateStat;
+        }catch(error){
+          console.error("Mutations.UpdateStat error", error);
+          return null;
+        }   
+
+      }
+
+
+      const updateStats = (question, optID, optionsInQuestion) => {          
+        const statsInQuestion = prepStatData(question, user, optID);
+       // if(statsInQuestion){        
+          return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);
+          // updateStatsAndOptionsInStatTable(question, optionsInQuestion, statsInQuestion);                   
+        // }else{
+        //   return null;
+        // } 
 
       }
 
@@ -407,14 +449,17 @@ const Questions = () => {
             }
           }
           const newA = [];  
-          const stats = updateStats(question, optID, optionsInQuestion);   
-          if(stats){
-            newA.push(stats);                             
-          }       
-          const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
-          // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
-           setBackendQuestions(updatedBackendQuestions);
-           setActiveQuestion(null);     
+          const stats = updateStats(question, optID, optionsInQuestion);    
+            
+          // if(stats){
+          //   console.log("what am I pushing to stats newA  ", stats);  
+          //   newA.push(stats);                           
+          //   console.log("what is new A  ", newA);    
+          // }       
+          // const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
+          // // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
+          //  setBackendQuestions(updatedBackendQuestions);
+          //  setActiveQuestion(null);     
          
         }catch(err){
           console.error("Mutations.UpdateQuestion error", err);
@@ -430,38 +475,41 @@ const Questions = () => {
           const userID = question.userId;
           const voteEndAt = question.voteEndAt;
           const sentiment = question.sentiment;
-          const options  = JSON.stringify(question.options);
+          const options  = JSON.stringify(question.options);         
           const userName = user.name;
                       
           let q = await Mutations.CreateQuestion(
             text, 
-            userID,
+            userID,            
             voteEndAt,
-            sentiment,
-            userName,
+            sentiment,  
+            userName,          
             parentID,
             questionTag,
-            options
-          );
+            options,      
+          );          
+                       
+          if(q){
+            const updatedBackendQuestions = [...backendQuestions];
+            updatedBackendQuestions.push(q);          
+  
+            setBackendQuestions(updatedBackendQuestions.filter(
+              (backendQuestion) => ((backendQuestion.parentID === null) )
+            )
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+  
+            setFilterList(updatedBackendQuestions.filter(
+              (backendQuestion) => ((backendQuestion.parentID === null) )
+            )
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
           
-
-          const updatedBackendQuestions = [...backendQuestions];
-          updatedBackendQuestions.push(q);          
-
-
-          setBackendQuestions(updatedBackendQuestions.filter(
-            (backendQuestion) => ((backendQuestion.parentID === null) )
-          )
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
-
-          setFilterList(updatedBackendQuestions.filter(
-            (backendQuestion) => ((backendQuestion.parentID === null) )
-          )
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
-        
-          setLoading(false);    
+            setLoading(false); 
+          }else{
+            console.error("Error on Mutations.CreateQuestion ");
+            setLoading(false); 
+          }        
    
         }catch(err){
           console.error("Error on Mutations.CreateQuestion ", err);
@@ -513,7 +561,7 @@ const Questions = () => {
       }
 
       const clearUrlParamsAfterVote = () => {
-        console.log("there is a id param after vote, must clear it");
+       // console.log("there is a id param after vote, must clear it");
         if (questionQueryId ){
           navigate(ROUTES[user.locale].MAIN);
         }

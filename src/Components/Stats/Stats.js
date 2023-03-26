@@ -16,7 +16,7 @@ export default function Stats({data, options, text, questionTag}) {
     return;
   }
 
-  const minStatVoteCount = 2; 
+  const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT; 
   const optionList = options && JSON.parse(options); 
   const checkOptionsListExists = optionList && optionList.length> 0;
   const isThereEnoughStats = data && options && data.length > minStatVoteCount ;
