@@ -67,9 +67,9 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateQuestion = /* GraphQL */ `
   subscription OnCreateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onCreateQuestion(filter: $filter, userID: $userID) {
+    onCreateQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -80,6 +80,7 @@ export const onCreateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -88,9 +89,9 @@ export const onCreateQuestion = /* GraphQL */ `
 export const onUpdateQuestion = /* GraphQL */ `
   subscription OnUpdateQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onUpdateQuestion(filter: $filter, userID: $userID) {
+    onUpdateQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -101,6 +102,7 @@ export const onUpdateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      owner
       createdAt
       updatedAt
     }
@@ -109,9 +111,9 @@ export const onUpdateQuestion = /* GraphQL */ `
 export const onDeleteQuestion = /* GraphQL */ `
   subscription OnDeleteQuestion(
     $filter: ModelSubscriptionQuestionFilterInput
-    $userID: String
+    $owner: String
   ) {
-    onDeleteQuestion(filter: $filter, userID: $userID) {
+    onDeleteQuestion(filter: $filter, owner: $owner) {
       id
       text
       userID
@@ -122,102 +124,7 @@ export const onDeleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateStat = /* GraphQL */ `
-  subscription OnCreateStat(
-    $filter: ModelSubscriptionStatFilterInput
-    $userID: String
-  ) {
-    onCreateStat(filter: $filter, userID: $userID) {
-      id
-      stats
-      questionID
-      userID
-      userName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStat = /* GraphQL */ `
-  subscription OnUpdateStat(
-    $filter: ModelSubscriptionStatFilterInput
-    $userID: String
-  ) {
-    onUpdateStat(filter: $filter, userID: $userID) {
-      id
-      stats
-      questionID
-      userID
-      userName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStat = /* GraphQL */ `
-  subscription OnDeleteStat(
-    $filter: ModelSubscriptionStatFilterInput
-    $userID: String
-  ) {
-    onDeleteStat(filter: $filter, userID: $userID) {
-      id
-      stats
-      questionID
-      userID
-      userName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateOption = /* GraphQL */ `
-  subscription OnCreateOption(
-    $filter: ModelSubscriptionOptionFilterInput
-    $userID: String
-  ) {
-    onCreateOption(filter: $filter, userID: $userID) {
-      id
-      options
-      questionID
-      userID
-      userName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateOption = /* GraphQL */ `
-  subscription OnUpdateOption(
-    $filter: ModelSubscriptionOptionFilterInput
-    $userID: String
-  ) {
-    onUpdateOption(filter: $filter, userID: $userID) {
-      id
-      options
-      questionID
-      userID
-      userName
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteOption = /* GraphQL */ `
-  subscription OnDeleteOption(
-    $filter: ModelSubscriptionOptionFilterInput
-    $userID: String
-  ) {
-    onDeleteOption(filter: $filter, userID: $userID) {
-      id
-      options
-      questionID
-      userID
-      userName
+      owner
       createdAt
       updatedAt
     }

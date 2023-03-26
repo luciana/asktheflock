@@ -47,8 +47,6 @@ function Question({
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
   }, []);
-
-
  
   const isAReply = question.parentId != null;
   const canDelete = user.id === question.userID  && !isAReply; 
@@ -64,7 +62,7 @@ function Question({
   //   activeQuestion.id === question.id &&
   //   activeQuestion.type === "replying";
 
-  const minStatVoteCount = 5; //statistically 100 is min value
+  const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT; //statistically 100 is min value
   const isThereEnoughStats =  question && user.id === question.userID && 
                               question.options && question.stats && 
                              //voteEnded &&
