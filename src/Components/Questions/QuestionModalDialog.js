@@ -29,7 +29,7 @@ function QuestionModalDialog(
  
   const [showQuestionModal, setShowQuestionModal] = useState(false);
   //const [showOptionsModal, setShowOptionsModal] = useState(false);
-  const [votePeriod, setVotePeriod] = useState(43200);
+  const [votePeriod, setVotePeriod] = useState(2880);
   const [input, setInput] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [expertTag, setExpertTag] = useState("");
@@ -155,13 +155,13 @@ function QuestionModalDialog(
                       </div>
                       <div className="p-2">                  
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="1440" name="votePeriod" value="1440" defaultChecked={votePeriod === 1440} /><label className=" "  htmlFor="1440">1 day</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="480" name="votePeriod" value="480" defaultChecked={votePeriod === 480} /><label className=" "  htmlFor="480">8 hours</label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="21600" name="votePeriod" value="21600" defaultChecked={votePeriod === 21600}/><label className=" " htmlFor="21600">15 days</label>
+                            <input type="radio" onChange={handleChangeVotePeriod} disabled={false} className="form-check-input" id="2880" name="votePeriod" value="2880" defaultChecked={votePeriod === 2880}/><label className=" " htmlFor="2880">2 days</label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="43200" name="votePeriod" value="43200" defaultChecked={votePeriod === 43200} /><label className=" " htmlFor="43200">30 days</label>
+                          <input type="radio" onChange={handleChangeVotePeriod}  disabled={false} className="form-check-input" id="10080" name="votePeriod" value="10080" defaultChecked={votePeriod === 10080} /><label className=" " htmlFor="10080">7 days</label>
                         </div>
                       </div>             
                           

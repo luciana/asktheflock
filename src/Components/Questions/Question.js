@@ -65,7 +65,7 @@ function Question({
   const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT; //statistically 100 is min value
   const isThereEnoughStats =  question && user.id === question.userID && 
                               question.options && question.stats && 
-                             //voteEnded &&
+                              voteEnded &&
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
 
