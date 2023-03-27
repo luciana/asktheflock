@@ -50,7 +50,7 @@ type Question @model
                 #  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},               
                 #  { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
                 #  { allow: groups, groups: ["asktheflockadmin"] }    
-                   { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},               
+                   { allow: owner, operations: [ read, create, update, delete]},               
                    { allow: private, operations: [read, update] }, 
                    { allow: groups, groups: ["asktheflockadmin"] }
                   ])
