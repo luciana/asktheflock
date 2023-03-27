@@ -230,6 +230,7 @@ const pt_br_lang = {
     teacher: "#proferssor",
     fashion_designer: "#fashion_designer",
     interior_designer: "#interior_designer",
+    insurance: "#seguro",
     lawyer:"#advogado",
     leadership:"#leader",
     life_coach: "#life_coach",

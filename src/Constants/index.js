@@ -35,6 +35,7 @@ export const TAGS = [
   "fitness",  
   "healthcare",
   "interior_designer",
+  "insurance",
   "journalist",
   "lawyer",
   "leadership",
