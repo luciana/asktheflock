@@ -96,7 +96,7 @@ const GetCredentials = async () => {
 }
 
 const DeleteUser =  async () => {
-  return await Auth.deleteUser();  
+  return await AmplifyAuth.deleteUser();  
 }
 
 const Auth = {
