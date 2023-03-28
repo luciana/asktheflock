@@ -604,7 +604,7 @@ const Questions = () => {
       }
       
       const showNoQuestions = filterList.length === 0;
-      console.log("user", user);
+ 
       return ( 
         <>
             {loading && <Loading />}

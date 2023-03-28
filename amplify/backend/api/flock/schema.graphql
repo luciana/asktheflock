@@ -65,7 +65,7 @@ type Question @model
   questionTag: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   options: AWSJSON! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   stats: AWSJSON @auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])
-  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
  }
 
 #  type Stat @model
