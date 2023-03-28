@@ -3,12 +3,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import '../pages.css';
 import './../profile-nav.css';
 import { AppContext} from '../../Contexts';
-import { Alert, Loading } from '../../Components';
-import  {isAdmin, findCounts}   from '../../Helpers';
+import { Alert, Loading, Button } from '../../Components';
+import  {isAdmin, findCounts, formatDateTime}   from '../../Helpers';
 import { ROUTES } from "../../Constants";
 import { useNavigate, useLocation } from "react-router-dom";
 import Queries from "../../Services/queries";
 import logo from'../../Assets/Images/logos/logo-image-blue-small.png';
+import { Modal } from 'react-bootstrap';
+import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './../../Components/Stats';
 
 
 function Admin() {
@@ -19,33 +21,67 @@ function Admin() {
     const [activeQuestion, setActiveQuestion] = useState(null);
     const query = new URLSearchParams(useLocation().search);
     const [statData, setStatData] = useState([]);
-    const [statOptionData, setStatOptionData] = useState([]);
+    const [optionList, setOptionList] = useState([]);
+    const [backendQuestions, setBackendQuestions] = useState([]);
+    const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
+    const [expertOverallMessage, setExpertOverallMessage] = useState(null);
+    const [genderOverallMessage, setGenderOverallMessage] = useState(null);
+    const [genderWinningMessage, setGenderWinningMessage] = useState(null);
+    const [winner, setWinner] = useState(null);
+    const [winnerOption, setWinnerOption] = useState(null);
+    const [winnerOptionItem, setWinnerOptionItem] = useState(null);
+    const [optionWinnerOptionId, setOptionWinnerOptionId] = useState(null);
+    const [totalVotes, setTotalVotes] = useState(null);
+    
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
     useEffect(() => {   
        check();
-       loadSingleQuestion();
+      // loadQuestions();
       }, []);
 
-      const loadSingleQuestion = async () => {
+      const loadQuestions = async () => {
         try{
-          setLoading(true);       
-         
-          //direct link to question - queryString id - URL paramenters
-          if (questionQueryId){                   
-            const singleQuestion = await Queries.GetSingleQuestion(questionQueryId);
-            if(singleQuestion){              
-              setActiveQuestion(singleQuestion);      
-              setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);  
-              setStatOptionData(singleQuestion.options ? JSON.parse(singleQuestion.options) : []);            
-            } 
+          setLoading(true);             
+          let q = await Queries.GetAllQuestions();         
+          if(q){                     
+              setBackendQuestions(q.filter(
+                (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
+                && (backendQuestion.parentID === null)) 
+                && JSON.parse(backendQuestion.stats).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
+              )            
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));                    
+          }      
+          setLoading(false);
+        }catch(err){
+          console.error("ADMIN: Loading All Questions from queries error", err);        
+          setBackendQuestions([]);
+          setLoading(false);
+       
+        }
+      };
+       const loadSingleQuestion = async (id) => {
+        try{
+          setLoading(true);                
+          if (id){                 
+            
+            const singleQuestion = await Queries.GetSingleQuestion(id);
+            return singleQuestion; 
+            // console.log("single questions", singleQuestion);
+            // if(singleQuestion){              
+            //   setActiveQuestion(singleQuestion);    
+            //   console.log("active question from retrieval",singleQuestion );  
+            //   setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);  
+            //   setoptionList(singleQuestion.options ? JSON.parse(singleQuestion.options) : []);            
+            // } 
           }else{
             setActiveQuestion(null); 
            
           }                       
           setLoading(false);
         }catch(err){
-          console.error("ADMIN: Questions.js Loading Single Question from queries error", err);
+          console.error("ADMIN: Loading Single Question from queries error", err);
           setActiveQuestion(null);    
             
         }
@@ -56,90 +92,122 @@ function Admin() {
        if ( !t ) {
         navigate(ROUTES[user.locale].MAIN);
        }
+       loadQuestions();
         setIsAuthorized(t);    
     }
 
-    const totalVotes = () =>{
+    const getTotalVotes = (statData) =>{
         let totalVoteCount = 0;
         if (statData) {
             totalVoteCount = statData && statData.length;
         }
         return totalVoteCount;
       }
-    
-    const tv = totalVotes();
-    const winningOption = statOptionData && Math.max(...statOptionData.map((o) => o.votes));  
-    const wininingOptionItem = statOptionData && winningOption &&  statOptionData.filter((i) => i.votes === winningOption ); 
-    const winners = wininingOptionItem &&  wininingOptionItem.map((i) => i.text + ' ');
-    const winner = wininingOptionItem && wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners;
 
-    const optionId = wininingOptionItem && wininingOptionItem.length>0 && wininingOptionItem[0].id;
+    const handleSingleQuestionClose = () => {
+      setShowSingleQuestionModal(false);     
+    }
 
-    const allMaleGender = (statData).filter((i) => i.userGender === 'male');
-    const allFemaleGender = (statData).filter((i) => i.userGender === 'female');
-    const allNonBinaryGender = (statData).filter((i) => i.userGender === 'non-binary');
-    const allNoneGender = (statData).filter((i) => i.userGender === '' || !i.userGender);
-    const mergeGenderOverallResult = [...allMaleGender, ...allFemaleGender,allNonBinaryGender,allNoneGender];    
+    const getExpertOverallMessage = (statData) => {
+      let expertOverallMessage = null;
+      const userQuestionTag = activeQuestion && activeQuestion.questionTag;
+      const expertsTags = findCounts(statData, "userTag", "userTag")
+      .map((item) => {
+            Object.keys(item).map((key) => {
+              item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+            });
+            return item;
+        })
+        .sort((a, b) => b.value - a.value)
+        .filter((fil) => fil.userTag === userQuestionTag)
 
-    console.log("winning values", wininingOptionItem);
+      // console.log("expertsTags", expertsTags);
+        if( expertsTags && expertsTags.length > 0  ){          
+              expertOverallMessage = ` You asked for #${userQuestionTag} and ${expertsTags[0].value} people with this expertise helped! `;   
+                
+        }       
+       setExpertOverallMessage(expertOverallMessage);
+    }
 
+    const getGenderOverallMessage = (statData) => {
+      const allMaleGender = (statData).filter((i) => i.userGender === 'male');
+      const allFemaleGender = (statData).filter((i) => i.userGender === 'female');
+      const allNonBinaryGender = (statData).filter((i) => i.userGender === 'non-binary');
+      const allNoneGender = (statData).filter((i) => i.userGender === '' || !i.userGender);
+      const mergeGenderOverallResult = [...allMaleGender, ...allFemaleGender,allNonBinaryGender,allNoneGender];    
 
-    let expertOverallMessage = null;
-    const userQuestionTag = activeQuestion && activeQuestion.questionTag;
-    const expertsTags = findCounts(statData, "userTag", "userTag")
-    .map((item) => {
-          Object.keys(item).map((key) => {
-            item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
-          });
-          return item;
-      })
-      .sort((a, b) => b.value - a.value)
-      .filter((fil) => fil.userTag === userQuestionTag)
-
-      console.log("expertsTags", expertsTags);
-      if( expertsTags && expertsTags.length > 0  ){          
-            expertOverallMessage = ` You asked for #${userQuestionTag} and ${expertsTags[0].value} people with this expertise helped! `;   
-               
-      }
-
-    
-    const noneGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && (i.userGender === '' || !i.userGender)));
-    const maleGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && i.userGender === 'male'));
-    const femaleGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && i.userGender === 'female'));
-    const nonBinaryGenderListFor =(optionId) => ((statData).filter((i) => i.optionId === optionId && i.userGender === 'non-binary'));
-    const mergeGenderOverallResultFor = [...nonBinaryGenderListFor(optionId), ...femaleGenderListFor(optionId),noneGenderListFor(optionId),maleGenderListFor(optionId)];   
-
-    let genderOverallMessage = null;
-      if( mergeGenderOverallResult && mergeGenderOverallResult.length > 0  ){
-        const f = findCounts(mergeGenderOverallResult, "userName", "userGender")
-                .filter((v)=> v.userName !== undefined)
-                .sort((a, b) => b.value - a.value) 
-        
-        //must account for duplicated
-        if(f.length === 1){
-            genderOverallMessage = `Vote was unanimous from ${f[0].userGender} users! Total of ${f[0].value}`;
-        }else if (f.length > 1){
-            
-            genderOverallMessage = `Most of the votes were from ${f[0].userGender} users!`;
+      let genderOverallMessage = null;
+        if( mergeGenderOverallResult && mergeGenderOverallResult.length > 0  ){
+          const f = findCounts(mergeGenderOverallResult, "userName", "userGender")
+                  .filter((v)=> v.userName !== undefined)
+                  .sort((a, b) => b.value - a.value) 
+          
+          //must account for duplicated
+          if(f.length === 1){
+              genderOverallMessage = `Vote was unanimous from ${f[0].userGender} users! Total of ${f[0].value}`;
+          }else if (f.length > 1){
+              
+              genderOverallMessage = `Most of the votes were from ${f[0].userGender} users!`;
+          }
         }
-      }
+       setGenderOverallMessage(genderOverallMessage);
+    }
 
+    const getGenderWinningMessage = (statData) => {
+     // const optionId = wininingOptionItem && wininingOptionItem.length>0 && wininingOptionItem[0].id;
+      const noneGenderListFor =(optionWinnerOptionId) => ((statData).filter((i) => i.optionWinnerOptionId === optionWinnerOptionId && (i.userGender === '' || !i.userGender)));
+      const maleGenderListFor =(optionWinnerOptionId) => ((statData).filter((i) => i.optionWinnerOptionId === optionWinnerOptionId && i.userGender === 'male'));
+      const femaleGenderListFor =(optionWinnerOptionId) => ((statData).filter((i) => i.optionWinnerOptionId === optionWinnerOptionId && i.userGender === 'female'));
+      const nonBinaryGenderListFor =(optionWinnerOptionId) => ((statData).filter((i) => i.optionWinnerOptionId === optionWinnerOptionId && i.userGender === 'non-binary'));
+      const mergeGenderOverallResultFor = [...nonBinaryGenderListFor(optionWinnerOptionId), ...femaleGenderListFor(optionWinnerOptionId),noneGenderListFor(optionWinnerOptionId),maleGenderListFor(optionWinnerOptionId)];   
       let genderWinningMessage = null;
-      if( mergeGenderOverallResultFor && mergeGenderOverallResultFor.length > 0  ){
-        const w = findCounts(mergeGenderOverallResultFor, "userName", "userGender")
-                .filter((v)=> v.userName !== undefined)
-                .sort((a, b) => b.value - a.value) 
-        
-        //must account for duplicated
-        if(w.length === 1){
-            genderWinningMessage = `The winning choice got all votes from ${w[0].userGender} users! Total of ${w[0].value}`;
-        }else if (w.length > 1){
-            
-            genderWinningMessage = `Most of the votes for the winning choice were from ${w[0].userGender} users!`;
+        if( mergeGenderOverallResultFor && mergeGenderOverallResultFor.length > 0  ){
+          const w = findCounts(mergeGenderOverallResultFor, "userName", "userGender")
+                  .filter((v)=> v.userName !== undefined)
+                  .sort((a, b) => b.value - a.value) 
+          
+          //must account for duplicated
+          if(w.length === 1){
+              genderWinningMessage = `The winning choice got all votes from ${w[0].userGender} users! Total of ${w[0].value}`;
+          }else if (w.length > 1){
+              
+              genderWinningMessage = `Most of the votes for the winning choice were from ${w[0].userGender} users!`;
+          }
         }
-      }
- 
-      console.log("activeQuestion", activeQuestion);
+        setGenderWinningMessage(genderWinningMessage);
+    }
+  
+
+    const getWinner = (optionList) => {
+      setWinnerOption(optionList && Math.max(...optionList.map((o) => o.votes)));
+      const winningOption = optionList && Math.max(...optionList.map((o) => o.votes));  
+      const wininingOptionItem = optionList && winningOption &&  optionList.filter((i) => i.votes === winningOption ); 
+      const winners = wininingOptionItem &&  wininingOptionItem.map((i) => i.text + ' ');
+      const optionId = wininingOptionItem && wininingOptionItem.length>0 && wininingOptionItem[0].id;
+      setWinner(wininingOptionItem && wininingOptionItem.length === 1 ? wininingOptionItem[0].text : winners);
+      setWinnerOptionItem(wininingOptionItem);
+      setOptionWinnerOptionId(optionId);
+      //console.log("winning values", wininingOptionItem);
+    }
+
+  
+
+    const prepareEmail = (question) => {     
+      const data = question.stats ? JSON.parse(question.stats) : [];
+      const optionList = question.options ? JSON.parse(question.options) : [];  
+      setStatData(data);
+      setOptionList(optionList);
+      setActiveQuestion(question);
+      if(data && data.length > 0){    
+        setShowSingleQuestionModal(true);
+        getWinner(optionList);       
+        setTotalVotes(getTotalVotes(data));
+        getExpertOverallMessage(data);
+        getGenderOverallMessage(data);
+        getGenderWinningMessage(data);                
+      } 
+    }
+
     return (
     <section className="App ">
      {loading && <Loading />}
@@ -150,18 +218,54 @@ function Admin() {
              <div className="white-bg container p-2 ">
                 <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />
 
+                {backendQuestions && (  
+                  <>
+                  <div className="title">This table shows all the questions that are closed with has enough votes to show meanful stats.</div>               
+                  <table className="table table-sm table-hover">
+                  <thead>
+                      <tr>
+                        <th scope="col">Question</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Votes Ended</th>
+                        <th scope="col"># of Options</th>     
+                        <th scope="col"># Votes</th>     
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {backendQuestions.map((question) => (
+                      <tr key={question.id} >
+                      <th scope="row"><strong>{question.text}</strong></th>
+                      <td>{question.userName}</td>
+                      <td>{formatDateTime(question.voteEndAt)}</td>
+                      <td>{JSON.parse(question.options).length}</td>
+                      <td>{JSON.parse(question.stats).length}</td>
+                      <td>
+                      <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=> prepareEmail(question)}> Prepare Email </button>
+                        
+                      </td>
+                      </tr>
+                    ))}                                         
+                    </tbody>
+                  </table>
+                  </>
+                )}
+               
                 { activeQuestion && (
-                    <>
-                    <h5>Email Template</h5>
-
-                    <div className="container m-2 border border-1">
+                     <Modal  fullscreen={true} show={showSingleQuestionModal} >
+                     <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>
+                       <Modal.Title>Email Template</Modal.Title>
+                     </Modal.Header>
+                     <Modal.Body >                              
+                     <div className="container m-2 border border-1">
                         <p className="align-center" >We are here to help you with your decision:</p>
                         <p>  {activeQuestion.text} </p>
                         <p>  <img src={logo} /></p>
                         <p>  {activeQuestion.userName}, here is  the data to help you finalize your decision. </p>                          
                         <ul>  
                         {winner && (
-                             <li>The winning choice was “{winner}” with {(winningOption/tv)*100}% of the total votes ({winningOption}/{tv})</li>
+                             <li>The winning choice was “{winner}” with {(winnerOption/totalVotes)*100}% of the total votes ({winnerOption}/{totalVotes})</li>
                         )}   
                         { expertOverallMessage &&(
                             <li> {expertOverallMessage}</li>
@@ -179,12 +283,35 @@ function Admin() {
                             
                         </ul> 
                         <button className="btn btn-primary my-2">Dig into the results details</button>
+
+
+                        <table className="table table-sm table-hover">                  
+                        <tbody>
+                      
+                          <tr>                        
+                          <td> <WinningStats  dataInput={optionList} total={totalVotes}/>   </td>
+                          <td>  <GenderStats dataInput={statData} optionId={null} /> </td>
+                          <td> <LanguageStats dataInput={statData} optionId={null} />      </td>                          
+                          </tr>                                                             
+                        </tbody>
+                      </table>
+
+                         
+
                         <p className="py-3">Thank you for ASKing THE FLOCK!  We  are looking forward to helping you with your next question.</p>
                         <p>Ask The Flock Team<br/><a href="http://www.asktheflock.com">http://www.asktheflock.com</a></p>
-                    </div>
-                   
-                  
-                    </>
+                    </div>                                                
+                     </Modal.Body>
+                     <Modal.Footer>                                                            
+                           <button
+                             type="button"
+                             className="btn btn-outline-dark rounded-pill"
+                             onClick={handleSingleQuestionClose}
+                           >
+                             Close
+                           </button>                  
+                     </Modal.Footer>
+                   </Modal>
                 )}
             
             </div> 

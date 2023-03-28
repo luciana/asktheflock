@@ -47,22 +47,24 @@ export default function GenderStats({dataInput, optionId}) {
      {loading && <Loading />}
     {!optionId && (
          <>
+          <div><Pie data={pieAllGenderData} /></div>  
          <div className="my-2">Male Votes: {allMaleGender} </div>
          <div className="my-2">Female Votes: {allFemaleGender} </div>
          <div className="my-2">Non-Binary Votes: {allNonBinaryGender} </div>     
          <div className="my-2">Not Entered: {allNoneGender}</div>  
-         <div><Pie data={pieAllGenderData} /></div>  
+        
          </>
     )}                                               
     
     {optionId && (
         <>
-         <div className="my-2">Male Votes: {maleGenderListFor(optionId)} </div>
+         <div><Pie data={pieGenderDataFor} /></div>    
+        <div className="my-2">Male Votes: {maleGenderListFor(optionId)} </div>
         <div className="my-2">Female Votes: {femaleGenderListFor(optionId)} </div>
         <div className="my-2">Non-Binary Votes: {nonBinaryGenderListFor(optionId)} </div>  
         <div className="my-2">Not Entered: {noneGenderListFor(optionId)}</div> 
-        <div><Pie data={pieGenderDataFor} /></div>    
-         </>
+       
+       </>
     )} 
     </>
 

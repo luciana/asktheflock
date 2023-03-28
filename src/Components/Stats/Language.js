@@ -24,16 +24,18 @@ export default function LanguageStats({dataInput, optionId}) {
     {loading && <Loading />}
     {!optionId && (
          <>
+          <div><Bar x={['English', 'Portuguese']} y={[allEnglishSpeaker, allPortugueseSpeaker]} /></div> 
          <div className="my-2"> English Speakers: {allEnglishSpeaker}</div>    
          <div className="my-2"> Portuguese Speakers: {allPortugueseSpeaker}</div>   
-         <div><Bar x={['English', 'Portuguese']} y={[allEnglishSpeaker, allPortugueseSpeaker]} /></div>   
+          
          </>
     )}                                               
     {optionId && (
         <>
+          <div><Bar x={['English', 'Portuguese']} y={[englishSpeakerFor(optionId), portugueseSpeakerFor(optionId)]} /></div>   
          <div className="my-2"> English Speakers: {englishSpeakerFor(optionId)}</div>    
          <div className="my-2"> Portuguese Speakers: {portugueseSpeakerFor(optionId)}</div>    
-         <div><Bar x={['English', 'Portuguese']} y={[englishSpeakerFor(optionId), portugueseSpeakerFor(optionId)]} /></div>                                         
+                                             
          </>
     )} 
     </>

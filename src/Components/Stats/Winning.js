@@ -47,9 +47,10 @@ const WinningStats = ({dataInput, total})  => {
   return (
     <>
     {loading && <Loading />}
+    <Pie data={chartData} />     
     <div className="my-2">Winning Option: <strong>{winner}</strong> </div>
     <div className="my-2"> Total Vote count: {total}</div>  
-    <Pie data={chartData} />                                      
+                                    
        
     </>
 
