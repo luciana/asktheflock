@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { useOutletContext, useNavigate} from "react-router-dom";
 import { LANGUAGES, ROUTES, TAGS, GENDER } from "../../Constants";
 import { AppContext } from "../../Contexts";
+import { Badge, QuestionBadge } from './../../Components/Votes';
 import Auth from "../../Services/auth";
 import Mutations from "../../Services/mutations";
 import { Alert, Button, DatePicker, Form, Input, Select, Title, Card } from "../../Components";
@@ -34,12 +35,24 @@ export default function Profile() {
   const [language, setLanguage] = useState(user.locale);
 
   useEffect(() => {
-    user && setEmail(user?.email) 
-    user && setName(user?.name)   
+   // user && setEmail(user?.email) 
+   // user && setName(user?.name)   
     user && setTag(user?.userTag === null ? "" : user.userTag)
     user && setGender(user?.gender)  
     user && user.birthday && setBirthdate(user?.birthdate)  
     user && user.address && setAddress(user?.address)  
+    const validateUser = async () => {     
+      try {
+        const attributes = await Auth.GetUser();
+        if ( attributes ){        
+         setEmail(attributes.email);
+         setName(attributes.name);
+        }       
+      } catch (error) {
+        console.error("Error validating user - unauthorized", error);
+      }
+    };    
+    validateUser();
     userVoteCount();
     userQuestionsAskedCount();
     whoHelpedMe();
@@ -117,7 +130,6 @@ export default function Profile() {
   };
 
   const handleChangeUserTag = (value) => {
-    console.log("setTag", value);
     
     if ( value && value.length > 0){
       setTag(value);
@@ -136,8 +148,7 @@ export default function Profile() {
     try {
       const validBirthDate = (birthdate || birthdate.length !== 0 )? birthdate : null; 
      
-      if (validBirthDate && tag){
-        console.log("birthday and tag exist");
+      if (validBirthDate && tag){      
         await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, birthdate: birthdate, userTag: tag });
       }else if (!validBirthDate && tag){
         await Mutations.UpdateUser({ id: user.id, email: user.email, locale: language, name: name, gender: gender, address: address, userTag: tag });
@@ -148,7 +159,7 @@ export default function Profile() {
       } 
      
       loadUser({ force: true, 
-        email: user.email,
+        email: email,
         name: name, 
         locale: language  ? language : "en-US",         
         gender: gender ? gender : "",
@@ -435,10 +446,7 @@ export default function Profile() {
   return (
    <div className="container">     
       <Alert type={alert?.type} text={alert?.text} />
-      <Card voteCounts={voteCounts} 
-            questionCounts={questionCounts}
-            whoHelpedMeCounts={whoHelpedMeCounts}
-           />
+      <Card />
     
       <hr className="m-3"></hr>     
       <div className="grid sm:grid-cols-3 gap-2">  
@@ -475,20 +483,39 @@ export default function Profile() {
           text={LANGUAGES[state.lang].Profile.UpdateProfile}
           disabled={disableProfileButton}
           handler={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
-        />
-        {/* <button                 
-          className="btn btn-outline-primary rounded-pill "
-          type="button"
-          onClick={() => handleProfileInfo(email, language, name, gender, address, birthdate, tag)}
-          disabled={disableProfileButton()}          
-        >{LANGUAGES[state.lang].Profile.UpdateProfile} </button> */}
+        />       
       </form>
       </div>
       
       </div>
       <hr className="m-2" /> 
-        {renderChangePassword()}
-        <hr className="m-0" />                  
+
+      <div className="border border-1 p-3 my-2" id="badges"> 
+        <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
+       
+         <div className="row">
+         <div className="col">
+            {voteCounts >0 && (
+               <Badge count={voteCounts} label={LANGUAGES[user.locale].Questions.Helped}/>             
+            )}           
+         </div><div className="col">
+            {questionCounts >0 && (            
+                <QuestionBadge count={questionCounts} label={LANGUAGES[user.locale].Questions.Asked}/>                  
+
+              )}       
+        </div><div className="col">
+            {whoHelpedMeCounts >0 && (
+               <QuestionBadge count={whoHelpedMeCounts} label={LANGUAGES[user.locale].Questions.WhoHelped}/>   
+                
+
+              )}    
+              </div>   
+        </div>
+      </div>
+
+      <hr className="m-2" /> 
+        {/* {renderChangePassword()} */}
+                      
       </div>
       </div>
   

@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { Badge, QuestionBadge } from './../../Components/Votes';
+import { useContext} from "react";
 import { LANGUAGES } from "../../Constants";
 import { AppContext } from "../../Contexts";
 import { RiMapPin2Line, RiFlag2Line, RiMedal2Line }  from 'react-icons/ri';
@@ -7,10 +6,12 @@ import { FaRegCircle, FaBirthdayCake }  from 'react-icons/fa';
 import './Card.css';
 import {formatDateTime, flagImage, findGeneration, isAdmin} from '../../Helpers';
 
-const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
+const Card = () => {
 
   const { state } = useContext(AppContext);
   const { user } = state;
+
+  
 
   return (
 
@@ -53,30 +54,7 @@ const Card = ({voteCounts, questionCounts, whoHelpedMeCounts}) => {
           </div>
        
       </div>
-      </div>
-      <div className="border border-1 p-3 my-2" id="badges"> 
-        <h3 className="profile-name ">{LANGUAGES[user.locale].BadgesLabel}</h3>  
-       
-         <div className="row">
-         <div className="col">
-            {voteCounts >0 && (
-               <Badge count={voteCounts} label={LANGUAGES[user.locale].Questions.Helped}/>             
-            )}           
-         </div><div className="col">
-            {questionCounts >0 && (            
-                <QuestionBadge count={questionCounts} label={LANGUAGES[user.locale].Questions.Asked}/>                  
-
-              )}       
-        </div><div className="col">
-            {whoHelpedMeCounts >0 && (
-               <QuestionBadge count={whoHelpedMeCounts} label={LANGUAGES[user.locale].Questions.WhoHelped}/>   
-                
-
-              )}    
-              </div>   
-        </div>
-      </div>
-      
+      </div>           
       </div>
       </>
   );

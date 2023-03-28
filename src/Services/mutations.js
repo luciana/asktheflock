@@ -148,12 +148,6 @@ const CreateQuestion = async (
   options
     ) => {
 
-      // const attributes = await Auth.GetUser();
-
-      // if ( attributes){
-      //   console.log("cred", attributes, userID);
-      // }
-
   const {
     data: { createQuestion },
   } = await API.graphql(
