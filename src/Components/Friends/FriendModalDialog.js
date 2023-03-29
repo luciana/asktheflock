@@ -5,6 +5,7 @@ import { TAGS, LANGUAGES, ROUTES } from '../../Constants';
 import { Button } from './../../Components';
 import gtag from 'ga-gtag';
 import { formatName } from './../../Helpers';
+import './../Votes/Badge.scss';
 
 function FriendModalDialog({modelShow, modelClose, item}) {
 
@@ -37,18 +38,16 @@ function FriendModalDialog({modelShow, modelClose, item}) {
             <li>You answered 22 questions that Rodolfo asked.</li>
           </ul> */}
           <p className="text-center">Your relationship score is </p>
-          <p className="text-center">          
-                <span className="fa-stack fa-3x "
-                  style={{
-                    color:"#ffb300"
-                  }}
-                >           
-                <i className="fa fa-circle fa-stack-2x"></i>
-                <strong className="fa-stack-1x text-light"> 
-                   {item.value}
-                </strong>                              
-            </span> 
-            </p>
+           
+             <div className="main-badge-wrapper">
+                 <div className="badge-earned yellow" >            
+                    <div className="circle">
+                      <strong className="fa-stack-1x text-color-gray mt-2 fs-3 text"> {item.value} </strong>                                       
+                    </div>                
+                </div>    
+              </div>
+              
+              
           <p>{messageMeaning}</p>
 
           </Modal.Body>   

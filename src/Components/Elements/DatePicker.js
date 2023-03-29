@@ -1,8 +1,14 @@
 import React from "react";
 import { Form } from 'react-bootstrap';
 
+
+
 const DatePicker = ({ name, label, placeholder, handler, required = false, locale, value }) => {      
 
+  function subtractYears(date, years) {
+    date.setFullYear(date.getFullYear() - years);
+    return date;
+  }
 
   return (
     <Form.Group controlId="dob">
@@ -14,9 +20,11 @@ const DatePicker = ({ name, label, placeholder, handler, required = false, local
        <Form.Control 
         type="date" 
         name={name} 
+        max={subtractYears(new Date(), 13).toISOString().split("T")[0]}
+        min={subtractYears(new Date(), 100).toISOString().split("T")[0]}
         onChange={(e) => handler(e.target.value)}
         placeholder={placeholder}
-        defaultValue={value}
+        defaultValue={value}       
      />        
     </div>
     </div>
