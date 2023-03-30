@@ -16,6 +16,7 @@ const ConfirmSignUp = lazy(() => import("./Pages/Auth/ConfirmSignUp"));
 
 const Layout = lazy(() => import("./Pages/Layout/Layout"));
 const Main = lazy(() => import("./Pages/Main"));
+const Stats = lazy(() => import("./Pages/Main/Stats"));
 const Admin = lazy(() => import("./Pages/Admin"));
 const Home = lazy(() => import("./Pages/Home"));
 const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
@@ -45,6 +46,7 @@ function App() {
         </Route>
         <Route element={<Layout />}>         
           <Route path={ROUTES[state.lang].MAIN} element={<Main />} />
+          <Route path={ROUTES[state.lang].QUESTION_STATS}  element={<Stats />} />
           <Route path={ROUTES[state.lang].PROFILE} element={<Profile />} />         
           <Route path={ROUTES[state.lang].ADMIN} element={<Admin />} /> 
         </Route>

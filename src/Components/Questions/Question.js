@@ -5,7 +5,7 @@ import { GrUserExpert } from 'react-icons/gr';
 import Avatar from 'react-avatar';
 //import ReplyModalDialog from './ReplyModalDialog';
 //import QuestionForm from './QuestionForm';
-import StatsDialog from '../Stats/StatsDialog';
+import StatsDialogIcon from '../Stats/StatsDialogIcon';
 import { SocialShare } from '../Social';
 import { formatDateTime, formatName, findCounts } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
@@ -85,7 +85,7 @@ function Question({
       const expertsTags = findExpertCounts
       .map((item) => {
             Object.keys(item).map((key) => {
-              item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+              item[key] = (item[key] === '' ? 'No data' : item[key]); return item[key]
             });
             return item;
         })
@@ -235,7 +235,7 @@ function Question({
               )}
 
               {isThereEnoughStats && (
-                <StatsDialog question={question}
+                <StatsDialogIcon question={question}
                             locale={user.locale}/>
               )}
               <button className="btn btn-sm  mx-1" title="copy link" onClick={displayCopyLinkDialog}>

@@ -1,26 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Modal } from 'react-bootstrap';
-import { FaChartPie} from 'react-icons/fa';
-import { LANGUAGES } from '../../Constants';
+import { LANGUAGES, ROUTES } from '../../Constants';
 import Stats from './Stats';
+import { useNavigate } from 'react-router-dom';
 
-function StatsDialog({question, locale}) {
-    const [showStatModal, setShowStatModal] = useState(false);
-    const [statData, setStatData] = useState([]);
-    const initModal = () => {
-      setStatData(question.stats ? JSON.parse(question.stats) : []);
-      return setShowStatModal(!false)
-    }  
+function StatsDialog({question, statData, locale, showStatModalWindow}) { 
+  const [showStatModal, setShowStatModal] = useState(false);
+  const navigate = useNavigate();
 
+  useEffect(() => {   
+    setShowStatModal( showStatModalWindow);
+  
+  }, []);
+
+  const handleModalClose = () => {
+    setShowStatModal(false);
+    navigate(ROUTES["en-US"].MAIN);
+  }
+
+ // console.log("showStatModal",showStatModal);
   return (
-    <>
-                           
-      <button title="results" className="btn btn-sm  mx-1" onClick={()=> initModal()}>
-        <FaChartPie alt={LANGUAGES[locale].Stats.QuestionStats} />
-      </button>
-      <div>    
+    <> 
         <Modal fullscreen={true} show={showStatModal} >
-              <Modal.Header closeButton onClick={() => {setShowStatModal(false)}}>
+              <Modal.Header closeButton onClick={() => { handleModalClose()}}>
                 <Modal.Title>{LANGUAGES[locale].Stats.Results}</Modal.Title>
               </Modal.Header>
               <Modal.Body >               
@@ -33,13 +35,12 @@ function StatsDialog({question, locale}) {
                     <button
                       type="button"
                       className="btn btn-outline-dark rounded-pill"
-                      onClick={()=> {setShowStatModal(false)}}
+                      onClick={()=> { handleModalClose()}}
                     >
                       Close
                     </button>                          
               </Modal.Footer>
-        </Modal>     
-         </div>
+        </Modal>  
        
     </>
   )

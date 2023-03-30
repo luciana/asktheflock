@@ -43,6 +43,7 @@ const en_us_lang = {
   Stats: {
     QuestionStats: "Question Stats",
     Results: "Your Results",
+    NotEnough: "There is not enough data collected to show you meaningful results",
   },
   Questions:{
     Questions: "Questions",

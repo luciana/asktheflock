@@ -43,6 +43,7 @@ const pt_br_lang = {
   Stats: {
     QuestionStats: "Estatisticas",
     Results: "Resultado",
+    NotEnough: "Não teve votos suficiente para mostrar resultados efetivos ",
   },
   Questions:{
     Questions: "Perguntas",

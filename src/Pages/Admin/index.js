@@ -37,7 +37,7 @@ function Admin() {
     const navigate = useNavigate();
     useEffect(() => {   
        check();
-      // loadQuestions();
+     
       }, []);
 
       const loadQuestions = async () => {
