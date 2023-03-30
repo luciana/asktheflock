@@ -62,6 +62,19 @@ const IsAdminUser = async() => {
   
 }
 
+const IsQuestionOwner = async(question) => {
+  const result = await AmplifyAuth.currentAuthenticatedUser(); 
+  console.log("isowner for question", question.owner);
+
+  if(question.owner && question.owner === result){
+    console.log("isowner ");
+    return true;
+  }else{
+    return false;
+  }
+  
+}
+
 const SignOut = async () => {
   try{
     await AmplifyAuth.signOut({ global: true })
@@ -108,6 +121,7 @@ const Auth = {
   RedefinePassword,
   GetUser,
   IsAdminUser,
+  IsQuestionOwner,
   SignOut,
   ChangeEmail,
   ConfirmChangeEmail,

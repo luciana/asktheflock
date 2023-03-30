@@ -61,31 +61,31 @@ function Admin() {
        
         }
       };
-       const loadSingleQuestion = async (id) => {
-        try{
-          setLoading(true);                
-          if (id){                 
+      //  const loadSingleQuestion = async (id) => {
+      //   try{
+      //     setLoading(true);                
+      //     if (id){                 
             
-            const singleQuestion = await Queries.GetSingleQuestion(id);
-            return singleQuestion; 
-            // console.log("single questions", singleQuestion);
-            // if(singleQuestion){              
-            //   setActiveQuestion(singleQuestion);    
-            //   console.log("active question from retrieval",singleQuestion );  
-            //   setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);  
-            //   setoptionList(singleQuestion.options ? JSON.parse(singleQuestion.options) : []);            
-            // } 
-          }else{
-            setActiveQuestion(null); 
+      //       const singleQuestion = await Queries.GetSingleQuestion(id);
+      //       return singleQuestion; 
+      //       // console.log("single questions", singleQuestion);
+      //       // if(singleQuestion){              
+      //       //   setActiveQuestion(singleQuestion);    
+      //       //   console.log("active question from retrieval",singleQuestion );  
+      //       //   setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);  
+      //       //   setoptionList(singleQuestion.options ? JSON.parse(singleQuestion.options) : []);            
+      //       // } 
+      //     }else{
+      //       setActiveQuestion(null); 
            
-          }                       
-          setLoading(false);
-        }catch(err){
-          console.error("ADMIN: Loading Single Question from queries error", err);
-          setActiveQuestion(null);    
+      //     }                       
+      //     setLoading(false);
+      //   }catch(err){
+      //     console.error("ADMIN: Loading Single Question from queries error", err);
+      //     setActiveQuestion(null);    
             
-        }
-      }
+      //   }
+      // }
 
     const check = async () =>{
        const t = await isAdmin();       
@@ -229,7 +229,7 @@ function Admin() {
                         <th scope="col">Votes Ended</th>
                         <th scope="col"># of Options</th>     
                         <th scope="col"># Votes</th>     
-                        <th scope="col">Action</th>
+                        <th scope="col">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -243,6 +243,8 @@ function Admin() {
                       <td>
                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
                           onClick={()=> prepareEmail(question)}> Prepare Email </button>
+                      <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=>  navigate(`/main/${question.id}/stats`)}> Stats </button>
                         
                       </td>
                       </tr>
@@ -282,7 +284,7 @@ function Admin() {
                         )}                   
                             
                         </ul> 
-                        <button className="btn btn-primary my-2">Dig into the results details</button>
+                        <a href={`/main/${activeQuestion.id}/stats`} className="btn btn-primary my-2">Dig into the results details</a>
 
 
                         <table className="table table-sm table-hover">                  

@@ -22,11 +22,10 @@ function Stats() {
   const { id } = useParams();
   const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT;
 
-console.log("what is the question  id", id);
 
   useEffect(() => {   
     check();
-},[id]);
+},[]);
 
 const check = async () =>{
     const t = await isAdmin();       
@@ -41,17 +40,24 @@ const check = async () =>{
     try{
       setLoading(true); 
       if (id){                   
-        const singleQuestion = await Queries.GetSingleQuestion(id);
+        const singleQuestion = await Queries.GetSingleQuestion(id);       
+      
         if(singleQuestion){
-          setQuestion(singleQuestion);
+          setQuestion(singleQuestion);         
           setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);
           setIsThereEnoughStats(singleQuestion && user.id === singleQuestion.userID && 
                                       singleQuestion.options && singleQuestion.stats && 
                                       new Date() - new Date(singleQuestion.voteEndAt) > 1 &&
                                       JSON.parse(singleQuestion.stats).length >= minStatVoteCount) ;
+                                      
+        }else{
+            setQuestion(null);  
+            console.error("Stats Page no question ");
+            navigate(ROUTES[user.locale].MAIN);
         } 
       }else{
         setQuestion(null);  
+        console.error("Stats Page no question id");
         navigate(ROUTES[user.locale].MAIN);
       }                       
       setLoading(false);

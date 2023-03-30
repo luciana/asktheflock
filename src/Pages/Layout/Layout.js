@@ -55,20 +55,20 @@ export default function Layout() {
           userTag: "",
         });
 
+        //deep link
         const beforeLoginUrl = sessionStorage.getItem('redirect_to');     
         if(beforeLoginUrl){
+         console.log("beforeLoginUrl", beforeLoginUrl);
           sessionStorage.removeItem('redirect_to');
-          navigate(beforeLoginUrl);
+          navigate("/main/866e9d2b-a86b-42e7-b1db-3d6716b452bb/stats");
         }
        
 
-      } catch (error) {
-        console.error("Layout.js Main error in isUserLoggedIn", error);    
-        if(location){
-          if(location.search){
-            console.log("storing in session storage location.state?.from?.pathname", location?.pathname, location?.search);
-            sessionStorage.setItem('redirect_to',  location.pathname + location.search);
-          }          
+      } catch (error) {        
+        if(location){   
+          //deep link
+           // console.log("storing in session storage location.state?.from?.pathname", location?.pathname, location?.search);
+            sessionStorage.setItem('redirect_to',  location.pathname + location.search);            
         }           
         if(String(error).includes("The user is not authenticated")){         
           //clear cookies         
