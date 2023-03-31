@@ -58,9 +58,9 @@ export default function Layout() {
         //deep link
         const beforeLoginUrl = sessionStorage.getItem('redirect_to');     
         if(beforeLoginUrl){
-         console.log("beforeLoginUrl", beforeLoginUrl);
+         //console.log("beforeLoginUrl", beforeLoginUrl);
           sessionStorage.removeItem('redirect_to');
-          navigate("/main/866e9d2b-a86b-42e7-b1db-3d6716b452bb/stats");
+          navigate(beforeLoginUrl);
         }
        
 
