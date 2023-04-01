@@ -114,7 +114,6 @@ export const getComment = /* GraphQL */ `
       id
       questionID
       optionID
-      userID
       comment
       owner
       createdAt
@@ -141,7 +140,6 @@ export const listComments = /* GraphQL */ `
         id
         questionID
         optionID
-        userID
         comment
         owner
         createdAt
@@ -256,7 +254,7 @@ export const questionByUserId = /* GraphQL */ `
 export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
   query CommentsByQuestionIDAndOptionID(
     $questionID: ID!
-    $optionID: ModelIDKeyConditionInput
+    $optionID: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelCommentFilterInput
     $limit: Int
@@ -274,7 +272,6 @@ export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
         id
         questionID
         optionID
-        userID
         comment
         owner
         createdAt

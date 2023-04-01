@@ -380,21 +380,16 @@ const Questions = () => {
 
       }
 
-      const updateStatsAndOptionsInStatTable = async(question, optionsInQuestion, statsInQuestion) => {     
-        try{
-          console.log("updateStat await about to ");
-          const updateStat =  await Mutations.UpdateStat(
-            question.id,
-            JSON.stringify(optionsInQuestion),
-            JSON.stringify(statsInQuestion),
-          );
-          console.log("updateStat await ", updateStat);
-          return updateStat;
-        }catch(error){
-          console.error("Mutations.UpdateStat error", error);
-          return null;
-        }   
+      const updateComments = async(comment) => {
+        console.log("update Comments for ",  comment.questionID,  comment.optionID);
 
+        const result  = await Queries.GetCommentsByQuestionIDAndOptionID(
+          comment.questionID,
+          comment.optionID
+        )
+
+          
+        console.log("resulted in ", result);
       }
 
 
@@ -653,19 +648,16 @@ const Questions = () => {
                   {filterList.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}
-                          question={rootQuestion}
-                          //replies={getReplies(rootQuestion.id)}                        
-                          //setActiveQuestion={setActiveQuestion}
-                          //activeQuestion={activeQuestion}   
+                          question={rootQuestion}                       
                           handleVote={handleVote}
                           updateVotedList={updateVotedList}
                           updateVotedOptionsList={updateVotedOptionsList}
                           votedList={votedList}
-                          votedOptionsList={votedOptionsList}
-                          //openQuestion={openQuestion}      
+                          votedOptionsList={votedOptionsList}                        
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
-                          updateQuestion={updateQuestion}                        
+                          updateQuestion={updateQuestion}  
+                          updateComments={updateComments}                      
                           user={user}
                       />
                   ))}

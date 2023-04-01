@@ -148,7 +148,6 @@ export const onCreateComment = /* GraphQL */ `
       id
       questionID
       optionID
-      userID
       comment
       owner
       createdAt
@@ -165,7 +164,6 @@ export const onUpdateComment = /* GraphQL */ `
       id
       questionID
       optionID
-      userID
       comment
       owner
       createdAt
@@ -182,7 +180,6 @@ export const onDeleteComment = /* GraphQL */ `
       id
       questionID
       optionID
-      userID
       comment
       owner
       createdAt

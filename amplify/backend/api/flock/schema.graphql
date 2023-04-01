@@ -96,8 +96,7 @@ type Comment @model
    {
      id: ID! @primaryKey
      questionID: ID! @index( name: "byQuestion", sortKeyFields: ["optionID"])
-     optionID: ID!   
-     userID: ID!
+     optionID: String!   
      comment: AWSJSON!
      owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
 }

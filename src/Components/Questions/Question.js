@@ -14,20 +14,18 @@ import { Button, Input, Alert, Loading } from './../../Components';
 import  shortenURL  from './../../Services/shortenURL';
 
 function Question({ 
-  question, 
-  replies,
-  //setActiveQuestion,
+  question,   
   votedList,
   updateVotedList,
   votedOptionsList,
   updateVotedOptionsList,
   updateQuestionVoteTime,
   handleVote,
-  //activeQuestion,
   deleteQuestion,
   openQuestion,
   parentId = null,
-  user
+  user,
+  updateComments,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -185,8 +183,20 @@ function Question({
            
   }
 
-  const createVoteComment = (questionID, optionID, optionText, comment) =>{
-    console.log("in question.jst question.id, edit.id, edit.value, comment", questionID, optionID, optionText, comment);
+  const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{ 
+    const obj = {};
+    obj.questionID = questionID;
+    obj.optionID = optionID;
+    const data = [];
+    obj.comment = data;
+    const commentObj = {};
+    commentObj.optionText = optionText;
+    commentObj.userID = user.id;
+    commentObj.userTag = user.userTag;
+    commentObj.comment = comment;
+    data.push(commentObj);
+    //console.log("createVoteCommentObject",obj); 
+    updateComments(obj);
   }
 
   return (
@@ -261,7 +271,7 @@ function Question({
                 votedOptionsList={votedOptionsList}
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded}
-                createVoteComment={createVoteComment}/>    
+                createVoteCommentObject={createVoteCommentObject}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 

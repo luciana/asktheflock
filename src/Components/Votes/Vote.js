@@ -9,7 +9,7 @@ const Vote = ({ question,
              myOwnQuestion,
              alreadyVotedForQuestionList,
              voteEnded,
-             createVoteComment }) => {
+             createVoteCommentObject }) => {
 
 const [edit, setEdit] = useState({
   id: null,
@@ -24,10 +24,10 @@ const iVotedForIt = ( id ) =>  {
   return votedOptionsList.includes(id)
 }
 
-const handleSubmit = (comment) => { 
-  console.log("handle submit vote comment" , comment);
-  console.log("handle submit vote other data" , question.id, edit.id, edit.value);
-  createVoteComment(question.id, edit.id, edit.value, comment);
+const handleSubmit = ({comment}) => { 
+  // console.log("handle submit vote comment" , comment);
+  // console.log("handle submit vote other data" , question.id, edit.id, edit.value);
+  createVoteCommentObject(question.id, edit.id, edit.value, comment);
   setEdit({
     id: null,
     value: '',

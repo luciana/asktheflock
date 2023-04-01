@@ -28,7 +28,7 @@ const QuestionCommentForm = ({
     handleSubmit({     
       comment: input,     
     });
-    //setInput('');
+    setInput('');
   }
 
   return (
