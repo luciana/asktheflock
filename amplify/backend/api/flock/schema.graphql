@@ -83,9 +83,24 @@ type Question @model
   questionTag: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   options: AWSJSON! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   stats: AWSJSON @auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])
+  comments: [Comment] @hasMany(indexName: "byQuestion", fields: ["id"]) @auth(rules: [{ allow: owner },{ allow: private, operations: [read,create]}])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
  }
 
+type Comment @model
+            @auth( rules: [ 
+               { allow: owner },
+               { allow: groups, groups: ["asktheflockadmin"] },
+               { allow: private, operations: [read ,create] }]) 
+          
+   {
+     id: ID! @primaryKey
+     questionID: ID! @index( name: "byQuestion", sortKeyFields: ["optionID"])
+     optionID: ID!   
+     userID: ID!
+     comment: AWSJSON!
+     owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
+}
 #  type Stat @model
 #             @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
 #                           { allow: private, operations: [read]},

@@ -374,6 +374,7 @@ const Questions = () => {
           );                   
           }catch(error){
             console.error("Mutations.UpdateQuestionOptions error", error);
+            navigate(ROUTES[user.locale].MAIN);
             return null;
           }   
 

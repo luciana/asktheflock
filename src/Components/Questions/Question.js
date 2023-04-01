@@ -185,6 +185,9 @@ function Question({
            
   }
 
+  const createVoteComment = (questionID, optionID, optionText, comment) =>{
+    console.log("in question.jst question.id, edit.id, edit.value, comment", questionID, optionID, optionText, comment);
+  }
 
   return (
     <>
@@ -257,7 +260,8 @@ function Question({
                 myOwnQuestion={myOwnQuestion}                
                 votedOptionsList={votedOptionsList}
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
-                voteEnded={voteEnded} />    
+                voteEnded={voteEnded}
+                createVoteComment={createVoteComment}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 

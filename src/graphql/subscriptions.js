@@ -80,6 +80,9 @@ export const onCreateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -102,6 +105,9 @@ export const onUpdateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -124,6 +130,60 @@ export const onDeleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateComment = /* GraphQL */ `
+  subscription OnCreateComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onCreateComment(filter: $filter, owner: $owner) {
+      id
+      questionID
+      optionID
+      userID
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateComment = /* GraphQL */ `
+  subscription OnUpdateComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onUpdateComment(filter: $filter, owner: $owner) {
+      id
+      questionID
+      optionID
+      userID
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteComment = /* GraphQL */ `
+  subscription OnDeleteComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onDeleteComment(filter: $filter, owner: $owner) {
+      id
+      questionID
+      optionID
+      userID
+      comment
       owner
       createdAt
       updatedAt

@@ -80,6 +80,9 @@ export const createQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -102,6 +105,9 @@ export const updateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
       owner
       createdAt
       updatedAt
@@ -124,6 +130,60 @@ export const deleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
+      comments {
+        nextToken
+      }
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createComment = /* GraphQL */ `
+  mutation CreateComment(
+    $input: CreateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    createComment(input: $input, condition: $condition) {
+      id
+      questionID
+      optionID
+      userID
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateComment = /* GraphQL */ `
+  mutation UpdateComment(
+    $input: UpdateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    updateComment(input: $input, condition: $condition) {
+      id
+      questionID
+      optionID
+      userID
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteComment = /* GraphQL */ `
+  mutation DeleteComment(
+    $input: DeleteCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    deleteComment(input: $input, condition: $condition) {
+      id
+      questionID
+      optionID
+      userID
+      comment
       owner
       createdAt
       updatedAt
