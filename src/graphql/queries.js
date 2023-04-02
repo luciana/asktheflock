@@ -109,9 +109,8 @@ export const listQuestions = /* GraphQL */ `
   }
 `;
 export const getComment = /* GraphQL */ `
-  query GetComment($id: ID!) {
-    getComment(id: $id) {
-      id
+  query GetComment($questionID: ID!, $optionID: Int!) {
+    getComment(questionID: $questionID, optionID: $optionID) {
       questionID
       optionID
       comment
@@ -123,21 +122,22 @@ export const getComment = /* GraphQL */ `
 `;
 export const listComments = /* GraphQL */ `
   query ListComments(
-    $id: ID
+    $questionID: ID
+    $optionID: ModelIntKeyConditionInput
     $filter: ModelCommentFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
     listComments(
-      id: $id
+      questionID: $questionID
+      optionID: $optionID
       filter: $filter
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
     ) {
       items {
-        id
         questionID
         optionID
         comment
@@ -269,7 +269,6 @@ export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
       nextToken: $nextToken
     ) {
       items {
-        id
         questionID
         optionID
         comment

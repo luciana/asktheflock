@@ -145,7 +145,6 @@ export const createComment = /* GraphQL */ `
     $condition: ModelCommentConditionInput
   ) {
     createComment(input: $input, condition: $condition) {
-      id
       questionID
       optionID
       comment
@@ -161,7 +160,6 @@ export const updateComment = /* GraphQL */ `
     $condition: ModelCommentConditionInput
   ) {
     updateComment(input: $input, condition: $condition) {
-      id
       questionID
       optionID
       comment
@@ -177,7 +175,6 @@ export const deleteComment = /* GraphQL */ `
     $condition: ModelCommentConditionInput
   ) {
     deleteComment(input: $input, condition: $condition) {
-      id
       questionID
       optionID
       comment

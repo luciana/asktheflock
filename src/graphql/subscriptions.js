@@ -145,7 +145,6 @@ export const onCreateComment = /* GraphQL */ `
     $owner: String
   ) {
     onCreateComment(filter: $filter, owner: $owner) {
-      id
       questionID
       optionID
       comment
@@ -161,7 +160,6 @@ export const onUpdateComment = /* GraphQL */ `
     $owner: String
   ) {
     onUpdateComment(filter: $filter, owner: $owner) {
-      id
       questionID
       optionID
       comment
@@ -177,7 +175,6 @@ export const onDeleteComment = /* GraphQL */ `
     $owner: String
   ) {
     onDeleteComment(filter: $filter, owner: $owner) {
-      id
       questionID
       optionID
       comment
