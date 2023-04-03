@@ -27,7 +27,7 @@ const iVotedForIt = ( id ) =>  {
 const handleSubmit = ({comment}) => { 
   // console.log("handle submit vote comment" , comment);
   // console.log("handle submit vote other data" , question.id, edit.id, edit.value);
-  createVoteCommentObject(question.id, edit.id, edit.value, comment);
+  createVoteCommentObject(question.id,edit.id, edit.value, comment);
   setEdit({
     id: null,
     value: '',

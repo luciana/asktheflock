@@ -181,7 +181,9 @@ const CreateComment = async (
   optionID,
   comment, 
     ) => {
-
+      console.log("muiation service craete comment inputs" , questionID, 
+      optionID,
+      comment );
   const {
     data: { createComment },
   } = await API.graphql(
@@ -189,12 +191,23 @@ const CreateComment = async (
       {   
         questionID, 
         optionID,
-        comment,        
+        comment
       } })
   );
   return createComment;
 
 }
+
+const UpdateComment = async ( questionID, optionID, comment ) => { 
+  const {
+    data: { updateComment },
+  } = await API.graphql(
+    graphqlOperation(mutations.updateComment, {
+      input: { questionID, optionID, comment },
+    })
+  );
+  return updateComment;
+};
 
 const Mutations = {
   CreateUser,
@@ -210,6 +223,7 @@ const Mutations = {
   UpdateUserBirthdate,
   UpdateUserName,
   CreateComment,
+  UpdateComment,
 };
 
 export default Mutations;   

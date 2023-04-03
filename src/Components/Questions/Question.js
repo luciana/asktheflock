@@ -184,19 +184,19 @@ function Question({
   }
 
   const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{ 
-    const obj = {};
-    obj.questionID = questionID;
-    obj.optionID = optionID;
-    const data = [];
-    obj.comment = data;
+    //console.log("createVoteCommentObject",questionID, optionID, optionText, comment); 
+    //const obj = {};
+    //obj.questionID = questionID;
+    //obj.optionID = optionID;   
+   // const commentArray = [];
     const commentObj = {};
     commentObj.optionText = optionText;
     commentObj.userID = user.id;
     commentObj.userTag = user.userTag;
     commentObj.comment = comment;
-    data.push(commentObj);
-    //console.log("createVoteCommentObject",obj); 
-    updateComments(obj);
+    //commentArray.push(commentObj);
+   // console.log("created  VoteCommentObject",obj); 
+    updateComments(questionID,optionID, commentObj);
   }
 
   return (

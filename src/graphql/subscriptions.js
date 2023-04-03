@@ -80,9 +80,6 @@ export const onCreateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      comments {
-        nextToken
-      }
       owner
       createdAt
       updatedAt
@@ -105,9 +102,6 @@ export const onUpdateQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      comments {
-        nextToken
-      }
       owner
       createdAt
       updatedAt
@@ -130,9 +124,6 @@ export const onDeleteQuestion = /* GraphQL */ `
       questionTag
       options
       stats
-      comments {
-        nextToken
-      }
       owner
       createdAt
       updatedAt

@@ -365,6 +365,7 @@ const Questions = () => {
 
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
         try{
+          console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
           //once validate that the stats and options were added to the new Stat table
           //then clear the options in the Question table below.
           return await Mutations.UpdateQuestionOptions(
@@ -380,16 +381,77 @@ const Questions = () => {
 
       }
 
-      const updateComments = async(comment) => {
-        console.log("update Comments for ",  comment.questionID,  comment.optionID);
 
-        const result  = await Queries.GetCommentsByQuestionIDAndOptionID(
-          comment.questionID,
-          comment.optionID
-        )
+      const getComment = async(comment) => {
+        try{
+          const result  = await Queries.GetCommentsByQuestionIDAndOptionID(
+            comment.questionID,
+            {eq: comment.optionID}
+          )
+        }catch(error){
+          console.error("Error getting comment with question and option IDs", error);
+        }
+      }
 
-          
-        console.log("resulted in ", result);
+      const createComment = async(questionID,optionID,comment) =>{
+        try{
+          //createComment    
+          console.log("comment array to create",questionID, optionID, comment);
+          const createResult  = await Mutations.CreateComment(
+            questionID,
+            optionID.toString(),
+            JSON.stringify(comment),          
+           // "{[{userTag:null, optionText:\"more test data\", comment: \"static test\", userID: \"387d6452-9d0e-4e26-bb1e-ce8948ac4295\" }]}",
+          )
+          console.log("creation resulted in ", createResult);
+        }catch(error){
+          console.error("Error on creating comments", error);
+         }
+      }
+
+      const updateComments = async(questionID,optionID, comment) => {
+       
+        try{
+          const queryResult  = await Queries.GetComment(
+            questionID,
+            optionID.toString(),
+          )
+         console.log(" updateComments query resulted in ", queryResult);
+
+         //found a comment entry for this question and option
+         if(queryResult && queryResult.length > 0){
+          try{
+             //updateComment
+            console.log("item was found, now we need to update it it");                    
+            let commentsInQuestion = queryResult[0].comment;           
+            if (commentsInQuestion){
+             // console.log("commentsInQuestion already ", commentsInQuestion);   
+              commentsInQuestion = JSON.parse(commentsInQuestion);           
+            }else{
+              //console.log("nothing in  commentsInQuestion - create new array");
+              commentsInQuestion = [];
+            }
+           // console.log(" add new comment ",  comment);
+            commentsInQuestion.push(comment);         
+            console.log(" params to update ",  questionID,  optionID.toString(), JSON.stringify(commentsInQuestion));
+           
+            const updateResult  = await Mutations.UpdateComment(
+              questionID,  
+              optionID,           
+              JSON.stringify(commentsInQuestion),
+            ) 
+
+            console.log("update resulted in ", updateResult);
+          }catch(error){
+            console.error("Error on updating comments", error);
+           }
+            
+         }else{
+         // createComment(questionID,optionID,comment);       
+        }   
+       }catch(error){
+        console.error("Error on Update Comments", error);
+       }
       }
 
 
