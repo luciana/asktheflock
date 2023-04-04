@@ -78,24 +78,23 @@ type Question @model
   parentID: ID #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   questionTag: String #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
   options: AWSJSON! #@auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  stats: AWSJSON #@auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])
-  #comments: [Comment] @hasMany(indexName: "byQuestion", fields: ["id"]) #@auth(rules: [{ allow: owner },{ allow: private, operations: [read,create]}])
+  stats: AWSJSON #@auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])  
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },   { allow: private, operations: [read, update, delete] }]) 
  }
 
 
-type Comment @model
-            @auth( rules: [ 
-               { allow: owner , operations: [ read, create, update, delete]},
-               { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
-               { allow: private, operations: [read ,create] }]) 
+# type Comment @model
+#             @auth( rules: [ 
+#                { allow: owner , operations: [ read, create, update, delete]},
+#                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
+#                { allow: private, operations: [read ,create] }]) 
           
-   {
-     questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])
-     optionID: Int!   
-     comment: AWSJSON!
-     owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
-}
+#    {
+#      questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])
+#      optionID: Int!   
+#      comment: AWSJSON!
+#      owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
+#}
 #  type Stat @model
 #             @auth(rules: [{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]},
 #                           { allow: private, operations: [read]},

@@ -105,47 +105,6 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
-export const getComment = /* GraphQL */ `
-  query GetComment($questionID: ID!, $optionID: Int!) {
-    getComment(questionID: $questionID, optionID: $optionID) {
-      questionID
-      optionID
-      comment
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listComments = /* GraphQL */ `
-  query ListComments(
-    $questionID: ID
-    $optionID: ModelIntKeyConditionInput
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listComments(
-      questionID: $questionID
-      optionID: $optionID
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        questionID
-        optionID
-        comment
-        owner
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: AWSEmail!
@@ -240,35 +199,6 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
-        owner
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
-  query CommentsByQuestionIDAndOptionID(
-    $questionID: ID!
-    $optionID: ModelIntKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    commentsByQuestionIDAndOptionID(
-      questionID: $questionID
-      optionID: $optionID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        questionID
-        optionID
-        comment
         owner
         createdAt
         updatedAt

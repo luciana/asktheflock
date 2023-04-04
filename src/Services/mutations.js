@@ -176,38 +176,38 @@ const DeleteQuestion = async ( id ) => {
   return deleteQuestion;
 };
 
-const CreateComment = async (
-  questionID, 
-  optionID,
-  comment, 
-    ) => {
-      console.log("muiation service craete comment inputs" , questionID, 
-      optionID,
-      comment );
-  const {
-    data: { createComment },
-  } = await API.graphql(
-    graphqlOperation(mutations.createComment, { input: 
-      {   
-        questionID, 
-        optionID,
-        comment
-      } })
-  );
-  return createComment;
+// const CreateComment = async (
+//   questionID, 
+//   optionID,
+//   comment, 
+//     ) => {
+//       console.log("muiation service craete comment inputs" , questionID, 
+//       optionID,
+//       comment );
+//   const {
+//     data: { createComment },
+//   } = await API.graphql(
+//     graphqlOperation(mutations.createComment, { input: 
+//       {   
+//         questionID, 
+//         optionID,
+//         comment
+//       } })
+//   );
+//   return createComment;
 
-}
+// }
 
-const UpdateComment = async ( questionID, optionID, comment ) => { 
-  const {
-    data: { updateComment },
-  } = await API.graphql(
-    graphqlOperation(mutations.updateComment, {
-      input: { questionID, optionID, comment },
-    })
-  );
-  return updateComment;
-};
+// const UpdateComment = async ( questionID, optionID, comment ) => { 
+//   const {
+//     data: { updateComment },
+//   } = await API.graphql(
+//     graphqlOperation(mutations.updateComment, {
+//       input: { questionID, optionID, comment },
+//     })
+//   );
+//   return updateComment;
+// };
 
 const Mutations = {
   CreateUser,
@@ -222,8 +222,8 @@ const Mutations = {
   UpdateUserZip,
   UpdateUserBirthdate,
   UpdateUserName,
-  CreateComment,
-  UpdateComment,
+  // CreateComment,
+  // UpdateComment,
 };
 
 export default Mutations;   
