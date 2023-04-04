@@ -399,7 +399,8 @@ const Questions = () => {
           console.log("comment array to create",questionID, optionID, comment);
           const createResult  = await Mutations.CreateComment(
             questionID,
-            optionID.toString(),
+           // optionID.toString(),
+           parseInt(optionID),
             JSON.stringify(comment),          
            // "{[{userTag:null, optionText:\"more test data\", comment: \"static test\", userID: \"387d6452-9d0e-4e26-bb1e-ce8948ac4295\" }]}",
           )
@@ -414,7 +415,9 @@ const Questions = () => {
         try{
           const queryResult  = await Queries.GetComment(
             questionID,
-            optionID.toString(),
+           // optionID.toString(),
+           //parseInt(optionID),
+           optionID,
           )
          console.log(" updateComments query resulted in ", queryResult);
 
@@ -437,7 +440,9 @@ const Questions = () => {
            
             const updateResult  = await Mutations.UpdateComment(
               questionID,  
-              optionID,           
+             // optionID,  
+             //optionID.toString(),
+              parseInt(optionID),         
               JSON.stringify(commentsInQuestion),
             ) 
 
