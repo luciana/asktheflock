@@ -25,7 +25,7 @@ function Question({
   openQuestion,
   parentId = null,
   user,
-  //updateComments,
+  updateComments,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -196,7 +196,7 @@ function Question({
     commentObj.comment = comment;
     //commentArray.push(commentObj);
    // console.log("created  VoteCommentObject",obj); 
-   // updateComments(questionID,optionID, commentObj);
+    updateComments(questionID,optionID, commentObj);
   }
 
   return (

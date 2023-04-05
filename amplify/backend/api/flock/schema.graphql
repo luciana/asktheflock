@@ -39,15 +39,15 @@ type Question @model
  }
 
 
-# type Comment @model
-#             @auth( rules: [ 
-#                { allow: owner , operations: [ read, create, update, delete]},
-#                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
-#                { allow: private, operations: [read ,create] }]) 
+type Comment @model
+            @auth( rules: [ 
+               { allow: owner , operations: [ read, create, update, delete]},
+               { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
+               { allow: private, operations: [read ,create] }]) 
           
-#    {
-#      questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])
-#      optionID: Int!   
-#      comment: AWSJSON!
-#      owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
-#}
+   {
+     questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])
+     optionID: Int!   
+     comment: AWSJSON!
+     owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
+}
