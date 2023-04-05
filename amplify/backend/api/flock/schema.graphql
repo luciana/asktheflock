@@ -43,7 +43,7 @@ type Comment @model
             @auth( rules: [ 
                { allow: owner , operations: [ read, create, update, delete]},
                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
-               { allow: private, operations: [read ,create] }]) 
+               { allow: private, operations: [read ,create, update] }]) 
           
    {
      questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])

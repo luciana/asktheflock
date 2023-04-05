@@ -382,15 +382,9 @@ const Questions = () => {
       }
 
 
-      const getComment = async(comment) => {
-        try{
-          const result  = await Queries.GetCommentsByQuestionIDAndOptionID(
-            comment.questionID,
-            {eq: comment.optionID}
-          )
-        }catch(error){
-          console.error("Error getting comment with question and option IDs", error);
-        }
+      const getComment = async(questionID,optionID) => {       
+        const result  = await Queries.GetComment(questionID, optionID );
+        return result ? result : null;          
       }
 
       const createComment = async(questionID,optionID,comment) =>{
@@ -415,10 +409,8 @@ const Questions = () => {
         console.log(" get comment for ", questionID, optionID);
         try{
           const queryResult  = await Queries.GetComment(
-            questionID,
-           // optionID.toString(),
-           //parseInt(optionID),
-           optionID,
+            questionID,     
+            optionID,
           )
          console.log(" updateComments query resulted in ", queryResult);
 
