@@ -365,7 +365,7 @@ const Questions = () => {
 
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
         try{
-          console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
+         // console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
           //once validate that the stats and options were added to the new Stat table
           //then clear the options in the Question table below.
           return await Mutations.UpdateQuestionOptions(

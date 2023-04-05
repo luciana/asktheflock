@@ -24,6 +24,7 @@ function Admin() {
     const [optionList, setOptionList] = useState([]);
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
+    const [showUserQuestionModal, setShowUserQuestionModal] = useState(false);
     const [expertOverallMessage, setExpertOverallMessage] = useState(null);
     const [genderOverallMessage, setGenderOverallMessage] = useState(null);
     const [genderWinningMessage, setGenderWinningMessage] = useState(null);
@@ -32,7 +33,7 @@ function Admin() {
     const [winnerOptionItem, setWinnerOptionItem] = useState(null);
     const [optionWinnerOptionId, setOptionWinnerOptionId] = useState(null);
     const [totalVotes, setTotalVotes] = useState(null);
-    
+    const [userData, setUserData] = useState([]);
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
     useEffect(() => {   
@@ -43,12 +44,14 @@ function Admin() {
       const loadQuestions = async () => {
         try{
           setLoading(true);             
-          let q = await Queries.GetAllQuestions();         
+          let q = await Queries.GetAllQuestions();              
           if(q){                     
               setBackendQuestions(q.filter(
-                (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
-                && (backendQuestion.parentID === null)) 
-                && JSON.parse(backendQuestion.stats).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
+                (backendQuestion) => ((
+                  (new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) &&
+                 (backendQuestion.parentID === null)) 
+                //&& JSON.parse(backendQuestion.stats).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT
+              )
               )            
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));                    
@@ -106,6 +109,10 @@ function Admin() {
 
     const handleSingleQuestionClose = () => {
       setShowSingleQuestionModal(false);     
+    }
+
+    const handleUserQuestionClose = () => {
+      setShowUserQuestionModal(false);
     }
 
     const getExpertOverallMessage = (statData) => {
@@ -208,6 +215,27 @@ function Admin() {
       } 
     }
 
+    const userInfo = async (question) => {
+      const userId = question.userID;  
+      const userName = question.userName;
+      try{
+        let userData = await Queries.GetUserById(userId);   
+        console.log("auser data for question", userData); 
+        if ( userData) {
+          setUserData({
+            expert: userData.userTag,
+            email:  userData.email,
+            votes: userData.votes,
+          });
+          setShowUserQuestionModal(true);
+        } 
+
+      }catch(error){
+        console.log("Error getting user info for question", error);
+        setShowUserQuestionModal(false);
+      }
+    }
+
     return (
     <section className="App ">
      {loading && <Loading />}
@@ -218,9 +246,12 @@ function Admin() {
              <div className="white-bg container p-2 ">
                 <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />
 
+
+
+
                 {backendQuestions && (  
                   <>
-                  <div className="title">This table shows all the questions that are closed with has enough votes to show meanful stats.</div>               
+                  <div className="title">This table shows all the questions that are closed with has enough votes to show meaningful stats.</div>               
                   <table className="table table-sm table-hover">
                   <thead>
                       <tr>
@@ -239,13 +270,15 @@ function Admin() {
                       <td>{question.userName}</td>
                       <td>{formatDateTime(question.voteEndAt)}</td>
                       <td>{JSON.parse(question.options).length}</td>
-                      <td>{JSON.parse(question.stats).length}</td>
+                      <td>{question.stats && JSON.parse(question.stats).length}</td>
                       <td>
                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
                           onClick={()=> prepareEmail(question)}> Prepare Email </button>
                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
                           onClick={()=>  navigate(`/main/${question.id}/stats`)}> Stats </button>
-                        
+                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=>  userInfo(question)}> User </button>
+                      
                       </td>
                       </tr>
                     ))}                                         
@@ -254,6 +287,26 @@ function Admin() {
                   </>
                 )}
                
+               { userData && (
+                     <Modal  fullscreen={true} show={showUserQuestionModal} >
+                     <Modal.Header closeButton onClick={() => {setShowUserQuestionModal(false)}}>
+                       <Modal.Title>User Info</Modal.Title>
+                     </Modal.Header>
+                     <Modal.Body >  
+                     <p>  {userData.email} </p>
+                     <p>  {userData.userTag} </p>
+                    </Modal.Body>
+                     <Modal.Footer>                                                            
+                           <button
+                             type="button"
+                             className="btn btn-outline-dark rounded-pill"
+                             onClick={handleUserQuestionClose}
+                           >
+                             Close
+                           </button>                  
+                     </Modal.Footer>
+                   </Modal>
+                )};
                 { activeQuestion && (
                      <Modal  fullscreen={true} show={showSingleQuestionModal} >
                      <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>

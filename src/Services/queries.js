@@ -11,6 +11,11 @@ const GetUserByEmail = async (email) => {
 
 };
 
+const GetUserById = async ( id ) => {
+    const data = await API.graphql(graphqlOperation(queries.getUser, { id }));   
+    return data.data.getUser ? data.data.getUser : null;
+}
+
 // const GetComment = async(questionID, optionID) =>{ 
 //   const data = await API.graphql(graphqlOperation(queries.getComment, { questionID, optionID })); 
 //  // console.log("GetComment data", data);
@@ -37,6 +42,7 @@ const Queries = {
   GetAllQuestions,
   GetSingleQuestion,
   GetQuestionByUserId,
+  GetUserById,
  // GetComment,
 };
 
