@@ -418,28 +418,29 @@ const Questions = () => {
          if(queryResult && queryResult.length > 0){
           try{
              //updateComment
-            console.log("item was found, now we need to update it it");                    
-            let commentsInQuestion = queryResult[0].comment;           
-            if (commentsInQuestion){
-              console.log("commentsInQuestion already ", commentsInQuestion);   
-              commentsInQuestion = JSON.parse(commentsInQuestion);           
-            }else{
-              console.log("nothing in  commentsInQuestion - create new array");
-              commentsInQuestion = [];
-            }
-            console.log(" add new comment ",  comment);
-            commentsInQuestion.push(comment);         
-            console.log(" params to update ",  questionID,  optionID.toString(), JSON.stringify(commentsInQuestion));
+            console.log("item was found, now we need to update it it"); 
+            createComment(questionID,optionID,comment);                    
+            // let commentsInQuestion = queryResult[0].comment;           
+            // if (commentsInQuestion){
+            //   console.log("commentsInQuestion already ", commentsInQuestion);   
+            //   commentsInQuestion = JSON.parse(commentsInQuestion);           
+            // }else{
+            //   console.log("nothing in  commentsInQuestion - create new array");
+            //   commentsInQuestion = [];
+            // }
+            // console.log(" add new comment ",  comment);
+            // commentsInQuestion.push(comment);         
+            // console.log(" params to update ",  questionID,  optionID.toString(), JSON.stringify(commentsInQuestion));
            
-            const updateResult  = await Mutations.UpdateComment(
-              questionID,  
-             // optionID,  
-             //optionID.toString(),
-              parseInt(optionID),         
-              JSON.stringify(commentsInQuestion),
-            ) 
+            // const updateResult  = await Mutations.UpdateComment(
+            //   questionID,  
+            //  // optionID,  
+            //  //optionID.toString(),
+            //   parseInt(optionID),         
+            //   JSON.stringify(commentsInQuestion),
+            // ) 
 
-            console.log("update resulted in ", updateResult);
+            // console.log("update resulted in ", updateResult);
           }catch(error){
             console.error("Error on updating comments", error);
            }

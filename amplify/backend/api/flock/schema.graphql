@@ -26,28 +26,29 @@ type Question @model
                   ])
               {
   id: ID!  @primaryKey 
-  text: String! #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  userID: ID! @index(name:"byUserId", queryField: "questionByUserId") # @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
+  text: String! 
+  userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
   userName: String 
   voteEndAt: AWSDateTime 
-  sentiment: String #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  parentID: ID #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  questionTag: String #@auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  options: AWSJSON! #@auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-  stats: AWSJSON #@auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])  
+  sentiment: String 
+  parentID: ID 
+  questionTag: String 
+  options: AWSJSON! 
+  stats: AWSJSON 
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },   { allow: private, operations: [read, update, delete] }]) 
  }
 
-
+//one user can only vote for one option in a question
 type Comment @model
             @auth( rules: [ 
                { allow: owner , operations: [ read, create, update, delete]},
                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
-               { allow: private, operations: [read ,create, update] }]) 
-          
+               { allow: private, operations: [read ,create, update] }])           
    {
-     questionID: ID! @primaryKey(sortKeyFields:["optionID"]) @index( name: "byQuestion", sortKeyFields: ["optionID"])
-     optionID: Int!   
+     questionID: ID! @primaryKey(sortKeyFields:["userID"]) @index( name: "byQuestion", sortKeyFields: ["userID"])
+     userID: ID!   
+     optionID: Int!
+     optionText: String
      comment: AWSJSON!
-     owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
+     owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }]) 
 }

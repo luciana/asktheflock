@@ -186,8 +186,8 @@ function Question({
 
   const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{    
     const commentObj = {};
-    commentObj.optionText = optionText;
-    commentObj.userID = user.id;
+    //commentObj.optionText = optionText;
+    //commentObj.userID = user.id;
     commentObj.userName = user.name;
     commentObj.userTag = user.userTag;
     commentObj.comment = comment;    
