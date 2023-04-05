@@ -45,6 +45,11 @@ const pt_br_lang = {
     Results: "Resultado",
     NotEnough: "Não teve votos suficiente para mostrar resultados efetivos ",
   },
+  Comments: {
+    View: "Ver comentários",
+    Close: "Fechar",
+    CommentsOnOption: "As justificativas dadas para escolher esse opção.",
+  },
   Questions:{
     Questions: "Perguntas",
     NoQuestionsPosted: "Nenhuma pergunta feita ainda. Faça a sua!",

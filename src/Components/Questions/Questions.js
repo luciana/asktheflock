@@ -713,6 +713,7 @@ const Questions = () => {
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}  
                           updateComments={updateComments}                      
+                          getComment={getComment}
                           user={user}
                       />
                   ))}

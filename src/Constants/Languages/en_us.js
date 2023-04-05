@@ -45,6 +45,11 @@ const en_us_lang = {
     Results: "Your Results",
     NotEnough: "There is not enough data collected to show you meaningful results",
   },
+  Comments: {
+    View: "View Comments",
+    Close: "Close",
+    CommentsOnOption: "People justifications for picking this option",
+  },
   Questions:{
     Questions: "Questions",
     NoQuestionsPosted: "No questions posted. Start one!",

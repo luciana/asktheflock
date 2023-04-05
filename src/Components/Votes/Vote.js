@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { FaCircle, FaRegCircle } from 'react-icons/fa';
 import QuestionCommentForm from '../Questions/QuestionCommentForm';
 import { RiEditLine } from 'react-icons/ri';
+import CommentModalDialog from '../Comments/CommentModalDialog';
 
 const Vote = ({ question,              
              votedOptionsList,
@@ -9,14 +10,44 @@ const Vote = ({ question,
              myOwnQuestion,
              alreadyVotedForQuestionList,
              voteEnded,
-             createVoteCommentObject }) => {
+             createVoteCommentObject,
+             getComment }) => {
 
 const [edit, setEdit] = useState({
   id: null,
   value: '',
   index: null,
 });
-const items = JSON.parse(question.options);
+const [items, setItems] = useState(null);
+const [optionComments, setOptionComments] = useState(null);
+
+useEffect(()=>{
+ // setItems(question && JSON.parse(question.options));
+  getCommentDataForOptions();
+}, []);
+
+const getQuestionOptionsComments = async (questionID, optionID) => {
+  console.log("input into calling getComment", questionID, optionID);
+  const result =  await getComment(questionID, optionID);
+  console.log("getCommengetQuestionOptionsComments getComment", result);  
+  return result ? result : null;
+}
+
+const getCommentDataForOptions =  () => {
+  const items  = JSON.parse(question.options);
+  setItems(items);
+  if ( items ){
+    
+    const options = items.map((o) => o.id);
+    console.log("options array", options);
+    options.map((id)=>{
+      const data = getQuestionOptionsComments(question.id, id);
+      console.log("comments for this question", data);
+    })    
+  }
+  
+}
+
     
 
 let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;

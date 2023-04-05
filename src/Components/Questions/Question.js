@@ -26,6 +26,7 @@ function Question({
   parentId = null,
   user,
   updateComments,
+  getComment,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -183,19 +184,13 @@ function Question({
            
   }
 
-  const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{ 
-    //console.log("createVoteCommentObject",questionID, optionID, optionText, comment); 
-    //const obj = {};
-    //obj.questionID = questionID;
-    //obj.optionID = optionID;   
-   // const commentArray = [];
+  const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{    
     const commentObj = {};
     commentObj.optionText = optionText;
     commentObj.userID = user.id;
+    commentObj.userName = user.name;
     commentObj.userTag = user.userTag;
-    commentObj.comment = comment;
-    //commentArray.push(commentObj);
-   // console.log("created  VoteCommentObject",obj); 
+    commentObj.comment = comment;    
     updateComments(questionID,optionID, commentObj);
   }
 
@@ -271,7 +266,8 @@ function Question({
                 votedOptionsList={votedOptionsList}
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded}
-                createVoteCommentObject={createVoteCommentObject}/>    
+                createVoteCommentObject={createVoteCommentObject}
+                getComment={getComment}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 
