@@ -2,13 +2,12 @@
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 type User @model @auth(rules: [
       { allow: owner, operations: [ read, create, update, delete]}     
-      { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }    
+     # { allow: private, operations: [update] }   # update was needed to vote
       ]) 
-# @aws_cognito_user_pools
-{
+ @aws_cognito_user_pools{
   id: ID! @primaryKey
   locale: String!
-  email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail")
+  email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail") @aws_cognito_user_pools
   name: String
   userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])
   birthdate: AWSDate
