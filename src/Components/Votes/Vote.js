@@ -27,10 +27,10 @@ useEffect(()=>{
   getCommentDataForOptions();
 }, []);
 
-const getQuestionComments = async (questionID, userID) => {
+const getQuestionComments = async (questionID) => {
   try{
-    console.log("input into calling getComment", questionID, userID);
-    const result =  await getComment(questionID, userID);
+    //console.log("input into calling getComment", questionID);
+    const result =  await getComment(questionID);
     console.log("getCommengetQuestionOptionsComments getComment", result);  
     return result ? result : null;
   }catch(error){
@@ -44,7 +44,7 @@ const getCommentDataForOptions =  () => {
   setItems(items);
 
   if (myOwnQuestion){
-    const data = getQuestionComments(question.id, user.id);
+    const data = getQuestionComments(question.id);
     //console.log("comments for this question from this user", data);
   }
   // if ( items ){

@@ -382,8 +382,8 @@ const Questions = () => {
       }
 
 
-      const getComment = async(questionID,userID) => {       
-        const result  = await Queries.GetComment(questionID, userID );
+      const getComment = async(questionID) => {       
+        const result  = await Queries.GetComment(questionID );
         return result ? result : null;          
       }
 

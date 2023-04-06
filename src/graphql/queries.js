@@ -106,8 +106,8 @@ export const listQuestions = /* GraphQL */ `
   }
 `;
 export const getComment = /* GraphQL */ `
-  query GetComment($questionID: ID!, $userID: ID!) {
-    getComment(questionID: $questionID, userID: $userID) {
+  query GetComment($questionID: ID!) {
+    getComment(questionID: $questionID) {
       questionID
       userID
       optionID
@@ -122,7 +122,6 @@ export const getComment = /* GraphQL */ `
 export const listComments = /* GraphQL */ `
   query ListComments(
     $questionID: ID
-    $userID: ModelIDKeyConditionInput
     $filter: ModelCommentFilterInput
     $limit: Int
     $nextToken: String
@@ -130,7 +129,6 @@ export const listComments = /* GraphQL */ `
   ) {
     listComments(
       questionID: $questionID
-      userID: $userID
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -244,37 +242,6 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
-        owner
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const commentsByQuestionIDAndUserID = /* GraphQL */ `
-  query CommentsByQuestionIDAndUserID(
-    $questionID: ID!
-    $userID: ModelIDKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCommentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    commentsByQuestionIDAndUserID(
-      questionID: $questionID
-      userID: $userID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        questionID
-        userID
-        optionID
-        optionText
-        comment
         owner
         createdAt
         updatedAt
