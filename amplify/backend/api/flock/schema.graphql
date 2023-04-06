@@ -38,17 +38,17 @@ type Question @model
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },   { allow: private, operations: [read, update, delete] }]) 
  }
 
-//one user can only vote for one option in a question
+
 type Comment @model
             @auth( rules: [ 
                { allow: owner , operations: [ read, create, update, delete]},
                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
                { allow: private, operations: [read ,create, update] }])           
    {
-     questionID: ID! @primaryKey(sortKeyFields:["userID"]) @index( name: "byQuestion", sortKeyFields: ["userID"])
-     userID: ID!   
+     questionID: ID! @primaryKey #(sortKeyFields:["userID"]) @index( name: "byQuestion", sortKeyFields: ["userID"])
+     userID: ID   
      optionID: Int!
      optionText: String
      comment: AWSJSON!
-     owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }]) 
+     owner: String @auth(rules: [{ allow: owner, operations: [read, update] }]) 
 }

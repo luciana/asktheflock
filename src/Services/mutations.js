@@ -178,19 +178,20 @@ const DeleteQuestion = async ( id ) => {
 
 const CreateComment = async (
   questionID, 
+  userID,
   optionID,
+  optionText,
   comment, 
-    ) => {
-      console.log("muiation service craete comment inputs" , questionID, 
-      optionID,
-      comment );
+    ) => {      
   const {
     data: { createComment },
   } = await API.graphql(
     graphqlOperation(mutations.createComment, { input: 
       {   
         questionID, 
+        userID,
         optionID,
+        optionText,
         comment
       } })
   );
@@ -198,12 +199,12 @@ const CreateComment = async (
 
 }
 
-const UpdateComment = async ( questionID, optionID, comment ) => { 
+const UpdateComment = async ( questionID, userID, optionID, optionText, comment ) => { 
   const {
     data: { updateComment },
   } = await API.graphql(
     graphqlOperation(mutations.updateComment, {
-      input: { questionID, optionID, comment },
+      input: { questionID, userID, optionID, optionText, comment },
     })
   );
   return updateComment;

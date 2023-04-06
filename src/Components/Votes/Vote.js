@@ -11,7 +11,8 @@ const Vote = ({ question,
              alreadyVotedForQuestionList,
              voteEnded,
              createVoteCommentObject,
-             getComment }) => {
+             getComment,
+             user }) => {
 
 const [edit, setEdit] = useState({
   id: null,
@@ -26,25 +27,35 @@ useEffect(()=>{
   getCommentDataForOptions();
 }, []);
 
-const getQuestionOptionsComments = async (questionID, optionID) => {
-  console.log("input into calling getComment", questionID, optionID);
-  const result =  await getComment(questionID, optionID);
-  console.log("getCommengetQuestionOptionsComments getComment", result);  
-  return result ? result : null;
+const getQuestionComments = async (questionID, userID) => {
+  try{
+    console.log("input into calling getComment", questionID, userID);
+    const result =  await getComment(questionID, userID);
+    console.log("getCommengetQuestionOptionsComments getComment", result);  
+    return result ? result : null;
+  }catch(error){
+    console.error("error getting comment", error);
+  }
+  
 }
 
 const getCommentDataForOptions =  () => {
   const items  = JSON.parse(question.options);
   setItems(items);
-  if ( items ){
-    
-    const options = items.map((o) => o.id);
-    console.log("options array", options);
-    options.map((id)=>{
-      const data = getQuestionOptionsComments(question.id, id);
-      console.log("comments for this question", data);
-    })    
+
+  if (myOwnQuestion){
+    const data = getQuestionComments(question.id, user.id);
+    //console.log("comments for this question from this user", data);
   }
+  // if ( items ){
+    
+  //   const options = items.map((o) => o.id);
+  //   console.log("options array", options);
+  //   options.map((id)=>{
+  //     const data = getQuestionOptionsComments(question.id, id);
+  //     console.log("comments for this question", data);
+  //   })    
+  // }
   
 }
 

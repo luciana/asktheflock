@@ -106,10 +106,12 @@ export const listQuestions = /* GraphQL */ `
   }
 `;
 export const getComment = /* GraphQL */ `
-  query GetComment($questionID: ID!, $optionID: Int!) {
-    getComment(questionID: $questionID, optionID: $optionID) {
+  query GetComment($questionID: ID!, $userID: ID!) {
+    getComment(questionID: $questionID, userID: $userID) {
       questionID
+      userID
       optionID
+      optionText
       comment
       owner
       createdAt
@@ -120,7 +122,7 @@ export const getComment = /* GraphQL */ `
 export const listComments = /* GraphQL */ `
   query ListComments(
     $questionID: ID
-    $optionID: ModelIntKeyConditionInput
+    $userID: ModelIDKeyConditionInput
     $filter: ModelCommentFilterInput
     $limit: Int
     $nextToken: String
@@ -128,7 +130,7 @@ export const listComments = /* GraphQL */ `
   ) {
     listComments(
       questionID: $questionID
-      optionID: $optionID
+      userID: $userID
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -136,7 +138,9 @@ export const listComments = /* GraphQL */ `
     ) {
       items {
         questionID
+        userID
         optionID
+        optionText
         comment
         owner
         createdAt
@@ -248,18 +252,18 @@ export const questionByUserId = /* GraphQL */ `
     }
   }
 `;
-export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
-  query CommentsByQuestionIDAndOptionID(
+export const commentsByQuestionIDAndUserID = /* GraphQL */ `
+  query CommentsByQuestionIDAndUserID(
     $questionID: ID!
-    $optionID: ModelIntKeyConditionInput
+    $userID: ModelIDKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelCommentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    commentsByQuestionIDAndOptionID(
+    commentsByQuestionIDAndUserID(
       questionID: $questionID
-      optionID: $optionID
+      userID: $userID
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -267,7 +271,9 @@ export const commentsByQuestionIDAndOptionID = /* GraphQL */ `
     ) {
       items {
         questionID
+        userID
         optionID
+        optionText
         comment
         owner
         createdAt

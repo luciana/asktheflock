@@ -137,7 +137,9 @@ export const createComment = /* GraphQL */ `
   ) {
     createComment(input: $input, condition: $condition) {
       questionID
+      userID
       optionID
+      optionText
       comment
       owner
       createdAt
@@ -152,7 +154,9 @@ export const updateComment = /* GraphQL */ `
   ) {
     updateComment(input: $input, condition: $condition) {
       questionID
+      userID
       optionID
+      optionText
       comment
       owner
       createdAt
@@ -167,7 +171,9 @@ export const deleteComment = /* GraphQL */ `
   ) {
     deleteComment(input: $input, condition: $condition) {
       questionID
+      userID
       optionID
+      optionText
       comment
       owner
       createdAt

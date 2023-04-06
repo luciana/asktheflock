@@ -382,82 +382,29 @@ const Questions = () => {
       }
 
 
-      const getComment = async(questionID,optionID) => {       
-        const result  = await Queries.GetComment(questionID, optionID );
+      const getComment = async(questionID,userID) => {       
+        const result  = await Queries.GetComment(questionID, userID );
         return result ? result : null;          
       }
 
-      const createComment = async(questionID,optionID,comment) =>{
-        try{
-          //createComment    
-          console.log("comment array to create",questionID, optionID, comment);
-          const createResult  = await Mutations.CreateComment(
+      const createComment = async(questionID,userID,optionID,optionText,comment) =>{
+        try{ 
+         // console.log("comment array to create",questionID, userID, optionID, optionText,comment);
+          await Mutations.CreateComment(
             questionID,
-           // optionID.toString(),
-           parseInt(optionID),
-            JSON.stringify(comment),          
-           // "{[{userTag:null, optionText:\"more test data\", comment: \"static test\", userID: \"387d6452-9d0e-4e26-bb1e-ce8948ac4295\" }]}",
-          )
-          console.log("creation resulted in ", createResult);
+            userID,
+            optionID,
+            optionText,
+            JSON.stringify(comment),                    
+          )        
         }catch(error){
           console.error("Error on creating comments", error);
          }
       }
 
-      const updateComments = async(questionID,optionID, comment) => {
-       
-        console.log(" get comment for ", questionID, optionID);
-        try{
-          const queryResult  = await Queries.GetComment(
-            questionID,     
-            optionID,
-          )
-         console.log(" updateComments query resulted in ", queryResult);
-
-         //found a comment entry for this question and option
-         if(queryResult && queryResult.length > 0){
-          try{
-             //updateComment
-            console.log("item was found, now we need to update it it"); 
-            createComment(questionID,optionID,comment);                    
-            // let commentsInQuestion = queryResult[0].comment;           
-            // if (commentsInQuestion){
-            //   console.log("commentsInQuestion already ", commentsInQuestion);   
-            //   commentsInQuestion = JSON.parse(commentsInQuestion);           
-            // }else{
-            //   console.log("nothing in  commentsInQuestion - create new array");
-            //   commentsInQuestion = [];
-            // }
-            // console.log(" add new comment ",  comment);
-            // commentsInQuestion.push(comment);         
-            // console.log(" params to update ",  questionID,  optionID.toString(), JSON.stringify(commentsInQuestion));
-           
-            // const updateResult  = await Mutations.UpdateComment(
-            //   questionID,  
-            //  // optionID,  
-            //  //optionID.toString(),
-            //   parseInt(optionID),         
-            //   JSON.stringify(commentsInQuestion),
-            // ) 
-
-            // console.log("update resulted in ", updateResult);
-          }catch(error){
-            console.error("Error on updating comments", error);
-           }
-            
-         }else{
-          createComment(questionID,optionID,comment);       
-        }   
-       }catch(error){
-        console.error("Error on Update Comments", error);
-       }
-      }
-
-
       const updateStats = (question, optID, optionsInQuestion) => {          
         const statsInQuestion = prepStatData(question, user, optID);      
         return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
-
       }
 
       const updateQuestionVoteTime = async (question, voteEndAt) => {
@@ -713,7 +660,7 @@ const Questions = () => {
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}  
-                          updateComments={updateComments}                      
+                          createComment={createComment}                      
                           getComment={getComment}
                           user={user}
                       />

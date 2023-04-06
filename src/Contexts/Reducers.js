@@ -6,14 +6,14 @@ function saveState(state) {
 
 function updateLang(state, payload) {
   const newState = { ...state, lang: payload };
-  saveState(newState); 
+  //saveState(newState); 
   return newState;
 }
 
 function updateUser(state, payload) {
   //localStorage.removeItem(STATENAME);
   const newState = { ...state, user: payload };
-  saveState(newState);
+  //saveState(newState);
   return newState;
 }
 

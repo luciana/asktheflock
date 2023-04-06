@@ -25,7 +25,7 @@ function Question({
   openQuestion,
   parentId = null,
   user,
-  updateComments,
+  createComment,
   getComment,
  }) {
 
@@ -185,13 +185,11 @@ function Question({
   }
 
   const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{    
-    const commentObj = {};
-    //commentObj.optionText = optionText;
-    //commentObj.userID = user.id;
+    const commentObj = {};   
     commentObj.userName = user.name;
     commentObj.userTag = user.userTag;
     commentObj.comment = comment;    
-    updateComments(questionID,optionID, commentObj);
+    createComment(questionID, user.id, optionID, optionText, commentObj);
   }
 
   return (
@@ -267,7 +265,8 @@ function Question({
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded}
                 createVoteCommentObject={createVoteCommentObject}
-                getComment={getComment}/>    
+                getComment={getComment}
+                user={user}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 
