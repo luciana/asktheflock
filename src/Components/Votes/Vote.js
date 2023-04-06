@@ -29,7 +29,7 @@ useEffect(()=>{
 
 const getQuestionComments = async (questionID) => {
   try{
-    //console.log("input into calling getComment", questionID);
+    console.log("input into calling getComment", questionID);
     const result =  await getComment(questionID);
     console.log("getCommengetQuestionOptionsComments getComment", result);  
     return result ? result : null;

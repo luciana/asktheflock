@@ -50,5 +50,5 @@ type Comment @model
      optionID: Int!
      optionText: String
      comment: AWSJSON!
-     owner: String @auth(rules: [{ allow: owner, operations: [read, update] }]) 
+     owner: String @auth(rules: [{ allow: owner, operations: [read, update] },  { allow: private, operations: [read ,create] }]) 
 }
