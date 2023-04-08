@@ -43,7 +43,7 @@ const handleSubmit = ({comment}) => {
 };
 
 if (!items) return;
-console.log("items", items);
+//console.log("items", items);
 const handleCancel = () =>{
  setEdit({ id: null, value: '', index: null })
 }

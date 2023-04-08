@@ -30,8 +30,9 @@ function CommentModalDialog({
   } 
 
   
-  const commentDetails = comment.comment;
+  const commentDetails = JSON.parse(comment.comment);
   console.log("commentDetails", commentDetails);
+  //{"userTag":"mechanic","comment":"sempre mais relaxante","userName":"Luciana Bruscino"}
   return (
     <>  
         <Modal  fullscreen={true} show={showCommentModal} >
@@ -41,12 +42,20 @@ function CommentModalDialog({
               <Modal.Body >               
                 {comment && (
                     <>
-                     <div className= "badge rounded-pill bg-success">{comment.commentCount}</div>
-                     <span> {comment.text}</span>
-                     <p>{commentDetails.comment}</p>
-                     <p>{commentDetails.userTag}</p>
-                     <p>{commentDetails.userName}</p>
-                     <hr />
+                      
+                    <div className= "badge rounded-pill bg-success my-3"> {comment.commentCount}</div>
+                                <span> {comment.text}</span>                   
+                    <div className="p-2 d-flex flex-row">                                                 
+                               <div><Avatar size="42" 
+                                            name={user.name} 
+                                            className="rounded-circle mx-auto my-auto" alt={commentDetails.userName} />  
+                                </div>                                        
+                               <div className="mx-2"> 
+                                <p>{commentDetails.comment}</p>
+                                <p className="text-color-gray text-sm">{commentDetails.userTag ? commentDetails.userTag : ""}</p>
+                            </div>                                      
+                    </div>
+                                          
                     </>
                    
                 )}

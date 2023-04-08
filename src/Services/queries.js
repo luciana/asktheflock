@@ -16,9 +16,9 @@ const GetUserById = async ( id ) => {
     return data.data.getUser ? data.data.getUser : null;
 }
 
-const GetComment = async(questionID) =>{ 
-  const data = await API.graphql(graphqlOperation(queries.getComment, { questionID })); 
-  return data.data.getComment ? data.data.getComment : null;
+const CommentByQuestionId = async(questionID) =>{ 
+  const data = await API.graphql(graphqlOperation(queries.commentByQuestionId, { questionID })); 
+  return data.data.commentByQuestionId.items.length ? data.data.commentByQuestionId.items : null;
 }
 
 const GetQuestionByUserId = async (userID) => {
@@ -42,7 +42,7 @@ const Queries = {
   GetSingleQuestion,
   GetQuestionByUserId,
   GetUserById,
-  GetComment,
+  CommentByQuestionId,
 };
 
 

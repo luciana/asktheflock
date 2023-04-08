@@ -102,18 +102,20 @@ function Question({
     const items  = JSON.parse(question.options);
     //Fetch question comments
     const commentData =  await getComment(question.id);
-    if (commentData){ 
+    if (commentData && commentData.length > 0){ 
         console.log("there are comments sent", commentData);
         let tempItems = items;
         items.map((i,index)=>{    
           i.commentCount = 0;  
-          if(parseInt(i.id) === commentData.optionID){         
-            i.comment = commentData.comment;            
-            i.commentCount = i.commentCount + 1;   
-            i.hasComment = true;
-            i.commentBy = commentData.userID;
-            tempItems[index]=i;
-          }
+          commentData.map((j) => {
+            if(parseInt(i.id) === j.optionID){         
+              i.comment = j.comment;            
+              i.commentCount = i.commentCount + 1;   
+              i.hasComment = true;
+              i.commentBy = j.userID;
+              tempItems[index]=i;
+            }
+          })          
         }); 
         setOptionItem(tempItems);    
     }else{
