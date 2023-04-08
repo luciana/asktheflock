@@ -12,6 +12,7 @@ import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
 import  shortenURL  from './../../Services/shortenURL';
+import { use } from 'echarts';
 
 function Question({ 
   question,   
@@ -36,6 +37,7 @@ function Question({
   const [alert, setAlert] = useState();
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
+  const [optionItem, setOptionItem] = useState(null);
 
 // if (!question) return;
   //console.log("Question ", question);
@@ -45,6 +47,7 @@ function Question({
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
+    getCommentDataForOptions();
   }, []);
  
   const isAReply = question.parentId != null;
@@ -95,7 +98,29 @@ function Question({
     }
   }
   
-  
+  const getCommentDataForOptions = async () => {
+    const items  = JSON.parse(question.options);
+    //Fetch question comments
+    const commentData =  await getComment(question.id);
+    if (commentData){ 
+        console.log("there are comments sent", commentData);
+        let tempItems = items;
+        items.map((i,index)=>{    
+          i.commentCount = 0;  
+          if(parseInt(i.id) === commentData.optionID){         
+            i.comment = commentData.comment;            
+            i.commentCount = i.commentCount + 1;   
+            i.hasComment = true;
+            i.commentBy = commentData.userID;
+            tempItems[index]=i;
+          }
+        }); 
+        setOptionItem(tempItems);    
+    }else{
+      setOptionItem(items);
+    }
+    
+  }
     
                 
     
@@ -258,7 +283,8 @@ function Question({
             {question.text} 
         </div>
         <div className="p-2">
-          <Vote question={question}                                
+          <Vote question={question}  
+                items={optionItem}                 
                 voteUp={voteUp}     
                 myOwnQuestion={myOwnQuestion}                
                 votedOptionsList={votedOptionsList}

@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { FaCircle, FaRegCircle } from 'react-icons/fa';
 import QuestionCommentForm from '../Questions/QuestionCommentForm';
-import { RiEditLine } from 'react-icons/ri';
+import { FaRegCommentDots, FaRegComment } from 'react-icons/fa';
 import CommentModalDialog from '../Comments/CommentModalDialog';
 
-const Vote = ({ question,              
+const Vote = ({ question,     
+             items,         
              votedOptionsList,
              voteUp,            
              myOwnQuestion,
@@ -19,45 +20,9 @@ const [edit, setEdit] = useState({
   value: '',
   index: null,
 });
-const [items, setItems] = useState(null);
-const [optionComments, setOptionComments] = useState(null);
+const [selectedItem, setSelectedItem] = useState(null);
+const [showCommentDialog, setShowCommentDialog] = useState(false);
 
-useEffect(()=>{
- // setItems(question && JSON.parse(question.options));
-  getCommentDataForOptions();
-}, []);
-
-const getQuestionComments = async (questionID) => {
-  try{
-    console.log("input into calling getComment", questionID);
-    const result =  await getComment(questionID);
-    console.log("getCommengetQuestionOptionsComments getComment", result);  
-    return result ? result : null;
-  }catch(error){
-    console.error("error getting comment", error);
-  }
-  
-}
-
-const getCommentDataForOptions =  () => {
-  const items  = JSON.parse(question.options);
-  setItems(items);
-
-  if (myOwnQuestion){
-    const data = getQuestionComments(question.id);
-    //console.log("comments for this question from this user", data);
-  }
-  // if ( items ){
-    
-  //   const options = items.map((o) => o.id);
-  //   console.log("options array", options);
-  //   options.map((id)=>{
-  //     const data = getQuestionOptionsComments(question.id, id);
-  //     console.log("comments for this question", data);
-  //   })    
-  // }
-  
-}
 
     
 
@@ -66,9 +31,9 @@ const iVotedForIt = ( id ) =>  {
   return votedOptionsList.includes(id)
 }
 
-const handleSubmit = ({comment}) => { 
-  // console.log("handle submit vote comment" , comment);
-  // console.log("handle submit vote other data" , question.id, edit.id, edit.value);
+const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;
+
+const handleSubmit = ({comment}) => {  
   createVoteCommentObject(question.id,edit.id, edit.value, comment);
   setEdit({
     id: null,
@@ -78,11 +43,19 @@ const handleSubmit = ({comment}) => {
 };
 
 if (!items) return;
-
+console.log("items", items);
 const handleCancel = () =>{
  setEdit({ id: null, value: '', index: null })
 }
-  return items.map((item, index) => (
+
+const openCommentDetails = (item) => {
+  setSelectedItem(item);
+  setShowCommentDialog(!showCommentDialog);
+}
+
+return (
+<>
+  {items.map((item, index) => (
    
     <div className='container p-3 border-bottom bg-light ' key={index} >
           <div className="row ">            
@@ -109,13 +82,28 @@ const handleCancel = () =>{
                 </button>                   
             </div>    
             <div className="col ">     
-             { (iVotedForIt(item.id) ) && (                
-                  <RiEditLine
+             { (iVotedForIt(item.id) ) && (isOpenQuestion) && (item.commentBy !== user.id) &&(                
+                <FaRegCommentDots
                   onClick={() => setEdit({ id: item.id, value: item.text, index: index })}
                   className='edit-icon'
-                  size={"30"}
+                  title="give us your opnion"
+                  size={"28"}
                 />
               )}
+               { (iVotedForIt(item.id) )  && (item.commentBy !== user.id) && (!myOwnQuestion)  &&(                                  
+                    <FaRegComment
+                  className='edit-icon'      
+                  color='gray'    
+                  title="you already voted for this question"       
+                  size={"28"}
+                /> 
+              )}
+              {((item.hasComment) && (item.hasComment === true) && (myOwnQuestion) ) && (           
+               <div className= "badge rounded-pill bg-success"
+               onClick={()=> openCommentDetails(item)}>{item.commentCount} {item.commentCount > 1 ? 'comments' : 'comment'}</div>              
+              )}
+              
+              
             </div>   
           </div>
           {((edit.id) && (edit.index === index)) && (
@@ -130,10 +118,18 @@ const handleCancel = () =>{
             </div>
           )}
           
-      </div>
-         
-   
-  ));
-};
+      </div>      
+  ))
+  }
+  
+  {showCommentDialog && selectedItem && (
+    <CommentModalDialog 
+          showCommentModalWindow={true}         
+          comment={selectedItem} 
+          user={user} />
+   )}
+  </>
+  )
+  }
 
 export default Vote;

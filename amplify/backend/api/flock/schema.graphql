@@ -45,7 +45,8 @@ type Comment @model
                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
                { allow: private, operations: [read ,create, update] }])           
    {
-     questionID: ID! @primaryKey #(sortKeyFields:["userID"]) @index( name: "byQuestion", sortKeyFields: ["userID"])
+     id: ID! @primaryKey
+     questionID: ID!  @index(name:"byQuestionId", queryField: "commentByQuestionId") 
      userID: ID   
      optionID: Int!
      optionText: String
