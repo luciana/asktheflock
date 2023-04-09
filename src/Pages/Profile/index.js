@@ -442,8 +442,6 @@ export default function Profile() {
     
   );
 
-  //console.log("User from profile", user);
-
   return (
    <div className="container">     
       <Alert type={alert?.type} text={alert?.text} />
