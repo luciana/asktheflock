@@ -12,7 +12,6 @@ import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
 import  shortenURL  from './../../Services/shortenURL';
-import { use } from 'echarts';
 
 function Question({ 
   question,   
@@ -38,6 +37,8 @@ function Question({
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [optionItem, setOptionItem] = useState(null);
+  const [commentData, setCommentData] = useState(null);
+  const [alreadyCommented, setAlreadyCommented] = useState(false);
 
 // if (!question) return;
   //console.log("Question ", question);
@@ -47,7 +48,7 @@ function Question({
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
-    getCommentDataForOptions();
+    getCommentDataForOptions();   
   }, []);
  
   const isAReply = question.parentId != null;
@@ -98,29 +99,51 @@ function Question({
     }
   }
   
+  const alreadycommentedOnQuestion = (comments) => {
+
+    if(comments && comments.length > 0 ){
+      return comments.filter((f)=> 
+                f.questionID = question.id &&
+                f.userID === user.id);    
+    }else {
+      return null;
+    }
+    
+  }
+
   const getCommentDataForOptions = async () => {
     const items  = JSON.parse(question.options);
+   // setOptionItem(items);
     //Fetch question comments
     const commentData =  await getComment(question.id);
     if (commentData && commentData.length > 0){ 
         console.log("there are comments sent", commentData);
-        let tempItems = items;
-        items.map((i,index)=>{    
-          i.commentCount = 0;  
-          commentData.map((j) => {
-            if(parseInt(i.id) === j.optionID){         
-              i.comment = j.comment;            
-              i.commentCount = i.commentCount + 1;   
-              i.hasComment = true;
-              i.commentBy = j.userID;
-              tempItems[index]=i;
-            }
-          })          
-        }); 
+        setCommentData(commentData);
+         let tempItems = items;
+         items.map((i,index)=>{    
+           const commentObject = commentData.filter((f)=> 
+                f.questionID = question.id &&
+                f.optionID === i.id);    
+                i.comment = commentObject;
+        //   i.commentCount = 0;  
+        //   let commentDataArray = [];
+        //   commentData.map((j) => {
+        //     if(parseInt(i.id) === j.optionID){         
+        //       i.comment = j.comment;            
+        //       i.commentCount = i.commentCount + 1;   
+        //       i.hasComment = true;
+        //       i.commentBy = j.userID;
+               tempItems[index]=i;
+        //     }
+        //   })          
+         }); 
         setOptionItem(tempItems);    
-    }else{
+        console.log("option items setup", tempItems);
+     }else{
       setOptionItem(items);
+      console.log("option items setup", items);
     }
+    setAlreadyCommented(alreadycommentedOnQuestion(commentData));  
     
   }
     
@@ -293,7 +316,8 @@ function Question({
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded}
                 createVoteCommentObject={createVoteCommentObject}
-                getComment={getComment}
+                comments={commentData}
+                alreadyCommented={alreadyCommented}
                 user={user}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             

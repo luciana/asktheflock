@@ -12,7 +12,8 @@ const Vote = ({ question,
              alreadyVotedForQuestionList,
              voteEnded,
              createVoteCommentObject,
-             getComment,
+             comments,
+             alreadyCommented,
              user }) => {
 
 const [edit, setEdit] = useState({
@@ -34,6 +35,7 @@ const iVotedForIt = ( id ) =>  {
 const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;
 
 const handleSubmit = ({comment}) => {  
+  console.log("from vote inputs into creating a comment",question.id,edit.id, edit.value, comment);
   createVoteCommentObject(question.id,edit.id, edit.value, comment);
   setEdit({
     id: null,
@@ -48,9 +50,23 @@ const handleCancel = () =>{
  setEdit({ id: null, value: '', index: null })
 }
 
+
+
 const openCommentDetails = (item) => {
-  setSelectedItem(item);
-  setShowCommentDialog(!showCommentDialog);
+  console.log("openCommentDetails for item", item);
+  console.log("all comments for this question ", comments);
+  if(myOwnQuestion){
+   const commentsForThisOption =  comments.filter((f)=> 
+              f.questionID = question.id &&
+              f.optionIF === item.id);
+
+    console.log("commentsForThisOption", commentsForThisOption);
+    setSelectedItem(commentsForThisOption);
+    setShowCommentDialog(!showCommentDialog);
+  }else{
+    alert("You don't have access to this information");
+  }
+  
 }
 
 return (
@@ -82,7 +98,7 @@ return (
                 </button>                   
             </div>    
             <div className="col ">     
-             { (iVotedForIt(item.id) ) && (isOpenQuestion) && (item.commentBy !== user.id) &&(                
+             { (iVotedForIt(item.id) ) && (isOpenQuestion) && (!alreadyCommented) && (!myOwnQuestion) &&(                
                 <FaRegCommentDots
                   onClick={() => setEdit({ id: item.id, value: item.text, index: index })}
                   className='edit-icon'
@@ -90,7 +106,7 @@ return (
                   size={"28"}
                 />
               )}
-               { (iVotedForIt(item.id) )  && (item.commentBy !== user.id) && (!myOwnQuestion)  &&(                                  
+               { (iVotedForIt(item.id) )  && (alreadyCommented) && (!myOwnQuestion)  &&(                                  
                     <FaRegComment
                   className='edit-icon'      
                   color='gray'    
@@ -122,7 +138,7 @@ return (
   ))
   }
   
-  {showCommentDialog && selectedItem && (
+  {showCommentDialog && selectedItem && selectedItem.length>0 && (
     <CommentModalDialog 
           showCommentModalWindow={true}         
           comment={selectedItem} 

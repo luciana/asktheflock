@@ -389,7 +389,7 @@ const Questions = () => {
 
       const createComment = async(questionID,userID,optionID,optionText,comment) =>{
         try{ 
-         // console.log("comment array to create",questionID, userID, optionID, optionText,comment);
+         console.log("comment array to create",questionID, userID, optionID, optionText,comment);
           await Mutations.CreateComment(
             questionID,
             userID,
