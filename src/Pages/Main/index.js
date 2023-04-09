@@ -25,6 +25,15 @@ function Main() {
     }else if ((!user.userTag || user.userTag === "") && user.gender && user.address && user.birthdate){
      // console.log("only expert Tag is missing");
       setAlert({ type: "warning", text: LANGUAGES[user.locale].Profile.OnlyExpertTagMissing, link: "/Profile"});  
+    }else if(!user.userTag || user.userTag === "") {
+      // console.log("expert tag is empty - and other field(s) too");
+       setAlert({ type: "warning", text: LANGUAGES[user.locale].Profile.OnlyExpertTagMissing, link: "/Profile"});  
+    }else if(!user.address || user.address === "") {
+        // console.log("address is empty - and other field(s) too");
+         setAlert({ type: "warning", text: LANGUAGES[user.locale].Profile.OnlyAddressMissing, link: "/Profile"}); 
+    }else if(!user.gender || user.gender === "") {
+          // console.log("gender is empty - and other field(s) too");
+           setAlert({ type: "warning", text: LANGUAGES[user.locale].Profile.OnlyGenderMissing, link: "/Profile"});  
     }else if(!user.userTag || !user.gender || !user.address || !user.birthdate){
      // console.log("generic profile missing message");
       setAlert({ type: "warning", text: LANGUAGES[user.locale].Profile.CompleteProfile, link: "/Profile"});  
