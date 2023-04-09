@@ -196,6 +196,7 @@ const en_us_lang = {
     ChangeGender: "Change Gender",
     ChangeBirthdate: "Change Birthday",
     YourZipCode: "Your Zip Code",
+    ZipFormat: "Must be 5 digits",
     YourGender: "Your Gender",
     YourBirthday: "Your Birthday",     
     CurrentPassword: "Current Password",

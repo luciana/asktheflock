@@ -196,6 +196,7 @@ const pt_br_lang = {
     ChangeGender: "Alterar Gênero",
     ChangeBirthdate: "Alterar Data de Nascimento",
     YourZipCode: "Seu Cep",
+    ZipFormat: "Cep deve ser 5 dígitos",
     YourGender: "Seu Gênero",
     YourBirthday: "Sua data de nascimento",
     AlterarBirthday: "Change Data de Nascimento",

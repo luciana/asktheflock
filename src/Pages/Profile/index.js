@@ -286,6 +286,7 @@ export default function Profile() {
         handler={setAddress}
         label={LANGUAGES[user.locale].Profile.YourZipCode}
       />
+      <div className="text-sm text-color-gray">{LANGUAGES[user.locale].Profile.ZipFormat}</div>
       {/* <Button
         text={LANGUAGES[user.locale].Profile.ChangeZip}
         disabled={disabledZip()}
