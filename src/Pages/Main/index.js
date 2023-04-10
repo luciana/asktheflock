@@ -45,8 +45,8 @@ function Main() {
   }, []);
   
   return (
-    <div className="App">                            
-        <div className="white-bg container p-2 ">
+    <div className="App pb-5">                            
+        <div className="white-bg container p-2 pb-5">
           <Alert type={alert?.type} text={alert?.text} link={alert?.link} />      
           <Questions />
         </div>               

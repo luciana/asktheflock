@@ -443,7 +443,7 @@ export default function Profile() {
   );
 
   return (
-   <div className="container">     
+   <div className="container pb-5">     
       <Alert type={alert?.type} text={alert?.text} />
       <Card />
     
@@ -512,7 +512,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <hr className="m-2" /> 
+      <hr className="my-3" /> 
         {/* {renderChangePassword()} */}
                       
       </div>

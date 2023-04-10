@@ -17,8 +17,7 @@ const GetUserById = async ( id ) => {
 }
 
 const CommentByQuestionId = async(questionID) =>{ 
-  const data = await API.graphql(graphqlOperation(queries.commentByQuestionId, { questionID })); 
-  console.log("commentByQuestionId", data);
+  const data = await API.graphql(graphqlOperation(queries.commentByQuestionId, { questionID }));  
   return data.data.commentByQuestionId.items.length ? data.data.commentByQuestionId.items : null;
 }
 

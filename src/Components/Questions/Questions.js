@@ -383,14 +383,13 @@ const Questions = () => {
 
 
       const getComment = async(questionID) => {       
-        const result  = await Queries.CommentByQuestionId(questionID );   
-        console.log( "get comment returned query", result);    
-        return result ? result : null;          
+        const result  = await Queries.CommentByQuestionId(questionID );                
+        return result && result.length > 0 ? result : null;          
       }
 
       const createComment = async(questionID,userID,optionID,optionText,comment) =>{
         try{ 
-         console.log("comment array to create",questionID, userID, optionID, optionText,comment);
+         //console.log("comment array to create",questionID, userID, optionID, optionText,comment);
           await Mutations.CreateComment(
             questionID,
             userID,
@@ -451,15 +450,6 @@ const Questions = () => {
           const newA = [];  
           const stats = updateStats(question, optID, optionsInQuestion);    
             
-          // if(stats){
-          //   console.log("what am I pushing to stats newA  ", stats);  
-          //   newA.push(stats);                           
-          //   console.log("what is new A  ", newA);    
-          // }       
-          // const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
-          // // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
-          //  setBackendQuestions(updatedBackendQuestions);
-          //  setActiveQuestion(null);     
          
         }catch(err){
           console.error("Mutations.UpdateQuestion error", err);
@@ -542,17 +532,12 @@ const Questions = () => {
           let userVotes = [];
           if (user.votes) userVotes = JSON.parse(user.votes);
           userVotes.push(userVote);
-          //user.votes = "[{\"optionId\":3942,\"questionId\":\"7998615d-88dd-427a-a20f-1a2851d009b3\"}]"
-
-
-         
+      
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
             JSON.stringify(userVotes)
           );
       
-         
-         
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
         }catch(err){

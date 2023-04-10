@@ -48,7 +48,7 @@ const pt_br_lang = {
   Comments: {
     View: "Ver comentários",
     Close: "Fechar",
-    CommentsOnOption: "As justificativas dadas para escolher esse opção.",
+    CommentsOnOption: "Justificativa dadas:",
   },
   Questions:{
     Questions: "Perguntas",

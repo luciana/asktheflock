@@ -23,6 +23,7 @@ const [edit, setEdit] = useState({
 });
 const [selectedItem, setSelectedItem] = useState(null);
 const [showCommentDialog, setShowCommentDialog] = useState(false);
+const [justSentComment, setJustSentComment] = useState(false);
 
 
     
@@ -35,8 +36,10 @@ const iVotedForIt = ( id ) =>  {
 const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;
 
 const handleSubmit = ({comment}) => {  
-  console.log("from vote inputs into creating a comment",question.id,edit.id, edit.value, comment);
+  //console.log("from vote inputs into creating a comment",question.id,edit.id, edit.value, comment);
   createVoteCommentObject(question.id,edit.id, edit.value, comment);
+  //after you vote, I want to change the icon so you don't comment again instead reloading the refreshing the page.
+  setJustSentComment(true);
   setEdit({
     id: null,
     value: '',
@@ -45,7 +48,7 @@ const handleSubmit = ({comment}) => {
 };
 
 if (!items) return;
-//console.log("items", items);
+console.log("items", items);
 const handleCancel = () =>{
  setEdit({ id: null, value: '', index: null })
 }
@@ -54,14 +57,14 @@ const handleCancel = () =>{
 
 const openCommentDetails = (item) => {
   console.log("openCommentDetails for item", item);
-  console.log("all comments for this question ", comments);
+  //console.log("all comments for this question ", comments);
   if(myOwnQuestion){
-   const commentsForThisOption =  comments.filter((f)=> 
-              f.questionID = question.id &&
-              f.optionIF === item.id);
+  //  const commentsForThisOption =  comments.filter((f)=> 
+  //             f.questionID === question.id &&
+  //             f.optionID === item.id);
 
-    console.log("commentsForThisOption", commentsForThisOption);
-    setSelectedItem(commentsForThisOption);
+  //   console.log("commentsForThisOption", commentsForThisOption, showCommentDialog);
+    setSelectedItem(item);
     setShowCommentDialog(!showCommentDialog);
   }else{
     alert("You don't have access to this information");
@@ -98,7 +101,7 @@ return (
                 </button>                   
             </div>    
             <div className="col ">     
-             { (iVotedForIt(item.id) ) && (isOpenQuestion) && (!alreadyCommented) && (!myOwnQuestion) &&(                
+             { (iVotedForIt(item.id) ) && (isOpenQuestion) && (!alreadyCommented) && !justSentComment && (!myOwnQuestion) &&(                
                 <FaRegCommentDots
                   onClick={() => setEdit({ id: item.id, value: item.text, index: index })}
                   className='edit-icon'
@@ -106,7 +109,7 @@ return (
                   size={"28"}
                 />
               )}
-               { (iVotedForIt(item.id) )  && (alreadyCommented) && (!myOwnQuestion)  &&(                                  
+               { (iVotedForIt(item.id) )  && (alreadyCommented || justSentComment) && (!myOwnQuestion)  &&(                                  
                     <FaRegComment
                   className='edit-icon'      
                   color='gray'    
@@ -130,6 +133,7 @@ return (
                 handleSubmit={handleSubmit}
                 hasCancelButton={true}
                 handleCancel={handleCancel}
+
               />
             </div>
           )}
@@ -138,10 +142,10 @@ return (
   ))
   }
   
-  {showCommentDialog && selectedItem && selectedItem.length>0 && (
+  {showCommentDialog  && (
     <CommentModalDialog 
-          showCommentModalWindow={true}         
-          comment={selectedItem} 
+          showCommentModalWindow={true}              
+          item={selectedItem} 
           user={user} />
    )}
   </>

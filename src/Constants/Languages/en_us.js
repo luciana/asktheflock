@@ -48,7 +48,7 @@ const en_us_lang = {
   Comments: {
     View: "View Comments",
     Close: "Close",
-    CommentsOnOption: "People justifications for picking this option",
+    CommentsOnOption: "Justification for picking: ",
   },
   Questions:{
     Questions: "Questions",

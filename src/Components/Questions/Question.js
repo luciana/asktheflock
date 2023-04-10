@@ -100,50 +100,88 @@ function Question({
   }
   
   const alreadycommentedOnQuestion = (comments) => {
-
     if(comments && comments.length > 0 ){
-      return comments.filter((f)=> 
+      const commentForThisUser = comments.filter((f)=> 
                 f.questionID = question.id &&
-                f.userID === user.id);    
+                f.userID === user.id);   
+      return commentForThisUser && commentForThisUser.length > 0 ? true : false;     
     }else {
-      return null;
+      return false;
     }
     
   }
 
-  const getCommentDataForOptions = async () => {
+    const getCommentDataForOptions = async() => {
     const items  = JSON.parse(question.options);
+    if( items ){
+      try{
+         const commentData =  await getComment(question.id);               
+        if (commentData && commentData.length > 0){ 
+          setAlreadyCommented(alreadycommentedOnQuestion(commentData)); 
+         // console.log("there are comments sent", commentData);
+          setCommentData(commentData);
+           let tempItems = items;
+           items.map((i,index)=>{    
+             const commentObject = commentData.filter((f)=> 
+                  f.questionID = question.id &&
+                  f.optionID === i.id);    
+              if(commentObject && commentObject.length > 0){
+                i.comment = commentObject;   
+                i.hasComment = true;
+                i.commentCount = commentObject.length;
+              }else{
+                i.comment = null;   
+                i.hasComment = false;
+                i.commentCount = 0;
+              }                     
+              tempItems[index]=i;                
+           }); 
+          setOptionItem(tempItems);    
+          console.log("option items with comments", tempItems);
+       }else{
+        setOptionItem(items);
+       // console.log("option items setup no comments", items);
+       }
+      }catch (error){
+        console.error(error);
+        setOptionItem(items);    
+      }
+       
+      
+     
+    }
+    
    // setOptionItem(items);
     //Fetch question comments
-    const commentData =  await getComment(question.id);
-    if (commentData && commentData.length > 0){ 
-        console.log("there are comments sent", commentData);
-        setCommentData(commentData);
-         let tempItems = items;
-         items.map((i,index)=>{    
-           const commentObject = commentData.filter((f)=> 
-                f.questionID = question.id &&
-                f.optionID === i.id);    
-                i.comment = commentObject;
-        //   i.commentCount = 0;  
-        //   let commentDataArray = [];
-        //   commentData.map((j) => {
-        //     if(parseInt(i.id) === j.optionID){         
-        //       i.comment = j.comment;            
-        //       i.commentCount = i.commentCount + 1;   
-        //       i.hasComment = true;
-        //       i.commentBy = j.userID;
-               tempItems[index]=i;
-        //     }
-        //   })          
-         }); 
-        setOptionItem(tempItems);    
-        console.log("option items setup", tempItems);
-     }else{
-      setOptionItem(items);
-      console.log("option items setup", items);
-    }
-    setAlreadyCommented(alreadycommentedOnQuestion(commentData));  
+   
+    // if (commentData && commentData.length > 0){ 
+    //     console.log("there are comments sent", commentData);
+    //     setCommentData(commentData);
+    //      let tempItems = items;
+    //      items.map((i,index)=>{    
+    //        const commentObject = commentData.filter((f)=> 
+    //             f.questionID = question.id &&
+    //             f.optionID === i.id);    
+    //             i.comment = commentObject;
+    //     //   i.commentCount = 0;  
+    //     //   let commentDataArray = [];
+    //     //   commentData.map((j) => {
+    //     //     if(parseInt(i.id) === j.optionID){         
+    //     //       i.comment = j.comment;            
+    //     //       i.commentCount = i.commentCount + 1;   
+    //     //       i.hasComment = true;
+    //     //       i.commentBy = j.userID;
+    //            tempItems[index]=i;
+    //     //     }
+    //     //   })          
+    //      }); 
+    //     setOptionItem(tempItems);    
+    //     console.log("option items setup", tempItems);
+    //  }else{
+    //   setOptionItem(items);
+    //   console.log("option items setup", items);
+    // }
+    
     
   }
     
