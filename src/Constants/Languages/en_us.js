@@ -218,7 +218,7 @@ const en_us_lang = {
     CompleteProfile: "Please, complete your profile!",
     OnlyExpertTagMissing: "What is your expertise? Add one to your profile. Others will value your expertise more!",
     OnlyAddressMissing: "Are you local to the area? Enter your zip code to help others with local decisions",
-    OnlyBirthdayMissing: "Appreciating opnions from various generations helps with a decision. Enter your birthday in your profile!",
+    OnlyBirthdayMissing: "Appreciating opnions from various generations help with a decision. Enter your birthday in your profile!",
     OnlyGenderMissing: "Diversity of opnions is important. Add your gender to your profile.",
     Joined: "Joined",
     ProfileUpdatedMessage: "Your profiles has been updated",
