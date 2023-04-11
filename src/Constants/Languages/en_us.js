@@ -49,6 +49,8 @@ const en_us_lang = {
     View: "View Comments",
     Close: "Close",
     CommentsOnOption: "Justification for picking: ",
+    CommentBubbleTitle: "Anything to say about your choice?",
+    CommentAlreadyDoneBubbleTitle: "You already commented on this option" ,
   },
   Questions:{
     Questions: "Questions",

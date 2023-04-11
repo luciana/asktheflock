@@ -3,6 +3,7 @@ import { FaCircle, FaRegCircle } from 'react-icons/fa';
 import QuestionCommentForm from '../Questions/QuestionCommentForm';
 import { FaRegCommentDots, FaRegComment } from 'react-icons/fa';
 import CommentModalDialog from '../Comments/CommentModalDialog';
+import { LANGUAGES } from '../../Constants';
 
 const Vote = ({ question,     
              items,         
@@ -105,15 +106,15 @@ return (
                 <FaRegCommentDots
                   onClick={() => setEdit({ id: item.id, value: item.text, index: index })}
                   className='edit-icon'
-                  title="give us your opnion"
+                  title={LANGUAGES[user.locale].Comments.CommentBubbleTitle} 
                   size={"28"}
                 />
               )}
                { (iVotedForIt(item.id) )  && (alreadyCommented || justSentComment) && (!myOwnQuestion)  &&(                                  
                     <FaRegComment
                   className='edit-icon'      
-                  color='gray'    
-                  title="you already voted for this question"       
+                  color='gray'                     
+                  title={LANGUAGES[user.locale].Comments.CommentAlreadyDoneBubbleTitle}      
                   size={"28"}
                 /> 
               )}
