@@ -291,9 +291,9 @@ function Question({
                 <button className="btn btn-sm  mx-1" title="delete question" onClick={()=> deleteQuestion(question.id)}>
                   <FaTrashAlt alt="Delete question" /></button>
               )}
-              {canRepost && (
+              {false && canRepost && (
                 <button className="btn btn-sm  mx-1"  onClick={()=> alert("this will repost the question and reopen the vote, but functionality not done yet. Is this a good idea?")}>
-                  <FaSyncAlt alt="Repost question" /></button>
+                  <FaSyncAlt alt="Open question for voting again" /></button>
               )}
 
               {isThereEnoughStats && (
