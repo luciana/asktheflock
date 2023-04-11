@@ -21,7 +21,8 @@
 # }
 
 type User @model @auth(rules: [
-      { allow: owner, operations: [ read, create, update, delete]}     
+      { allow: owner, operations: [ read, create, update, delete]}    
+      { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }
      # { allow: private, operations: [update] }   # update was needed to vote
       ]) 
  @aws_cognito_user_pools{
@@ -33,8 +34,8 @@ type User @model @auth(rules: [
   birthdate: AWSDate
   gender: String
   address: String
-  votes: AWSJSON @auth(rules: [{ allow: owner }, { allow: private, operations: [update] }]) 
-  owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }])
+  votes: AWSJSON @auth(rules: [{ allow: owner }, { allow: private, operations: [update] },  { allow: groups, groups: ["asktheflockadmin"], operations: [read, create, update, delete]}]) 
+  owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] },  { allow: groups, groups: ["asktheflockadmin"], operations: [read, create, update, delete]}])
   #prevent owners to reassign the owner of their existing record to another user.
 }
 type Question @model            
