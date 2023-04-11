@@ -14,20 +14,19 @@ import { Button, Input, Alert, Loading } from './../../Components';
 import  shortenURL  from './../../Services/shortenURL';
 
 function Question({ 
-  question, 
-  replies,
-  //setActiveQuestion,
+  question,   
   votedList,
   updateVotedList,
   votedOptionsList,
   updateVotedOptionsList,
   updateQuestionVoteTime,
   handleVote,
-  //activeQuestion,
   deleteQuestion,
   openQuestion,
   parentId = null,
-  user
+  user,
+  createComment,
+  getComment,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -37,6 +36,9 @@ function Question({
   const [alert, setAlert] = useState();
   const [questionLink, setQuestionLink] = useState("");
   const [loading, setLoading] = useState(false);
+  const [optionItem, setOptionItem] = useState(null);
+  const [commentData, setCommentData] = useState(null);
+  const [alreadyCommented, setAlreadyCommented] = useState(false);
 
 // if (!question) return;
   //console.log("Question ", question);
@@ -46,6 +48,7 @@ function Question({
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
+    getCommentDataForOptions();   
   }, []);
  
   const isAReply = question.parentId != null;
@@ -96,7 +99,91 @@ function Question({
     }
   }
   
-  
+  const alreadycommentedOnQuestion = (comments) => {
+    if(comments && comments.length > 0 ){
+      const commentForThisUser = comments.filter((f)=> 
+                f.questionID = question.id &&
+                f.userID === user.id);   
+      return commentForThisUser && commentForThisUser.length > 0 ? true : false;     
+    }else {
+      return false;
+    }
+    
+  }
+
+    const getCommentDataForOptions = async() => {
+    const items  = JSON.parse(question.options);
+    if( items ){
+      try{
+         const commentData =  await getComment(question.id);               
+        if (commentData && commentData.length > 0){ 
+          setAlreadyCommented(alreadycommentedOnQuestion(commentData)); 
+         // console.log("there are comments sent", commentData);
+          setCommentData(commentData);
+           let tempItems = items;
+           items.map((i,index)=>{    
+             const commentObject = commentData.filter((f)=> 
+                  f.questionID = question.id &&
+                  f.optionID === i.id);    
+              if(commentObject && commentObject.length > 0){
+                i.comment = commentObject;   
+                i.hasComment = true;
+                i.commentCount = commentObject.length;
+              }else{
+                i.comment = null;   
+                i.hasComment = false;
+                i.commentCount = 0;
+              }                     
+              tempItems[index]=i;                
+           }); 
+          setOptionItem(tempItems);    
+          console.log("option items with comments", tempItems);
+       }else{
+        setOptionItem(items);
+       // console.log("option items setup no comments", items);
+       }
+      }catch (error){
+        console.error(error);
+        setOptionItem(items);    
+      }
+       
+      
+     
+    }
+    
+   // setOptionItem(items);
+    //Fetch question comments
+   
+    // if (commentData && commentData.length > 0){ 
+    //     console.log("there are comments sent", commentData);
+    //     setCommentData(commentData);
+    //      let tempItems = items;
+    //      items.map((i,index)=>{    
+    //        const commentObject = commentData.filter((f)=> 
+    //             f.questionID = question.id &&
+    //             f.optionID === i.id);    
+    //             i.comment = commentObject;
+    //     //   i.commentCount = 0;  
+    //     //   let commentDataArray = [];
+    //     //   commentData.map((j) => {
+    //     //     if(parseInt(i.id) === j.optionID){         
+    //     //       i.comment = j.comment;            
+    //     //       i.commentCount = i.commentCount + 1;   
+    //     //       i.hasComment = true;
+    //     //       i.commentBy = j.userID;
+    //            tempItems[index]=i;
+    //     //     }
+    //     //   })          
+    //      }); 
+    //     setOptionItem(tempItems);    
+    //     console.log("option items setup", tempItems);
+    //  }else{
+    //   setOptionItem(items);
+    //   console.log("option items setup", items);
+    // }
+    
+    
+  }
     
                 
     
@@ -185,6 +272,13 @@ function Question({
            
   }
 
+  const createVoteCommentObject = (questionID, optionID, optionText, comment) =>{    
+    const commentObj = {};   
+    commentObj.userName = user.name;
+    commentObj.userTag = user.userTag;
+    commentObj.comment = comment;    
+    createComment(questionID, user.id, optionID, optionText, commentObj);
+  }
 
   return (
     <>
@@ -252,12 +346,17 @@ function Question({
             {question.text} 
         </div>
         <div className="p-2">
-          <Vote question={question}                                
+          <Vote question={question}  
+                items={optionItem}                 
                 voteUp={voteUp}     
                 myOwnQuestion={myOwnQuestion}                
                 votedOptionsList={votedOptionsList}
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
-                voteEnded={voteEnded} />    
+                voteEnded={voteEnded}
+                createVoteCommentObject={createVoteCommentObject}
+                comments={commentData}
+                alreadyCommented={alreadyCommented}
+                user={user}/>    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 

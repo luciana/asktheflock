@@ -130,3 +130,57 @@ export const deleteQuestion = /* GraphQL */ `
     }
   }
 `;
+export const createComment = /* GraphQL */ `
+  mutation CreateComment(
+    $input: CreateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    createComment(input: $input, condition: $condition) {
+      id
+      questionID
+      userID
+      optionID
+      optionText
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateComment = /* GraphQL */ `
+  mutation UpdateComment(
+    $input: UpdateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    updateComment(input: $input, condition: $condition) {
+      id
+      questionID
+      userID
+      optionID
+      optionText
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteComment = /* GraphQL */ `
+  mutation DeleteComment(
+    $input: DeleteCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    deleteComment(input: $input, condition: $condition) {
+      id
+      questionID
+      userID
+      optionID
+      optionText
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;

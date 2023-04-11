@@ -105,6 +105,51 @@ export const listQuestions = /* GraphQL */ `
     }
   }
 `;
+export const getComment = /* GraphQL */ `
+  query GetComment($id: ID!) {
+    getComment(id: $id) {
+      id
+      questionID
+      userID
+      optionID
+      optionText
+      comment
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listComments = /* GraphQL */ `
+  query ListComments(
+    $id: ID
+    $filter: ModelCommentFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listComments(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        questionID
+        userID
+        optionID
+        optionText
+        comment
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: AWSEmail!
@@ -199,6 +244,36 @@ export const questionByUserId = /* GraphQL */ `
         questionTag
         options
         stats
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const commentByQuestionId = /* GraphQL */ `
+  query CommentByQuestionId(
+    $questionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    commentByQuestionId(
+      questionID: $questionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        questionID
+        userID
+        optionID
+        optionText
+        comment
         owner
         createdAt
         updatedAt

@@ -45,16 +45,12 @@ function Main() {
   }, []);
   
   return (
-    <div className="App  ">      
-        
-                             
-        <div className="white-bg container p-2 ">
-        <Alert type={alert?.type} text={alert?.text} link={alert?.link} />
-        {/* <QuestionAndPoll2 user={user}  /> */}
-        <Questions />
+    <div className="App pb-5">                            
+        <div className="white-bg container p-2 pb-5">
+          <Alert type={alert?.type} text={alert?.text} link={alert?.link} />      
+          <Questions />
         </div>               
-        <hr className="m-0"></hr>       
-                  
+        <hr className="m-0"></hr>                         
     </div>
   );
 }

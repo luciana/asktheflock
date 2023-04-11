@@ -47,11 +47,9 @@ function Admin() {
           let q = await Queries.GetAllQuestions();              
           if(q){                     
               setBackendQuestions(q.filter(
-                (backendQuestion) => ((
-                  (new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) &&
-                 (backendQuestion.parentID === null)) 
-                //&& (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats)).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT
-              )
+                (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
+                && (backendQuestion.parentID === null)) 
+                && JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
               )            
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));                    
@@ -219,8 +217,7 @@ function Admin() {
       const userId = question.userID;  
       const userName = question.userName;
       try{
-        let userData = await Queries.GetUserById(userId);   
-        console.log("auser data for question", userData); 
+        let userData = await Queries.GetUserById(userId);        
         if ( userData) {
           setUserData({
             expert: userData.userTag,

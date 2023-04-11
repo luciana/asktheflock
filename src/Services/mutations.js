@@ -1,5 +1,4 @@
 import { API, graphqlOperation } from "aws-amplify";
-import Auth from './auth';
 import * as mutations from "../graphql/mutations";
 
 const CreateUser = async (email, locale,  name, address, birthdate, gender) => {
@@ -177,6 +176,40 @@ const DeleteQuestion = async ( id ) => {
   return deleteQuestion;
 };
 
+const CreateComment = async (
+  questionID, 
+  userID,
+  optionID,
+  optionText,
+  comment, 
+    ) => {      
+  const {
+    data: { createComment },
+  } = await API.graphql(
+    graphqlOperation(mutations.createComment, { input: 
+      {   
+        questionID, 
+        userID,
+        optionID,
+        optionText,
+        comment
+      } })
+  );
+  return createComment;
+
+}
+
+const UpdateComment = async ( questionID, userID, optionID, optionText, comment ) => { 
+  const {
+    data: { updateComment },
+  } = await API.graphql(
+    graphqlOperation(mutations.updateComment, {
+      input: { questionID, userID, optionID, optionText, comment },
+    })
+  );
+  return updateComment;
+};
+
 const Mutations = {
   CreateUser,
   UpdateUser,
@@ -190,6 +223,8 @@ const Mutations = {
   UpdateUserZip,
   UpdateUserBirthdate,
   UpdateUserName,
+  CreateComment,
+  UpdateComment,
 };
 
 export default Mutations;   

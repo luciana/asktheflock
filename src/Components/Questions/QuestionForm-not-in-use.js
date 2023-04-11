@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const QuestionForm = ({
   handleSubmit, 
@@ -12,9 +12,9 @@ const QuestionForm = ({
   const inputRef = useRef(null);
   const isTextareaEmpty = input.length === 0;
 
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // });
+  useEffect(() => {
+    inputRef.current.focus();
+  });
 
   const handleChange = e => {
     setInput(e.target.value);
@@ -38,7 +38,7 @@ const QuestionForm = ({
   }
 
   return (
-    <form  className='todo-form'>
+    <form  className='comment-form'>
           <textarea
             placeholder={placeHolderText}
             value={input}
@@ -49,13 +49,13 @@ const QuestionForm = ({
             className='form-control '
             ref={inputRef}
           />
-          <button onClick={onSubmit} disabled={isTextareaEmpty} className='btn-md btn btn-success my-3'>
+          <button onClick={onSubmit} disabled={isTextareaEmpty} className='btn-md btn btn-success'>
            {submitLabel}
           </button>
           {hasCancelButton && (
             <button
               type="button"
-              className="btn btn-md btn-dark"
+              className='btn-md btn btn-dark my-3 ms-3'
               onClick={handleCancel}
             >
               Cancel

@@ -365,6 +365,7 @@ const Questions = () => {
 
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
         try{
+         // console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
           //once validate that the stats and options were added to the new Stat table
           //then clear the options in the Question table below.
           return await Mutations.UpdateQuestionOptions(
@@ -374,38 +375,36 @@ const Questions = () => {
           );                   
           }catch(error){
             console.error("Mutations.UpdateQuestionOptions error", error);
+            navigate(ROUTES[user.locale].MAIN);
             return null;
           }   
 
       }
 
-      const updateStatsAndOptionsInStatTable = async(question, optionsInQuestion, statsInQuestion) => {     
-        try{
-          console.log("updateStat await about to ");
-          const updateStat =  await Mutations.UpdateStat(
-            question.id,
-            JSON.stringify(optionsInQuestion),
-            JSON.stringify(statsInQuestion),
-          );
-          console.log("updateStat await ", updateStat);
-          return updateStat;
-        }catch(error){
-          console.error("Mutations.UpdateStat error", error);
-          return null;
-        }   
 
+      const getComment = async(questionID) => {       
+        const result  = await Queries.CommentByQuestionId(questionID );                
+        return result && result.length > 0 ? result : null;          
       }
 
+      const createComment = async(questionID,userID,optionID,optionText,comment) =>{
+        try{ 
+         //console.log("comment array to create",questionID, userID, optionID, optionText,comment);
+          await Mutations.CreateComment(
+            questionID,
+            userID,
+            optionID,
+            optionText,
+            JSON.stringify(comment),                    
+          )        
+        }catch(error){
+          console.error("Error on creating comments", error);
+         }
+      }
 
       const updateStats = (question, optID, optionsInQuestion) => {          
-        const statsInQuestion = prepStatData(question, user, optID);
-       // if(statsInQuestion){        
-          return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);
-          // updateStatsAndOptionsInStatTable(question, optionsInQuestion, statsInQuestion);                   
-        // }else{
-        //   return null;
-        // } 
-
+        const statsInQuestion = prepStatData(question, user, optID);      
+        return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
       }
 
       const updateQuestionVoteTime = async (question, voteEndAt) => {
@@ -451,15 +450,6 @@ const Questions = () => {
           const newA = [];  
           const stats = updateStats(question, optID, optionsInQuestion);    
             
-          // if(stats){
-          //   console.log("what am I pushing to stats newA  ", stats);  
-          //   newA.push(stats);                           
-          //   console.log("what is new A  ", newA);    
-          // }       
-          // const updatedBackendQuestions =  backendQuestions.map(obj => newA.find(o => o.id === obj.id) || obj);
-          // // console.log("Questions.js updatedBackendQuestions result", updatedBackendQuestions);        
-          //  setBackendQuestions(updatedBackendQuestions);
-          //  setActiveQuestion(null);     
          
         }catch(err){
           console.error("Mutations.UpdateQuestion error", err);
@@ -542,17 +532,12 @@ const Questions = () => {
           let userVotes = [];
           if (user.votes) userVotes = JSON.parse(user.votes);
           userVotes.push(userVote);
-          //user.votes = "[{\"optionId\":3942,\"questionId\":\"7998615d-88dd-427a-a20f-1a2851d009b3\"}]"
-
-
-         
+      
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
             JSON.stringify(userVotes)
           );
       
-         
-         
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
         }catch(err){
@@ -652,19 +637,17 @@ const Questions = () => {
                   {filterList.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}
-                          question={rootQuestion}
-                          //replies={getReplies(rootQuestion.id)}                        
-                          //setActiveQuestion={setActiveQuestion}
-                          //activeQuestion={activeQuestion}   
+                          question={rootQuestion}                       
                           handleVote={handleVote}
                           updateVotedList={updateVotedList}
                           updateVotedOptionsList={updateVotedOptionsList}
                           votedList={votedList}
-                          votedOptionsList={votedOptionsList}
-                          //openQuestion={openQuestion}      
+                          votedOptionsList={votedOptionsList}                        
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
-                          updateQuestion={updateQuestion}                        
+                          updateQuestion={updateQuestion}  
+                          createComment={createComment}                      
+                          getComment={getComment}
                           user={user}
                       />
                   ))}

@@ -1,25 +1,5 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-#input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
-
-# type User @model @auth(rules: [
-#       { allow: owner, operations: [ read, create, update, delete]}     
-#       { allow: private, operations: [update] }   # update was needed to vote
-#       ]) 
-#  @aws_cognito_user_pools{
-#   id: ID! @primaryKey
-#   locale: String!
-#   email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail") @aws_cognito_user_pools
-#   name: String
-#   userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])
-#   birthdate: AWSDate
-#   gender: String
-#   address: String
-#   votes: AWSJSON
-#   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }])
-#   #prevent owners to reassign the owner of their existing record to another user.
-# }
-
 type User @model @auth(rules: [
       { allow: owner, operations: [ read, create, update, delete]}    
       { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }
@@ -38,6 +18,7 @@ type User @model @auth(rules: [
   owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] },  { allow: groups, groups: ["asktheflockadmin"], operations: [read, create, update, delete]}])
   #prevent owners to reassign the owner of their existing record to another user.
 }
+
 type Question @model            
              @auth(rules: [                    
                    { allow: private, operations: [read, update, delete] }, 
@@ -58,25 +39,17 @@ type Question @model
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },   { allow: private, operations: [read, update, delete] }]) 
  }
 
-# type Question @model            
-#              @auth(rules: [       
-#                 #  { allow: owner, ownerField: "userID", operations: [ read, create, update, delete]},               
-#                 #  { allow: private, operations: [read, update, delete] }, # delete was needed here for the owner to delete a question 
-#                 #  { allow: groups, groups: ["asktheflockadmin"] }    
-#                    { allow: owner, operations: [ read, create, update, delete]},               
-#                    { allow: private, operations: [read, update] }, 
-#                    { allow: groups, groups: ["asktheflockadmin"] }
-#                   ])
-#               {
-#   id: ID!  @primaryKey @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   text: String! @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   userID: ID! @index(name:"byUserId", queryField: "questionByUserId") @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   userName: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   voteEndAt: AWSDateTime @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   sentiment: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   parentID: ID @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   questionTag: String @auth(rules: [{ allow: owner },{ allow: private, operations: [read]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   options: AWSJSON! @auth(rules: [{ allow: owner },{ allow: private, operations: [read, update]}, { allow: groups, groups: ["asktheflockadmin"] }]) 
-#   stats: AWSJSON @auth(rules: [{ allow: owner },{ allow: private, operations: [read,update]}, { allow: groups, groups: ["asktheflockadmin"] }])
-#   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
-#  }
+type Comment @model
+            @auth( rules: [ 
+               { allow: owner , operations: [ read, create, update, delete]},
+               { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
+               { allow: private, operations: [read ,create, update] }])           
+   {
+     id: ID! @primaryKey
+     questionID: ID!  @index(name:"byQuestionId", queryField: "commentByQuestionId") 
+     userID: ID   
+     optionID: Int!
+     optionText: String
+     comment: AWSJSON!
+     owner: String @auth(rules: [{ allow: owner, operations: [read, update] },  { allow: private, operations: [read ,create] }]) 
+}
