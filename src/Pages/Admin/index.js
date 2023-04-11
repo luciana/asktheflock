@@ -49,7 +49,7 @@ function Admin() {
               setBackendQuestions(q.filter(
                 (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
                 && (backendQuestion.parentID === null)) 
-                && JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
+                && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
               )            
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));                    
