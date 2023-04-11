@@ -80,6 +80,7 @@ function Question({
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
   let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
   const myOwnQuestion = question.userID === user.id;
+  //console.log("myOwnQuestion",question.userID, user.id, myOwnQuestion, question.text) ;
 
 
   const getExpertVoteCount = () => {
@@ -137,7 +138,7 @@ function Question({
               tempItems[index]=i;                
            }); 
           setOptionItem(tempItems);    
-          console.log("option items with comments", tempItems);
+         // console.log("option items with comments", tempItems);
        }else{
         setOptionItem(items);
        // console.log("option items setup no comments", items);
@@ -149,40 +150,7 @@ function Question({
        
       
      
-    }
-    
-   // setOptionItem(items);
-    //Fetch question comments
-   
-    // if (commentData && commentData.length > 0){ 
-    //     console.log("there are comments sent", commentData);
-    //     setCommentData(commentData);
-    //      let tempItems = items;
-    //      items.map((i,index)=>{    
-    //        const commentObject = commentData.filter((f)=> 
-    //             f.questionID = question.id &&
-    //             f.optionID === i.id);    
-    //             i.comment = commentObject;
-    //     //   i.commentCount = 0;  
-    //     //   let commentDataArray = [];
-    //     //   commentData.map((j) => {
-    //     //     if(parseInt(i.id) === j.optionID){         
-    //     //       i.comment = j.comment;            
-    //     //       i.commentCount = i.commentCount + 1;   
-    //     //       i.hasComment = true;
-    //     //       i.commentBy = j.userID;
-    //            tempItems[index]=i;
-    //     //     }
-    //     //   })          
-    //      }); 
-    //     setOptionItem(tempItems);    
-    //     console.log("option items setup", tempItems);
-    //  }else{
-    //   setOptionItem(items);
-    //   console.log("option items setup", items);
-    // }
-    
-    
+    }  
   }
     
                 

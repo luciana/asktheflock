@@ -47,7 +47,6 @@ const RedefinePassword = async (email, code, pwd) => {
 const GetUser = async () => {
   const result = await AmplifyAuth.currentAuthenticatedUser();
   return result.attributes;
-
 };
 
 const IsAdminUser = async() => {

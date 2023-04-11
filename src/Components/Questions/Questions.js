@@ -514,7 +514,7 @@ const Questions = () => {
               id             
             );
 
-            const updatedBackendQuestions = backendQuestions.filter(
+            const updatedBackendQuestions = filterList.filter(
                   (backendQuestion) => backendQuestion.id !== id
                 );
             setBackendQuestions(updatedBackendQuestions);

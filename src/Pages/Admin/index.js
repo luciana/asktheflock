@@ -12,7 +12,6 @@ import logo from'../../Assets/Images/logos/logo-image-blue-small.png';
 import { Modal } from 'react-bootstrap';
 import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './../../Components/Stats';
 
-
 function Admin() {
     const { state } = useContext(AppContext);
     const { user } = state;
@@ -34,6 +33,7 @@ function Admin() {
     const [optionWinnerOptionId, setOptionWinnerOptionId] = useState(null);
     const [totalVotes, setTotalVotes] = useState(null);
     const [userData, setUserData] = useState([]);
+    const [openQuestion, setOpenQuestion] = useState([]);
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
     useEffect(() => {   
@@ -46,13 +46,21 @@ function Admin() {
           setLoading(true);             
           let q = await Queries.GetAllQuestions();              
           if(q){                     
+
+            //closed questions that have has a minimum of stats
               setBackendQuestions(q.filter(
                 (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
                 && (backendQuestion.parentID === null)) 
                 && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
               )            
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));                    
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));   
+              
+              const openQuestions = (q.filter(
+                (question) => ((new Date(question.voteEndAt) - new Date() > 1 ))
+              ));
+              //console.log("openQuestions",openQuestions);
+              setOpenQuestion(openQuestions);
           }      
           setLoading(false);
         }catch(err){
@@ -61,32 +69,7 @@ function Admin() {
           setLoading(false);
        
         }
-      };
-      //  const loadSingleQuestion = async (id) => {
-      //   try{
-      //     setLoading(true);                
-      //     if (id){                 
-            
-      //       const singleQuestion = await Queries.GetSingleQuestion(id);
-      //       return singleQuestion; 
-      //       // console.log("single questions", singleQuestion);
-      //       // if(singleQuestion){              
-      //       //   setActiveQuestion(singleQuestion);    
-      //       //   console.log("active question from retrieval",singleQuestion );  
-      //       //   setStatData(singleQuestion.stats ? JSON.parse(singleQuestion.stats) : []);  
-      //       //   setoptionList(singleQuestion.options ? JSON.parse(singleQuestion.options) : []);            
-      //       // } 
-      //     }else{
-      //       setActiveQuestion(null); 
-           
-      //     }                       
-      //     setLoading(false);
-      //   }catch(err){
-      //     console.error("ADMIN: Loading Single Question from queries error", err);
-      //     setActiveQuestion(null);    
-            
-      //   }
-      // }
+      };   
 
     const check = async () =>{
        const t = await isAdmin();       
@@ -94,7 +77,21 @@ function Admin() {
         navigate(ROUTES[user.locale].MAIN);
        }
        loadQuestions();
-        setIsAuthorized(t);    
+       setIsAuthorized(t);    
+    }
+
+    const numberOfOpenQuestionsSinceThatIhaventVoted = (lastUsed, questionsVoted) => {          
+      const votedList = questionsVoted.map((m)=> m.questionId);
+       const result = openQuestion.filter(
+          (question) => (
+              (lastUsed  - new Date(question.createdAt) > 1) 
+              // &&(!votedList.includes(question.id)) 
+               && (question.userID !== user.id)
+              )
+        );
+      console.log("numberOfOpenQuestionsSince", result);  
+      return result;
+           
     }
 
     const getTotalVotes = (statData) =>{
@@ -217,12 +214,20 @@ function Admin() {
       const userId = question.userID;  
       const userName = question.userName;
       try{
-        let userData = await Queries.GetUserById(userId);        
+        let userData = await Queries.GetUserById(userId);    
+        let needsAVote = numberOfOpenQuestionsSinceThatIhaventVoted(
+          new Date(user.updatedAt), 
+          JSON.parse(user.votes));
+        console.log("needs a vote",needsAVote);
+        if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;
+        const voteCount = (userData.votes && JSON.parse(userData.votes)) ? JSON.parse(userData.votes).length : 0;
         if ( userData) {
           setUserData({
             expert: userData.userTag,
             email:  userData.email,
-            votes: userData.votes,
+            votes: voteCount,
+            needsAVote: needsAVote,
+
           });
           setShowUserQuestionModal(true);
         } 
@@ -243,7 +248,7 @@ function Admin() {
              <div className="white-bg container p-2 ">
                 <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />
 
-
+               
 
 
                 {backendQuestions && (  
@@ -292,6 +297,11 @@ function Admin() {
                      <Modal.Body >  
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
+                     <p>  {userData.votes} votes you have contributed so far.</p>
+                     <p>  {userData.needsAVote} new question(s) have been posted since last time you used the site ( that you have not voted yet)</p>
+
+                    
+
                     </Modal.Body>
                      <Modal.Footer>                                                            
                            <button
