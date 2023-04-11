@@ -231,7 +231,7 @@ function Admin() {
         } 
 
       }catch(error){
-        console.log("Error getting user info for question", error);
+        console.error("Error getting user info for question", error);
         setShowUserQuestionModal(false);
       }
     }
