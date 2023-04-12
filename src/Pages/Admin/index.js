@@ -35,6 +35,7 @@ function Admin() {
     const [optionWinnerOptionId, setOptionWinnerOptionId] = useState(null);
     const [totalVotes, setTotalVotes] = useState(null);
     const [userData, setUserData] = useState([]);
+    const [users, setUsers] = useState([]);
     const [openQuestion, setOpenQuestion] = useState([]);
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
@@ -79,8 +80,10 @@ function Admin() {
        if ( !t ) {
         navigate(ROUTES[user.locale].MAIN);
        }
+       getAllUsers(); 
        loadQuestions();
-       setIsAuthorized(t);    
+       setIsAuthorized(t);   
+      
     }
 
     const numberOfOpenQuestionsSinceThatIhaventVoted = (lastUsed, questionsVoted) => {   
@@ -218,42 +221,45 @@ function Admin() {
       } 
     }
 
-    const userInfo = async (question) => {
+    const getAllUsers = async () => {
+      try{
+        const users= await Queries.GetAllUsers();
+        setUsers(users);
+      }catch(error){
+        console.error("Error getting All Users", error);
+      }      
+    }
+
+    const userInfo = (question) => {
       const userId = question.userID;  
       const userName = question.userName;
       try{
-        const d = await Queries.GetUserByIdForAdmin(userId);
-        console.log("GetUserByIdForAdmin" , d);
-
-        let userData = null; //await Queries.GetUserById(userId);
-       // console.log("user data" , userData);
-
-        if (userData){
-          const userVotes = user.votes ? user.votes : 0;
-          let needsAVote = numberOfOpenQuestionsSinceThatIhaventVoted(
+        let userData =[];
+        if( users ) {         
+          userData = users.filter((u) => u.id === userId)[0];
+        }              
+        console.log("user data retrieved" , userData);
+        if (userData  ){
+          const userVotes = userData.votes ? JSON.parse(userData.votes) : [];
+          let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
             new Date(userData.updatedAt), 
-            JSON.parse(userData.votes));
-         
-          if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;  
-          let voteCount = 0;       
-          if (userData.votes){
-            const v = JSON.parse(userData.votes);           
-            if ( v ) {
-              voteCount = ( v.length > 0 ) ? v.length : 0;
-            }          
-          }                    
-          if ( userData) {
-            setUserData({
+            userVotes);
+         console.log("openQuestions", openQuestions);
+         const needsAVote =  ( openQuestions || openQuestions.length !== 0 ) ? openQuestions : 0;  
+         const voteCount = ( userVotes.length > 0 ) ? userVotes.length : 0;
+                                      
+          
+          setUserData({
               name: userName,
               expert: userData.userTag,
               email:  userData.email,
               votes: voteCount,
               needsAVote: needsAVote.length,
   
-            });
+          });
             setAlert();
             setShowUserQuestionModal(true);
-          } 
+          
         }else{
           setAlert({ type: "error", text: "no data provided" });
         }      
@@ -271,7 +277,9 @@ function Admin() {
       <div className="">      
             { isAuthorized  && (
              <div className="white-bg container p-2 ">
-                <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />            
+                <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />   
+
+                <div className="my-3 pb-3"> Total number of users: {users.length}         </div>
                 {backendQuestions && (  
                   <>
                   <div className="title">This table shows all the questions that are closed with has enough votes to show meaningful stats.</div>               

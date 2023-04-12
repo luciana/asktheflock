@@ -11,26 +11,6 @@ const GetUserByEmail = async (email) => {
 
 };
 
-const GetUserByIdForAdmin = async ( id ) => {
-    let nextToken;
-    let apiName = 'AdminQueries';
-    let path = '/listUsersgetUser';
-    let myInit = { 
-        queryStringParameters: {
-          "groupname": "asktheflockadmin",
-          "limit": 2,
-          "token": nextToken
-        },
-        headers: {
-          'Content-Type' : 'application/json',
-          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`
-        }
-    }
-    const { NextToken, ...rest } =  await API.get(apiName, path, myInit);
-    nextToken = NextToken;
-    return rest;
-}
-
 const GetUserById = async ( id ) => {
   const data = await API.graphql(graphqlOperation(queries.getUser, { id })); 
   return data.data.getUser ? data.data.getUser : null;
@@ -50,6 +30,10 @@ const GetAllQuestions = async() => {
   const data = await API.graphql(graphqlOperation(queries.listQuestions));
   return data.data.listQuestions.items.length ? data.data.listQuestions.items : null;
 }
+const GetAllUsers = async() => {
+  const data = await API.graphql(graphqlOperation(queries.listUsers));
+  return data.data.listUsers.items.length ? data.data.listUsers.items : null;
+}
 
 const GetSingleQuestion = async(id) => {
   const data = await API.graphql(graphqlOperation(queries.getQuestion, { id }));
@@ -59,11 +43,11 @@ const GetSingleQuestion = async(id) => {
 const Queries = {
   GetUserByEmail,
   GetAllQuestions,
+  GetAllUsers,
   GetSingleQuestion,
   GetQuestionByUserId,
   GetUserById,
-  CommentByQuestionId,
-  GetUserByIdForAdmin,
+  CommentByQuestionId
 };
 
 
