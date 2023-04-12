@@ -12,7 +12,7 @@ const GetUserByEmail = async (email) => {
 };
 
 const GetUserById = async ( id ) => {
-  const data = await API.graphql(graphqlOperation(queries.getUser, { id }));   
+  const data = await API.graphql(graphqlOperation(queries.getUser, { id })); 
   return data.data.getUser ? data.data.getUser : null;
 }
 

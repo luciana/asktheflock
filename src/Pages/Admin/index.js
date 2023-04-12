@@ -11,11 +11,13 @@ import Queries from "../../Services/queries";
 import logo from'../../Assets/Images/logos/logo-image-blue-small.png';
 import { Modal } from 'react-bootstrap';
 import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './../../Components/Stats';
+import { use } from 'echarts';
 
 function Admin() {
     const { state } = useContext(AppContext);
     const { user } = state;
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState(); 
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const query = new URLSearchParams(useLocation().search);
@@ -221,25 +223,37 @@ function Admin() {
       const userName = question.userName;
       try{
         let userData = await Queries.GetUserById(userId);
-        let needsAVote = numberOfOpenQuestionsSinceThatIhaventVoted(
-          new Date(user.updatedAt), 
-          JSON.parse(user.votes));
-       
-        if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;       
-        const voteCount = (JSON.parse(userData.votes) && JSON.parse(userData.votes).length > 0 ) ? JSON.parse(userData.votes).length : 0;
-        console.log("needs a vote",needsAVote);
-        if ( userData) {
-          setUserData({
-            name: userName,
-            expert: userData.userTag,
-            email:  userData.email,
-            votes: voteCount,
-            needsAVote: needsAVote.length,
+        console.log("user data" , userData);
 
-          });
-          setShowUserQuestionModal(true);
-        } 
-
+        if (userData){
+          const userVotes = user.votes ? user.votes : 0;
+          let needsAVote = numberOfOpenQuestionsSinceThatIhaventVoted(
+            new Date(userData.updatedAt), 
+            JSON.parse(userData.votes));
+         
+          if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;  
+          let voteCount = 0;       
+          if (userData.votes){
+            const v = JSON.parse(userData.votes);           
+            if ( v ) {
+              voteCount = ( v.length > 0 ) ? v.length : 0;
+            }          
+          }                    
+          if ( userData) {
+            setUserData({
+              name: userName,
+              expert: userData.userTag,
+              email:  userData.email,
+              votes: voteCount,
+              needsAVote: needsAVote.length,
+  
+            });
+            setAlert();
+            setShowUserQuestionModal(true);
+          } 
+        }else{
+          setAlert({ type: "error", text: "no data provided" });
+        }      
       }catch(error){
         console.error("Error getting user info for question", error);
         setShowUserQuestionModal(false);
