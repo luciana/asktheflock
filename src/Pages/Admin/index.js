@@ -51,7 +51,8 @@ function Admin() {
               setBackendQuestions(q.filter(
                 (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
                 && (backendQuestion.parentID === null)) 
-                && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT)
+               // && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT
+               )
               )            
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));   
@@ -80,12 +81,17 @@ function Admin() {
        setIsAuthorized(t);    
     }
 
-    const numberOfOpenQuestionsSinceThatIhaventVoted = (lastUsed, questionsVoted) => {          
-      const votedList = questionsVoted.map((m)=> m.questionId);
+    const numberOfOpenQuestionsSinceThatIhaventVoted = (lastUsed, questionsVoted) => {   
+
+      let votedList = [];
+      if (questionsVoted){
+        votedList = questionsVoted.map((m)=> m.questionId);
+      }
+
        const result = openQuestion.filter(
           (question) => (
               (lastUsed  - new Date(question.createdAt) > 1) 
-              // &&(!votedList.includes(question.id)) 
+               &&(!votedList.includes(question.id)) 
                && (question.userID !== user.id)
               )
         );
@@ -214,19 +220,21 @@ function Admin() {
       const userId = question.userID;  
       const userName = question.userName;
       try{
-        let userData = await Queries.GetUserById(userId);    
+        let userData = await Queries.GetUserById(userId);
         let needsAVote = numberOfOpenQuestionsSinceThatIhaventVoted(
           new Date(user.updatedAt), 
           JSON.parse(user.votes));
+       
+        if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;       
+        const voteCount = (JSON.parse(userData.votes) && JSON.parse(userData.votes).length > 0 ) ? JSON.parse(userData.votes).length : 0;
         console.log("needs a vote",needsAVote);
-        if ( !needsAVote || needsAVote.length === 0 ) needsAVote = 0;
-        const voteCount = (userData.votes && JSON.parse(userData.votes)) ? JSON.parse(userData.votes).length : 0;
         if ( userData) {
           setUserData({
+            name: userName,
             expert: userData.userTag,
             email:  userData.email,
             votes: voteCount,
-            needsAVote: needsAVote,
+            needsAVote: needsAVote.length,
 
           });
           setShowUserQuestionModal(true);
@@ -246,11 +254,7 @@ function Admin() {
       <div className="">      
             { isAuthorized  && (
              <div className="white-bg container p-2 ">
-                <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />
-
-               
-
-
+                <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />            
                 {backendQuestions && (  
                   <>
                   <div className="title">This table shows all the questions that are closed with has enough votes to show meaningful stats.</div>               
@@ -298,7 +302,7 @@ function Admin() {
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
                      <p>  {userData.votes} votes you have contributed so far.</p>
-                     <p>  {userData.needsAVote} new question(s) have been posted since last time you used the site ( that you have not voted yet)</p>
+                     <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 
                     
 

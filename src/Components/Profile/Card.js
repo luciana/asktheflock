@@ -25,31 +25,35 @@ const Card = () => {
         <div className="" >    
           <div className="row py-2" >     
           <div className="col fw-lighter"> 
-            {user.address && user.address.length > 0 && (   
-            <div className=""><RiMapPin2Line size={18}/> {user.address}</div>
-            )}
+           <RiFlag2Line size={18}/> {LANGUAGES[user.locale].Languages[user.locale]  } {flagImage(user.locale)}            
           </div>   
-          <div className="col fw-lighter">  <RiFlag2Line size={18}/> {LANGUAGES[user.locale].Languages[user.locale]  } {flagImage(user.locale)}</div>                    
+          <div className="col fw-lighter">  
+        
+          {user.birthdate && user.birthdate.length > 0 && (   
+              <div className=""><FaBirthdayCake size={18} />  {LANGUAGES[user.locale].Birth + " : "}{user.birthdate}  <span className="mx-2 text-color-gray" aria-hidden="true"> • </span>  {findGeneration(new Date(user.birthdate))} </div>
+            )} 
+          </div>                    
           </div>          
           <div className="row py-2" >    
             <div className="col fw-lighter"> 
-            {user.gender && user.gender.length > 0 && (              
-              <div className=""><FaRegCircle size={15}/> {user.gender}</div>
-            )} 
-            </div>  
-            <div className="col fw-ligther"> 
-             {user.userTag && user.userTag.length > 0 && (
+            {user.userTag && user.userTag.length > 0 && (
                 <span className=""><RiMedal2Line size={18} /> #{user.userTag}
                 </span>           
                 )} 
+            
+            </div>  
+            <div className="col fw-ligther"> 
+            {user.gender && user.gender.length > 0 && (              
+              <div className=""><FaRegCircle size={15}/> {user.gender}</div>
+            )} 
             </div> 
              
           </div>
           <div className="row" >    
             <div className="col fw-lighter"> 
-            {user.birthdate && user.birthdate.length > 0 && (   
-              <div className=""><FaBirthdayCake size={18} />  {LANGUAGES[user.locale].Birth + " : "}{user.birthdate}  <span className="mx-2 text-color-gray" aria-hidden="true"> • </span>  {findGeneration(new Date(user.birthdate))} </div>
-            )}                       
+            {user.address && user.address.length > 0 && (   
+            <div className=""><RiMapPin2Line size={18}/> {user.address}</div>
+            )}              
             </div> 
           </div>
        

@@ -5,10 +5,10 @@ type User @model @auth(rules: [
       { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }
      # { allow: private, operations: [update] }   # update was needed to vote
       ]) 
- @aws_cognito_user_pools{
-  id: ID! @primaryKey
+  {
+  id: ID! @primaryKey 
   locale: String!
-  email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail") @aws_cognito_user_pools
+  email: AWSEmail! @index(name: "byEmail", queryField: "userByEmail")
   name: String
   userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])
   birthdate: AWSDate
