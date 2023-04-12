@@ -57,14 +57,7 @@ const handleCancel = () =>{
 
 
 const openCommentDetails = (item) => {
-  //console.log("openCommentDetails for item", item);
-  //console.log("all comments for this question ", comments);
   if(myOwnQuestion){
-  //  const commentsForThisOption =  comments.filter((f)=> 
-  //             f.questionID === question.id &&
-  //             f.optionID === item.id);
-
-  //   console.log("commentsForThisOption", commentsForThisOption, showCommentDialog);
     setSelectedItem(item);
     setShowCommentDialog(!showCommentDialog);
   }else{

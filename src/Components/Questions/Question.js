@@ -43,7 +43,7 @@ function Question({
 // if (!question) return;
   //console.log("Question ", question);
   // //console.log("User ", user.votes);
-  // console.log("votedList", votedList);
+  //console.log("votedList", votedList);
 
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
@@ -75,6 +75,7 @@ function Question({
   let alreadyVotedForQuestionList = votedList.filter(
     (vote) => vote && vote.questionId === question.id
   );
+  //console.log("alreadyVotedForQuestionList", alreadyVotedForQuestionList);
 
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
@@ -153,21 +154,16 @@ function Question({
     }  
   }
     
-                
-    
-
-
   const voteUp = (item) => {
 
     if (myOwnQuestion) return; 
 
     const id = item.id;
     const text = item.text;
-    if (alreadyVotedForQuestionListBool) {
-      
+
+    if (alreadyVotedForQuestionListBool) {      
       return;
-    }if (votedOptionsList.includes(id)){
-      
+    }if (votedOptionsList.includes(id)){      
       return;
     }else{        
         
