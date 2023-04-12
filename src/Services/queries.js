@@ -1,4 +1,4 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Auth } from "aws-amplify";
 import * as queries from "../graphql/queries";
 
 const GetUserByEmail = async (email) => {
@@ -10,6 +10,26 @@ const GetUserByEmail = async (email) => {
   }  
 
 };
+
+const GetUserByIdForAdmin = async ( id ) => {
+    let nextToken;
+    let apiName = 'AdminQueries';
+    let path = '/listUsersgetUser';
+    let myInit = { 
+        queryStringParameters: {
+          "groupname": "asktheflockadmin",
+          "limit": 2,
+          "token": nextToken
+        },
+        headers: {
+          'Content-Type' : 'application/json',
+          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`
+        }
+    }
+    const { NextToken, ...rest } =  await API.get(apiName, path, myInit);
+    nextToken = NextToken;
+    return rest;
+}
 
 const GetUserById = async ( id ) => {
   const data = await API.graphql(graphqlOperation(queries.getUser, { id })); 
@@ -43,6 +63,7 @@ const Queries = {
   GetQuestionByUserId,
   GetUserById,
   CommentByQuestionId,
+  GetUserByIdForAdmin,
 };
 
 

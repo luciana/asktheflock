@@ -97,7 +97,7 @@ function Admin() {
                && (question.userID !== user.id)
               )
         );
-      console.log("numberOfOpenQuestionsSince", result);  
+     // console.log("numberOfOpenQuestionsSince", result);  
       return result;
            
     }
@@ -222,8 +222,11 @@ function Admin() {
       const userId = question.userID;  
       const userName = question.userName;
       try{
-        let userData = await Queries.GetUserById(userId);
-        console.log("user data" , userData);
+        const d = await Queries.GetUserByIdForAdmin(userId);
+        console.log("GetUserByIdForAdmin" , d);
+
+        let userData = null; //await Queries.GetUserById(userId);
+       // console.log("user data" , userData);
 
         if (userData){
           const userVotes = user.votes ? user.votes : 0;

@@ -73,6 +73,7 @@
       "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/main/\",\"https://www.asktheflock.com/main/\"],\"LogoutURLs\":[\"http://localhost:3000/\",\"https://www.asktheflock.com/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/main/\",\"https://www.asktheflock.com/main/\"],\"LogoutURLs\":[\"http://localhost:3000/\",\"https://www.asktheflock.com/\"]}",
+    "adminQueryGroup": "asktheflockadmin"
   }
 }

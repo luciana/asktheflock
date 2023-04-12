@@ -57,7 +57,7 @@ const handleCancel = () =>{
 
 
 const openCommentDetails = (item) => {
-  console.log("openCommentDetails for item", item);
+  //console.log("openCommentDetails for item", item);
   //console.log("all comments for this question ", comments);
   if(myOwnQuestion){
   //  const commentsForThisOption =  comments.filter((f)=> 
