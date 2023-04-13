@@ -404,7 +404,7 @@ const Questions = () => {
 
       const createVote = async ( userID, userName, questionID, optionID, optionText)=>{
         try{
-          console.log("input to createVote", userID, userName, questionID, optionID, optionText);
+         // console.log("input to createVote", userID, userName, questionID, optionID, optionText);
           await Mutations.CreateVote(
             userID,
             userName,
@@ -542,12 +542,33 @@ const Questions = () => {
           }        
         }
       };
+
+      
       const updateUserVotes = async (userVote) =>{        
         try{                
           let userVotes = [];
-          if (user.votes) userVotes = JSON.parse(user.votes);
+           //there are votes in the user model
+          if (user.votes) {
+            userVotes = JSON.parse(user.votes);   
+            
+            if(userVotes.length > 0){
+              //check if this user has votes in the vote model
+              //console.log("about to get votes in Votes table for ", user.id);
+              const votesByUserId = await Queries.GetVotesByUserId(user.id);
+              if(votesByUserId && votesByUserId.length > 0 ){
+                //there are some votes for this user in the vote model
+                console.log("get votes by userid", votesByUserId);
+
+                //get list of optionsId that user has voted and it is stored in vote model
+                const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);
+                const itemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
+                console.log("itemsNotYetInVoteModel", itemsNotYetInVoteModel);
+              }     
+            }     
+          }
           userVotes.push(userVote);
-      
+          console.log("updateUserVotes", userVotes);
+          
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
             JSON.stringify(userVotes)
@@ -575,8 +596,9 @@ const Questions = () => {
 
          setLoading(true);         
          updateQuestion(question, option);
-         updateUserVotes(userVote);
          createVote(user.id, user.name, question.id, option.id, option.text);
+         updateUserVotes(userVote);
+        
          setLoading(false);     
          clearUrlParamsAfterVote();
          

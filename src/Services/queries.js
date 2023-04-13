@@ -40,8 +40,8 @@ const GetSingleQuestion = async(id) => {
   return data.data.getQuestion ? data.data.getQuestion : null;
 }
 
-const GetVotesByUserId = async( id ) => {
-  const data = await API.graphql(graphqlOperation(queries.voteByUserId, { id }));
+const GetVotesByUserId = async( userID ) => {
+  const data = await API.graphql(graphqlOperation(queries.voteByUserId, { userID }));
   return data.data.voteByUserId.items.length ? data.data.voteByUserId.items : null;
 }
 
