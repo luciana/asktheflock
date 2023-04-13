@@ -184,3 +184,54 @@ export const deleteComment = /* GraphQL */ `
     }
   }
 `;
+export const createVote = /* GraphQL */ `
+  mutation CreateVote(
+    $input: CreateVoteInput!
+    $condition: ModelVoteConditionInput
+  ) {
+    createVote(input: $input, condition: $condition) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateVote = /* GraphQL */ `
+  mutation UpdateVote(
+    $input: UpdateVoteInput!
+    $condition: ModelVoteConditionInput
+  ) {
+    updateVote(input: $input, condition: $condition) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteVote = /* GraphQL */ `
+  mutation DeleteVote(
+    $input: DeleteVoteInput!
+    $condition: ModelVoteConditionInput
+  ) {
+    deleteVote(input: $input, condition: $condition) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;

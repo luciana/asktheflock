@@ -184,3 +184,45 @@ export const onDeleteComment = /* GraphQL */ `
     }
   }
 `;
+export const onCreateVote = /* GraphQL */ `
+  subscription OnCreateVote($filter: ModelSubscriptionVoteFilterInput) {
+    onCreateVote(filter: $filter) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateVote = /* GraphQL */ `
+  subscription OnUpdateVote($filter: ModelSubscriptionVoteFilterInput) {
+    onUpdateVote(filter: $filter) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteVote = /* GraphQL */ `
+  subscription OnDeleteVote($filter: ModelSubscriptionVoteFilterInput) {
+    onDeleteVote(filter: $filter) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;

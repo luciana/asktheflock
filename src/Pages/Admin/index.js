@@ -81,6 +81,7 @@ function Admin() {
         navigate(ROUTES[user.locale].MAIN);
        }
        getAllUsers(); 
+       getAllVotes();
        loadQuestions();
        setIsAuthorized(t);   
       
@@ -231,7 +232,17 @@ function Admin() {
       }      
     }
 
-    const userInfo = (question) => {
+    const getAllVotes = async () => {
+      try{
+        const votes = await Queries.GetAllVotes();
+        console.log("all votes", votes);
+      }catch(error){
+        console.error("Error getting All Votes", error);
+      }      
+    }
+
+
+    const userInfo = async(question) => {
       const userId = question.userID;  
       const userName = question.userName;
       try{
@@ -240,6 +251,14 @@ function Admin() {
           userData = users.filter((u) => u.id === userId)[0];
         }              
         console.log("user data retrieved" , userData);
+
+        if( userId) {
+         // 585541e8-921a-4a2d-9dd5-96cd36a5f8f1
+         userId = "585541e8-921a-4a2d-9dd5-96cd36a5f8f1";
+         console.log("user id to get votes count" , userId);
+         const votesByUserId = await Queries.GetVotesByUserId(userId);
+         console.log("get votes by userid", votesByUserId);
+        }
         if (userData  ){
           const userVotes = userData.votes ? JSON.parse(userData.votes) : [];
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
@@ -414,7 +433,7 @@ function Admin() {
      
     </section>
       )}
-    ;
+    
 
 export default Admin;
 

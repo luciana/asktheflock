@@ -150,6 +150,49 @@ export const listComments = /* GraphQL */ `
     }
   }
 `;
+export const getVote = /* GraphQL */ `
+  query GetVote($id: ID!) {
+    getVote(id: $id) {
+      id
+      userID
+      userName
+      questionID
+      optionID
+      optionText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listVotes = /* GraphQL */ `
+  query ListVotes(
+    $id: ID
+    $filter: ModelVoteFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listVotes(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        userID
+        userName
+        questionID
+        optionID
+        optionText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userByEmail = /* GraphQL */ `
   query UserByEmail(
     $email: AWSEmail!
@@ -275,6 +318,64 @@ export const commentByQuestionId = /* GraphQL */ `
         optionText
         comment
         owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const voteByUserId = /* GraphQL */ `
+  query VoteByUserId(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelVoteFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    voteByUserId(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        userName
+        questionID
+        optionID
+        optionText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const voteByQuestionId = /* GraphQL */ `
+  query VoteByQuestionId(
+    $questionID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelVoteFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    voteByQuestionId(
+      questionID: $questionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        userName
+        questionID
+        optionID
+        optionText
         createdAt
         updatedAt
       }

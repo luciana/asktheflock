@@ -26,7 +26,7 @@ function Question({
   parentId = null,
   user,
   createComment,
-  getComment,
+  getComment
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -166,7 +166,8 @@ function Question({
     }if (votedOptionsList.includes(id)){      
       return;
     }else{        
-        
+      
+      
       item.votes++;  
 
       let userVote ={

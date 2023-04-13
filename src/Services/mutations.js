@@ -210,6 +210,29 @@ const UpdateComment = async ( questionID, userID, optionID, optionText, comment 
   return updateComment;
 };
 
+const CreateVote = async (
+  userID,
+  userName,
+  questionID, 
+  optionID,
+  optionText,   
+    ) => {      
+  const {
+    data: { createVote },
+  } = await API.graphql(
+    graphqlOperation(mutations.createVote, { input: 
+      {   
+        userID,
+        userName,
+        questionID, 
+        optionID,
+        optionText
+      } })
+  );
+  return createVote;
+
+}
+
 const Mutations = {
   CreateUser,
   UpdateUser,
@@ -225,6 +248,7 @@ const Mutations = {
   UpdateUserName,
   CreateComment,
   UpdateComment,
+  CreateVote,
 };
 
 export default Mutations;   

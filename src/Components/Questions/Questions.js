@@ -402,6 +402,21 @@ const Questions = () => {
          }
       }
 
+      const createVote = async ( userID, userName, questionID, optionID, optionText)=>{
+        try{
+          console.log("input to createVote", userID, userName, questionID, optionID, optionText);
+          await Mutations.CreateVote(
+            userID,
+            userName,
+            questionID,
+            optionID,
+            optionText,
+          )
+        }catch(error){
+          console.error("Error on creating vote", error);
+        }
+      }
+
       const updateStats = (question, optID, optionsInQuestion) => {          
         const statsInQuestion = prepStatData(question, user, optID);      
         return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
@@ -540,6 +555,8 @@ const Questions = () => {
       
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
+         
+
         }catch(err){
           console.error("Mutations.UpdateUserVotes Error ", err);
         }      
@@ -559,6 +576,7 @@ const Questions = () => {
          setLoading(true);         
          updateQuestion(question, option);
          updateUserVotes(userVote);
+         createVote(user.id, user.name, question.id, option.id, option.text);
          setLoading(false);     
          clearUrlParamsAfterVote();
          
@@ -647,7 +665,7 @@ const Questions = () => {
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}  
                           createComment={createComment}                      
-                          getComment={getComment}
+                          getComment={getComment}                         
                           user={user}
                       />
                   ))}

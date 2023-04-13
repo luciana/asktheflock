@@ -1,9 +1,8 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
 type User @model @auth(rules: [
-      { allow: owner, operations: [ read, create, update, delete]}    
-      { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }
-     # { allow: private, operations: [update] }   # update was needed to vote
+      { allow: private, operations: [read, create, update] }  
+      { allow: owner, operations: [ read, delete]}        
       ]) 
   {
   id: ID! @primaryKey 
@@ -14,8 +13,9 @@ type User @model @auth(rules: [
   birthdate: AWSDate
   gender: String
   address: String
-  votes: AWSJSON @auth(rules: [{ allow: owner }, { allow: private, operations: [update] },  { allow: groups, groups: ["asktheflockadmin"], operations: [read, create, update, delete]}]) 
-  owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] },  { allow: groups, groups: ["asktheflockadmin"], operations: [read, create, update, delete]}])
+  votes: AWSJSON @auth(rules: [ { allow: private, operations: [read, update] }]) 
+  #owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }])
+  owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
   #prevent owners to reassign the owner of their existing record to another user.
 }
 
@@ -53,3 +53,17 @@ type Comment @model
      comment: AWSJSON!
      owner: String @auth(rules: [{ allow: owner, operations: [read, update] },  { allow: private, operations: [read ,create] }]) 
 }
+
+type Vote @model            
+             @auth(rules: [                    
+                   { allow: private, operations: [read, create] },                   
+                  ])
+              {
+  id: ID!  @primaryKey 
+  userID: ID! @index(name:"byUserId", queryField: "voteByUserId") 
+  userName: String
+  questionID: ID! @index(name:"byQuestionId", queryField: "voteByQuestionId") 
+  optionID: Int!
+  optionText: String
+ }
+
