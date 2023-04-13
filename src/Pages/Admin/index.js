@@ -224,6 +224,7 @@ function Admin() {
     const getAllUsers = async () => {
       try{
         const users= await Queries.GetAllUsers();
+        console.log("all users", users);
         setUsers(users);
       }catch(error){
         console.error("Error getting All Users", error);
