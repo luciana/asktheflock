@@ -17,6 +17,17 @@ function updateUser(state, payload) {
   return newState;
 }
 
+function updateVotes(state, payload) {
+  
+  // const result = Array.isArray(payload);
+  // if(!result) {
+  //   payload =[];
+  // }
+  const newState = { ...state, myVotes: payload };
+  console.log("updateVotes state = new is ", newState);
+  return newState;
+}
+
 export default function AppReducer(state, { type, payload }) {
 
   switch (type) {
@@ -24,6 +35,8 @@ export default function AppReducer(state, { type, payload }) {
       return updateLang(state, payload);
     case TYPES.UPDATE_USER:
       return updateUser(state, payload);
+    case TYPES.UPDATE_VOTES:
+        return updateVotes(state, payload);
     default:
       throw new Error("TYPE NOT FOUND");
   }

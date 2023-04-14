@@ -15,18 +15,19 @@ import  shortenURL  from './../../Services/shortenURL';
 
 function Question({ 
   question,   
-  votedList,
-  updateVotedList,
-  votedOptionsList,
-  updateVotedOptionsList,
+  // votedList,
+  // updateVotedList,
+  // votedOptionsList,
+  // updateVotedOptionsList,
   updateQuestionVoteTime,
   handleVote,
   deleteQuestion,
   openQuestion,
   parentId = null,
   user,
+  myVotes,
   createComment,
-  getComment
+  getComment,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -39,11 +40,6 @@ function Question({
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
-
-// if (!question) return;
-  //console.log("Question ", question);
-  // //console.log("User ", user.votes);
-  //console.log("votedList", votedList);
 
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
@@ -72,18 +68,17 @@ function Question({
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
 
-  let alreadyVotedForQuestionList = votedList.filter(
-    (vote) => vote && vote.questionId === question.id
+  //console.log("my vote from state", myVotes);
+  let alreadyVotedForQuestionList = myVotes.filter(
+    (vote) => vote.questionID === question.id
   );
   //console.log("alreadyVotedForQuestionList", alreadyVotedForQuestionList);
+  let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
-  let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
   const myOwnQuestion = question.userID === user.id;
-  //console.log("myOwnQuestion",question.userID, user.id, myOwnQuestion, question.text) ;
-
-
+  
   const getExpertVoteCount = () => {
     const findExpertCounts = findCounts(JSON.parse(question.stats), "userTag", "userTag");
     if(findExpertCounts){
@@ -155,37 +150,24 @@ function Question({
   }
     
   const voteUp = (item) => {
-
     if (myOwnQuestion) return; 
-
+    if (alreadyVotedForQuestionListBool) {      
+      console.log("alreadyVotedForQuestion for this question.. can't vote again",alreadyVotedForQuestionListBool);
+      return;
+    }
     const id = item.id;
     const text = item.text;
-
-    if (alreadyVotedForQuestionListBool) {      
-      return;
-    }if (votedOptionsList.includes(id)){      
-      return;
-    }else{        
-      
-      
-      item.votes++;  
-
-      let userVote ={
-        "optionId": id,
-        "questionId": question.id,  
-      };
-       
-      let questionOption = {         
-        "id": id,
-        "text": text,  
-        "votes": item.votes, 
-        }         
-      updateVotedList(questionOption);    
-      updateVotedOptionsList(id);
-      handleVote(question, questionOption, userVote);
-     
-    } 
-    
+    item.votes++;  
+    let userVote ={
+      "optionId": id,
+      "questionId": question.id,  
+    };
+    let questionOption = {         
+      "id": id,
+      "text": text,  
+      "votes": item.votes, 
+      }         
+    handleVote(question, questionOption, userVote);     
   };
 
   
@@ -314,8 +296,7 @@ function Question({
           <Vote question={question}  
                 items={optionItem}                 
                 voteUp={voteUp}     
-                myOwnQuestion={myOwnQuestion}                
-                votedOptionsList={votedOptionsList}
+                myOwnQuestion={myOwnQuestion}                               
                 alreadyVotedForQuestionList={alreadyVotedForQuestionList}
                 voteEnded={voteEnded}
                 createVoteCommentObject={createVoteCommentObject}

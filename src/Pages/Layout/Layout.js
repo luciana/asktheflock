@@ -26,9 +26,16 @@ export default function Layout() {
         //Create user in GraphQL with the attributes from Cognito
         user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
       }
-     //Update language and user in the cookie
+
+      
+     //Update language and user in context
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale || user.locale });
       dispatch({ type: TYPES.UPDATE_USER, payload: user });
+      
+      const myVotes = await Queries.GetVotesByUserId(user.id);
+      const votes = (myVotes && myVotes.length > 0 ) ? myVotes : [];
+      dispatch({ type: TYPES.UPDATE_VOTES, payload: votes });
+      
     } 
   }, [dispatch, state]);
 

@@ -10,6 +10,7 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -17,7 +18,7 @@ const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [votedList, setVotedList] = useState([]);
-    const [votedOptionsList, setVoteOptionsdList] = useState([]);
+   // const [votedOptionsList, setVoteOptionsdList] = useState([]);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [loading, setLoading] = useState(false);
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
@@ -26,10 +27,10 @@ const Questions = () => {
     const [questionFilteredList, setQuestionFilteredList] =    useState([]);
     const [voteFilteredList, setVoteFilteredList] =    useState([]);
     const [alreadyVotedFilterList, setAlreadyVotedFilterList] = useState([]);
-    const [myVotes, setMyVotes] = useState([]);
+   // const [myVotes, setMyVotes] = useState([]);
     const navigate = useNavigate();
     const { state, dispatch } = useContext(AppContext);
-    const { user } = state;
+    const { user, myVotes } = state;
     const [filterList, setFilterList]= useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
@@ -93,35 +94,9 @@ const Questions = () => {
           setLoading(false);
          // alert("Error getting all the questions from database");
         }
-      };
-    
-      const loadVotes = async () => {
-        try{
-          if(user.votes) {
-            let votes = JSON.parse(user.votes);
-            setVotedList(votes);                    
-            const newArray = [];            
-            for (let i = 0; i < votes.length; i++) {
-              newArray.push(votes[i].optionId);
-            }
-            setVoteOptionsdList(newArray);
-          }; 
-        }catch(err){
-          console.error("Questions.js Loading Votes from queries error", err);
-          setBackendQuestions([]);
-          setLoading(false);
-          //alert("Error getting question voltes from database");
-        }
-      };
-
-      const loadMyVotes = () => {
-        setMyVotes(JSON.parse(user.votes));
-      }
-      
+      };     
         loadQuestions();
-        loadVotes();
-        loadSingleQuestion();    
-        loadMyVotes();                                
+        loadSingleQuestion();                                  
       }, [user,setFilterList ]);
       
 
@@ -131,9 +106,9 @@ const Questions = () => {
         setIsAlreadyVotedFilterChecked(!isAlreadyVotedFilterChecked);  
              
         if(!isAlreadyVotedFilterChecked){
-          // already voted switch is on
-          //const myVotes = JSON.parse(user.votes);
+          // already voted switch is on     
           const myVotesList = myVotes.map((p) => p.questionId);      
+          console.log("my Votes needed for handleAlreadyVotedFilterSwitch ", myVotes);
           const haventVotedYet = filterList.filter(
                 (backendQuestion) => ( !myVotesList.includes(backendQuestion.id) &&
                                       (backendQuestion.parentID === null))
@@ -402,19 +377,22 @@ const Questions = () => {
          }
       }
 
-      const createVote = async ( userID, userName, questionID, optionID, optionText)=>{
+      const createVote = async ( userID, userName, questionID, optionID)=>{
         try{
-         // console.log("input to createVote", userID, userName, questionID, optionID, optionText);
-           await Mutations.CreateVote(
+         // console.log("input to createVote", userID, userName, questionID, optionID);
+           const result =  await Mutations.CreateVote(
             userID,
             userName,
             questionID,
             optionID
-          )
-          return true;
+          );
+          let myVotesArray = myVotes ? myVotes : [];
+          myVotesArray.push(result);
+          console.log("new vote migrated - new entry created in Vote table", result);
+          console.log("dispatch state change ", myVotesArray);
+          dispatch({ type: TYPES.UPDATE_VOTES, payload: myVotesArray });     
         }catch(error){
-          console.error("Error on creating vote", error);
-          return false;
+          console.error("Error on creating vote", error);     
         }
       }
 
@@ -544,39 +522,66 @@ const Questions = () => {
         }
       };
 
-      
-      const migratingUserVotesToVoteTable = async(userVotes)=> {
-        try{
-           //check if this user has votes in the vote model
-           //console.log("about to get votes in Votes table for ", user.id);
-          const votesByUserId = await Queries.GetVotesByUserId(user.id);
-          if(votesByUserId && votesByUserId.length > 0 ){
-            //there are some votes for this user in the vote model
-            console.log("get votes by userid", votesByUserId);
+      //this is used during the migration only
+      const isVoteRegistered = async( userID, questionID, optionID) =>{
 
-            //get list of optionsId that user has voted and it is stored in vote model
-            const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);
-            const questionIDInVoteModel = votesByUserId.map((v)=> v.questionID);
-            const optionItemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
-            console.log("optionItemsNotYetInVoteModel", optionItemsNotYetInVoteModel);
-            const questionItemsNotYetInVoteModel = userVotes.filter((v) => !questionIDInVoteModel.includes(v.questionId));
-            console.log("questionItemsNotYetInVoteModel", questionItemsNotYetInVoteModel);
-          
-            if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
-               optionItemsNotYetInVoteModel.map((item)=>{
-               
-                //createVote(user.id, user.name, item.questionId, item.optionId);
-              });
-              console.log("migrated", optionItemsNotYetInVoteModel.length);
+        try{
+          const myVotes = await Queries.GetVotesByUserId(userID);
+          if(myVotes && myVotes.length > 0 ){
+            const myVotesForThisQuestion = myVotes.filter((vote) => vote.questionID == questionID 
+                                  && vote.optionID === optionID);
+            console.log("is my vote alread in db>", myVotesForThisQuestion);
+            if(myVotesForThisQuestion && myVotesForThisQuestion.length >0){
               return true;
             }else{
               return false;
-            }
-           
+            }            
+          }else{
+            return false;
+          }
+        }catch(error){
+          console.error("Error checking if vote is already registered", error);
+          return false;
+        }
+        
+      }
 
-           
+      //this is used during the migration only
+      const migratingUserVotesToVoteTable = async(userVotes)=> {
+        try{
+           //check if this user has votes in the vote model
+           console.log("about to get votes in Votes table for ", user.id);
+          const votesByUserId = await Queries.GetVotesByUserId(user.id);
+          console.log("get votes by userid in vote tabel", votesByUserId);
+          let optionItemsNotYetInVoteModel =[];
 
-          } 
+          if(votesByUserId && votesByUserId.length > 0 ){
+            console.log("there are some votes for this user in the vote model");          
+            //get list of optionsId that user has voted and it is stored in vote model
+            const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);           
+            optionItemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
+          }else{
+            console.log("there are NO votes for this user in the vote model");    
+            optionItemsNotYetInVoteModel = userVotes;
+          }
+          console.log("optionItemsNotYetInVoteModel", optionItemsNotYetInVoteModel);
+          
+          if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
+              optionItemsNotYetInVoteModel.map((item)=>{              
+              if (!isVoteRegistered(user.id,item.questionId, item.optionId)){
+                  createVote(user.id, user.name, item.questionId, item.optionId);          
+              }               
+            });
+            console.log("migrated", optionItemsNotYetInVoteModel.length);         
+            console.log("empty user votes in user table - not doing it at this time.");
+            let userVotesUpdated = await Mutations.UpdateUserVotes(
+              user.id,
+              null
+            ); 
+            console.log("user votes in user table is updated to empty", userVotesUpdated);
+            dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
+          }        
+         
         }catch(error){
           console.log("error migrating user votes to vote table", error);
         }
@@ -587,14 +592,8 @@ const Questions = () => {
       const updateUserVotes = async(userVote) =>{        
         try{                
           let userVotes = [];
-           //there are votes in the user model
-          if (user.votes) {
-            userVotes = JSON.parse(user.votes);   
-            console.log("userVotes in usermodel", userVotes);
-            if(userVotes.length > 0){
-              migratingUserVotesToVoteTable(userVotes);    
-            }     
-          }
+         
+          userVotes = JSON.parse(user.votes);          
           userVotes.push(userVote);
           console.log("updateUserVotes", userVotes);
           
@@ -605,8 +604,14 @@ const Questions = () => {
          
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
-         
-
+          if (userVotesUpdated){
+            console.log("userVotesUpdated",userVotesUpdated);
+            console.log("user votes",user.votes);
+            if(JSON.parse(user.votes) && JSON.parse(user.votes).length > 0){
+              console.log("initiate migration");
+              migratingUserVotesToVoteTable(userVotes);    
+            }  
+          }        
         }catch(err){
           console.error("Mutations.UpdateUserVotes Error ", err);
         }      
@@ -620,36 +625,24 @@ const Questions = () => {
       }
 
       const handleVote = async (question, option, userVote) =>{                     
-        try{
-        
-
+        try{      
          setLoading(true);         
          updateQuestion(question, option);
-        createVote(user.id, user.name, question.id, option.id);
-        updateUserVotes(userVote);
-        
+
+        console.log("does user has user votes entries", user.votes);
+         if (user.votes) {
+          console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
+          updateUserVotes(userVote);
+         }else{
+           console.log("user vote has been emptied from the migration. just create item in votes table");
+           await createVote(user.id, user.name, question.id, option.id);          
+         }
          setLoading(false);     
          clearUrlParamsAfterVote();
          
         }catch(err){
           console.error("Error on handleVote ", err);
         }      
-      }
-
-      const updateVotedList = (item) => {    
-        setVotedList(votedList => {           
-          const newArray = [...votedList];
-          newArray.push(item);
-          return newArray;
-        });        
-      }
-
-      const updateVotedOptionsList = (id) => {    
-        setVoteOptionsdList(votedOptionsList => {           
-          const newArray = [...votedOptionsList];
-          newArray.push(id);
-          return newArray;
-        });        
       }
       
       const handleSingleQuestionClose = () => {
@@ -707,17 +700,14 @@ const Questions = () => {
                       <Question 
                           key={rootQuestion.id}
                           question={rootQuestion}                       
-                          handleVote={handleVote}
-                          updateVotedList={updateVotedList}
-                          updateVotedOptionsList={updateVotedOptionsList}
-                          votedList={votedList}
-                          votedOptionsList={votedOptionsList}                        
+                          handleVote={handleVote}                                                 
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
                           updateQuestion={updateQuestion}  
                           createComment={createComment}                      
-                          getComment={getComment}                         
+                          getComment={getComment}                                         
                           user={user}
+                          myVotes={myVotes}
                       />
                   ))}
               </div>   
@@ -732,11 +722,7 @@ const Questions = () => {
                         <Question 
                             key={activeQuestion.id}
                             question={activeQuestion}                                                                      
-                            handleVote={handleVote}
-                            updateVotedList={updateVotedList}
-                            updateVotedOptionsList={updateVotedOptionsList}
-                            votedList={votedList}
-                            votedOptionsList={votedOptionsList}
+                            handleVote={handleVote}                     
                           // openQuestion={openQuestion}                                       
                             deleteQuestion={deleteQuestion}
                             updateQuestion={updateQuestion}                        

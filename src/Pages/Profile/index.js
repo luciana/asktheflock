@@ -14,7 +14,7 @@ import Queries from "../../Services/queries";
 
 export default function Profile() {
   const { state } = useContext(AppContext);
-  const { user } = state;
+  const { user, myVotes } = state;
   const navigate = useNavigate();
   const { loadUser, setLoading  } = useOutletContext();
   const [alert, setAlert] = useState();
@@ -200,9 +200,9 @@ export default function Profile() {
 
   const userVoteCount = () => {
    
-    if (user.votes) {
-        setVoteCounts(JSON.parse(user.votes).length);
-    }
+  
+      setVoteCounts(myVotes?.length);
+  
    
   }
  
@@ -210,7 +210,6 @@ export default function Profile() {
     try{
       const questions = await Queries.GetQuestionByUserId(user.id);
       if ( questions ){
-      //  console.log("questions by this user ", questions);
         setQuestionCounts(questions);
       }
     }catch(error){     

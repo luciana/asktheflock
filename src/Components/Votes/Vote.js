@@ -6,8 +6,7 @@ import CommentModalDialog from '../Comments/CommentModalDialog';
 import { LANGUAGES } from '../../Constants';
 
 const Vote = ({ question,     
-             items,         
-             votedOptionsList,
+             items,               
              voteUp,            
              myOwnQuestion,
              alreadyVotedForQuestionList,
@@ -30,8 +29,17 @@ const [justSentComment, setJustSentComment] = useState(false);
     
 
 let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
+
 const iVotedForIt = ( id ) =>  {    
-  return votedOptionsList.includes(id)
+   const voteForOption = alreadyVotedForQuestionList.filter((v)=> 
+    v.questionID === question.id  && v.optionID === id
+  );
+  //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
+  if (voteForOption.length > 0){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;

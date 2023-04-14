@@ -216,10 +216,8 @@ const CreateVote = async (
   questionID, 
   optionID 
     ) => {      
-  const {
-    data: { createVote },
-  } = await API.graphql(
-    graphqlOperation(mutations.createVote, { input: 
+  
+  const data = await API.graphql(graphqlOperation(mutations.createVote, { input: 
       {   
         userID,
         userName,
@@ -227,8 +225,8 @@ const CreateVote = async (
         optionID
       } })
   );
-  return createVote;
 
+  return data.data.createVote ? data.data.createVote : null;
 }
 
 const Mutations = {
