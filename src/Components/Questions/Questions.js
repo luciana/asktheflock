@@ -405,15 +405,16 @@ const Questions = () => {
       const createVote = async ( userID, userName, questionID, optionID, optionText)=>{
         try{
          // console.log("input to createVote", userID, userName, questionID, optionID, optionText);
-          await Mutations.CreateVote(
+           await Mutations.CreateVote(
             userID,
             userName,
             questionID,
-            optionID,
-            optionText,
+            optionID
           )
+          return true;
         }catch(error){
           console.error("Error on creating vote", error);
+          return false;
         }
       }
 
@@ -544,26 +545,54 @@ const Questions = () => {
       };
 
       
-      const updateUserVotes = async (userVote) =>{        
+      const migratingUserVotesToVoteTable = async(userVotes)=> {
+        try{
+           //check if this user has votes in the vote model
+           //console.log("about to get votes in Votes table for ", user.id);
+          const votesByUserId = await Queries.GetVotesByUserId(user.id);
+          if(votesByUserId && votesByUserId.length > 0 ){
+            //there are some votes for this user in the vote model
+            console.log("get votes by userid", votesByUserId);
+
+            //get list of optionsId that user has voted and it is stored in vote model
+            const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);
+            const questionIDInVoteModel = votesByUserId.map((v)=> v.questionID);
+            const optionItemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
+            console.log("optionItemsNotYetInVoteModel", optionItemsNotYetInVoteModel);
+            const questionItemsNotYetInVoteModel = userVotes.filter((v) => !questionIDInVoteModel.includes(v.questionId));
+            console.log("questionItemsNotYetInVoteModel", questionItemsNotYetInVoteModel);
+          
+            if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
+               optionItemsNotYetInVoteModel.map((item)=>{
+               
+                //createVote(user.id, user.name, item.questionId, item.optionId);
+              });
+              console.log("migrated", optionItemsNotYetInVoteModel.length);
+              return true;
+            }else{
+              return false;
+            }
+           
+
+           
+
+          } 
+        }catch(error){
+          console.log("error migrating user votes to vote table", error);
+        }
+       
+       
+      }
+
+      const updateUserVotes = async(userVote) =>{        
         try{                
           let userVotes = [];
            //there are votes in the user model
           if (user.votes) {
             userVotes = JSON.parse(user.votes);   
-            
+            console.log("userVotes in usermodel", userVotes);
             if(userVotes.length > 0){
-              //check if this user has votes in the vote model
-              //console.log("about to get votes in Votes table for ", user.id);
-              const votesByUserId = await Queries.GetVotesByUserId(user.id);
-              if(votesByUserId && votesByUserId.length > 0 ){
-                //there are some votes for this user in the vote model
-                console.log("get votes by userid", votesByUserId);
-
-                //get list of optionsId that user has voted and it is stored in vote model
-                const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);
-                const itemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
-                console.log("itemsNotYetInVoteModel", itemsNotYetInVoteModel);
-              }     
+              migratingUserVotesToVoteTable(userVotes);    
             }     
           }
           userVotes.push(userVote);
@@ -572,8 +601,8 @@ const Questions = () => {
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
             JSON.stringify(userVotes)
-          );
-      
+          );         
+         
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
          
@@ -596,8 +625,8 @@ const Questions = () => {
 
          setLoading(true);         
          updateQuestion(question, option);
-         createVote(user.id, user.name, question.id, option.id, option.text);
-         updateUserVotes(userVote);
+        createVote(user.id, user.name, question.id, option.id);
+        updateUserVotes(userVote);
         
          setLoading(false);     
          clearUrlParamsAfterVote();

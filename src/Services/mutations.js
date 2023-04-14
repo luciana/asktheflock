@@ -214,8 +214,7 @@ const CreateVote = async (
   userID,
   userName,
   questionID, 
-  optionID,
-  optionText,   
+  optionID 
     ) => {      
   const {
     data: { createVote },
@@ -225,8 +224,7 @@ const CreateVote = async (
         userID,
         userName,
         questionID, 
-        optionID,
-        optionText
+        optionID
       } })
   );
   return createVote;

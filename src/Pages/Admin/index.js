@@ -252,9 +252,8 @@ function Admin() {
         }              
         console.log("user data retrieved" , userData);
 
-        if( userId) {
-         // 585541e8-921a-4a2d-9dd5-96cd36a5f8f1
-         userId = "585541e8-921a-4a2d-9dd5-96cd36a5f8f1";
+        if( userId) {        
+      
          console.log("user id to get votes count" , userId);
          const votesByUserId = await Queries.GetVotesByUserId(userId);
          console.log("get votes by userid", votesByUserId);

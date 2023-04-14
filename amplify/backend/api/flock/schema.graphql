@@ -14,7 +14,6 @@ type User @model @auth(rules: [
   gender: String
   address: String
   votes: AWSJSON @auth(rules: [ { allow: private, operations: [read, update] }]) 
-  #owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }])
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] }]) 
   #prevent owners to reassign the owner of their existing record to another user.
 }
@@ -64,6 +63,5 @@ type Vote @model
   userName: String
   questionID: ID! @index(name:"byQuestionId", queryField: "voteByQuestionId") 
   optionID: Int!
-  optionText: String
  }
 

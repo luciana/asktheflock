@@ -192,7 +192,6 @@ export const onCreateVote = /* GraphQL */ `
       userName
       questionID
       optionID
-      optionText
       createdAt
       updatedAt
     }
@@ -206,7 +205,6 @@ export const onUpdateVote = /* GraphQL */ `
       userName
       questionID
       optionID
-      optionText
       createdAt
       updatedAt
     }
@@ -220,7 +218,6 @@ export const onDeleteVote = /* GraphQL */ `
       userName
       questionID
       optionID
-      optionText
       createdAt
       updatedAt
     }
