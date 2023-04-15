@@ -174,12 +174,12 @@ function Question({
 
   const displayCopyLinkDialog = async () => {
     const url = window.location.origin +"/main?id=" + question.id;
-    const s = await shortenURL(url);  
+    const s = await shortenURL(url);   
     try{
       setLoading(true);
       
       if(s){
-        setQuestionLink(url);
+        setQuestionLink(s);
         setShowQuestionCopyLink(true);
         setLoading(false);
       }else{
