@@ -10,15 +10,11 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-
-
 
 const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [votedList, setVotedList] = useState([]);
-   // const [votedOptionsList, setVoteOptionsdList] = useState([]);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [loading, setLoading] = useState(false);
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
@@ -27,7 +23,6 @@ const Questions = () => {
     const [questionFilteredList, setQuestionFilteredList] =    useState([]);
     const [voteFilteredList, setVoteFilteredList] =    useState([]);
     const [alreadyVotedFilterList, setAlreadyVotedFilterList] = useState([]);
-   // const [myVotes, setMyVotes] = useState([]);
     const navigate = useNavigate();
     const { state, dispatch } = useContext(AppContext);
     const { user, myVotes } = state;
@@ -522,11 +517,16 @@ const Questions = () => {
         }
       };
 
+      const getVotesByUserID = async(userID) =>{
+        const myVotes = await Queries.GetVotesByUserId(userID);
+        return (myVotes && myVotes.length > 0 ) ? myVotes : null;
+      }
+
       //this is used during the migration only
       const isVoteRegistered = async( userID, questionID, optionID) =>{
 
         try{
-          const myVotes = await Queries.GetVotesByUserId(userID);
+          const myVotes = await getVotesByUserID(userID);
           if(myVotes && myVotes.length > 0 ){
             const myVotesForThisQuestion = myVotes.filter((vote) => vote.questionID == questionID 
                                   && vote.optionID === optionID);
@@ -573,13 +573,13 @@ const Questions = () => {
               }               
             });
             console.log("migrated", optionItemsNotYetInVoteModel.length);         
-            console.log("empty user votes in user table - not doing it at this time.");
-            let userVotesUpdated = await Mutations.UpdateUserVotes(
-              user.id,
-              null
-            ); 
-            console.log("user votes in user table is updated to empty", userVotesUpdated);
-            dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
+            console.log("empty user votes in user table - not doing it at this time. not emptying user.myvotes yet");
+            // let userVotesUpdated = await Mutations.UpdateUserVotes(
+            //   user.id,
+            //   null
+            // ); 
+            // console.log("user votes in user table is updated to empty", userVotesUpdated);
+            // dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
           }        
          
         }catch(error){
@@ -706,8 +706,6 @@ const Questions = () => {
                           updateQuestion={updateQuestion}  
                           createComment={createComment}                      
                           getComment={getComment}                                         
-                          user={user}
-                          myVotes={myVotes}
                       />
                   ))}
               </div>   

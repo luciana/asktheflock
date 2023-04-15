@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect, useContext} from 'react';
 import Vote from '../Votes/Vote';
 import { FaCircleNotch , FaLink, FaSyncAlt, FaCircle, FaTrashAlt, FaRegHandshake, FaPhoneVolume} from 'react-icons/fa';
 import { GrUserExpert } from 'react-icons/gr';
@@ -12,6 +12,7 @@ import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
 import  shortenURL  from './../../Services/shortenURL';
+import { AppContext} from '../../Contexts'; 
 
 function Question({ 
   question,   
@@ -24,8 +25,6 @@ function Question({
   deleteQuestion,
   openQuestion,
   parentId = null,
-  user,
-  myVotes,
   createComment,
   getComment,
  }) {
@@ -40,11 +39,17 @@ function Question({
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
+  const { state, dispatch } = useContext(AppContext);
+  
+  const { user, myVotes } = state;
 
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
-    getCommentDataForOptions();   
+    getCommentDataForOptions();    
+    // if(!myVotes){
+    //   console.log("myVotes didn't populate");
+    // }  
   }, []);
  
   const isAReply = question.parentId != null;
