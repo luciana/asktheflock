@@ -73,11 +73,23 @@ function Question({
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
 
-  //console.log("my vote from state", myVotes);
-  let alreadyVotedForQuestionList = myVotes.filter(
+  //console.log("my vote from state in question", myVotes);
+  let alreadyVotedForQuestionList =[];
+  if (myVotes && myVotes.length>0){
+    //console.log("my votes data retrieved from state", myVotes);
+  
+   alreadyVotedForQuestionList = myVotes.filter(
     (vote) => vote.questionID === question.id
   );
-  //console.log("alreadyVotedForQuestionList", alreadyVotedForQuestionList);
+  //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
+ }else{
+  alreadyVotedForQuestionList = JSON.parse(user.votes).filter(
+    (vote) => vote.questionId === question.id
+  );
+
+  //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
+ }
+
   let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
