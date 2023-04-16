@@ -31,7 +31,7 @@ const GetAllQuestions = async() => {
   return data.data.listQuestions.items.length ? data.data.listQuestions.items : null;
 }
 const GetAllUsers = async() => {
-  const data = await API.graphql(graphqlOperation(queries.listUsers));
+  const data = await API.graphql(graphqlOperation(queries.listUsers), {authMode: "AMAZON_COGNITO_USER_POOLS"});
   return data.data.listUsers.items.length ? data.data.listUsers.items : null;
 }
 
