@@ -13,7 +13,7 @@ type User @model @auth(rules: [
   birthdate: AWSDate
   gender: String
   address: String
-  votes: AWSJSON @auth(rules: [ { allow: private, operations: [read, update] }]) 
+  votes: AWSJSON @auth(rules: [  { allow: owner},{ allow: private, operations: [read, update] }]) 
   owner: String @auth(rules: [{ allow: owner, operations: [read, update, delete] }]) 
   #prevent owners to reassign the owner of their existing record to another user.
 }
