@@ -12,6 +12,7 @@ import logo from'../../Assets/Images/logos/logo-image-blue-small.png';
 import { Modal } from 'react-bootstrap';
 import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './../../Components/Stats';
 import { use } from 'echarts';
+import { listenToAuthHub } from '@aws-amplify/ui';
 
 function Admin() {
     const { state } = useContext(AppContext);
@@ -245,6 +246,8 @@ function Admin() {
     const userInfo = async(question) => {
       const userId = question.userID;  
       const userName = question.userName;
+      const messages = [];
+      let votesByUserId = [];
       try{
         let userData =[];
         if( users ) {         
@@ -252,14 +255,14 @@ function Admin() {
         }              
         console.log("user data retrieved" , userData);
 
-        if( userId) {        
-      
+        if( userId) {              
          console.log("user id to get votes count" , userId);
-         const votesByUserId = await Queries.GetVotesByUserId(userId);
+          votesByUserId = await Queries.GetVotesByUserId(userId);
          console.log("get votes by userid", votesByUserId);
         }
         if (userData  ){
-          const userVotes = userData.votes ? JSON.parse(userData.votes) : [];
+          const userVotes = userData.votes ? JSON.parse(userData.votes) : votesByUserId;
+          if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet, which means that user hasn't migrated to the new Voting table"});
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
             new Date(userData.updatedAt), 
             userVotes);
@@ -273,6 +276,7 @@ function Admin() {
               expert: userData.userTag,
               email:  userData.email,
               votes: voteCount,
+              messages: messages,
               needsAVote: needsAVote.length,
   
           });
@@ -327,8 +331,7 @@ function Admin() {
                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
                           onClick={()=>  navigate(`/main/${question.id}/stats`)}> Stats </button>
                        <button type="button" className="btn btn-outline-dark rounded-pill"                            
-                          onClick={()=>  userInfo(question)}> User </button>
-                      
+                          onClick={()=>  userInfo(question)}> User </button>                      
                       </td>
                       </tr>
                     ))}                                         
@@ -348,7 +351,8 @@ function Admin() {
                      <p>  {userData.votes} votes you have contributed so far.</p>
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 
-                    
+                    <p></p>
+                    <p> {userData.messages && userData.messages.map((m) => m.text)}</p>
 
                     </Modal.Body>
                      <Modal.Footer>                                                            
@@ -361,7 +365,7 @@ function Admin() {
                            </button>                  
                      </Modal.Footer>
                    </Modal>
-                )};
+                )}
                 { activeQuestion && (
                      <Modal  fullscreen={true} show={showSingleQuestionModal} >
                      <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>
