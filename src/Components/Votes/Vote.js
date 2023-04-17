@@ -38,14 +38,7 @@ const iVotedForIt = ( id ) =>  {
   if (voteForOption.length > 0){
     return true;
   }else{
-    const voteForOptionInUserVote = alreadyVotedForQuestionList.filter((v)=> 
-      v.questionId === question.id  && v.optionId === id
-    );
-    if (voteForOptionInUserVote.length > 0){
-      return true;
-    }else{
-      return false;
-    }    
+   return false;  
   }
 }
 

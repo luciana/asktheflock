@@ -602,13 +602,9 @@ const Questions = () => {
           
           if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
               optionItemsNotYetInVoteModel.map((item)=>{       
-                console.log("iterating thry optionItemsNotYetInVoteModel ", item);
-              //if (!isVoteRegistered(user.id,item.questionId, item.optionId)){
-                 // console.log("entry doesn't exist in Vote table yet - create Vote", item);
+                console.log("iterating thry optionItemsNotYetInVoteModel ", item);             
                   createVote(user.id, user.name, item.questionId, item.optionId, true);          
-              // }else{
-              //   console.log("entry already exist in Vote table", item);
-              // }           
+                       
             });               
             console.log("empty user votes in user table - not doing it at this time. not emptying user.myvotes yet");
             let userVotesUpdated = await Mutations.UpdateUserVotes(
@@ -663,7 +659,7 @@ const Questions = () => {
       const handleVote = async (question, option, userVote) =>{                     
         try{      
          setLoading(true);         
-         updateQuestion(question, option);
+        
 
         console.log("does user has user votes entries", user.votes);
          if (user.votes) {
@@ -671,7 +667,8 @@ const Questions = () => {
           updateUserVotes(userVote);
          }else{
            console.log("user vote has been emptied from the migration. just create item in votes table");
-           await createVote(user.id, user.name, question.id, option.id, false);          
+           await createVote(user.id, user.name, question.id, option.id, false);  
+          updateQuestion(question, option);        
          }
          setLoading(false);     
          clearUrlParamsAfterVote();
