@@ -226,7 +226,7 @@ function Admin() {
     const getAllUsers = async () => {
       try{
         const users= await Queries.GetAllUsers();
-        console.log("all users", users);
+       // console.log("all users", users);
         setUsers(users);
       }catch(error){
         console.error("Error getting All Users", error);
@@ -236,7 +236,7 @@ function Admin() {
     const getAllVotes = async () => {
       try{
         const votes = await Queries.GetAllVotes();
-        console.log("all votes", votes);
+       // console.log("all votes", votes);
       }catch(error){
         console.error("Error getting All Votes", error);
       }      
@@ -262,7 +262,7 @@ function Admin() {
         }
         if (userData  ){
           const userVotes = userData.votes ? JSON.parse(userData.votes) : votesByUserId;
-          if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet, which means that user hasn't migrated to the new Voting table"});
+          if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet. It means that user hasn't migrated to the new Voting table"});
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
             new Date(userData.updatedAt), 
             userVotes);
@@ -346,13 +346,20 @@ function Admin() {
                        <Modal.Title>User Info</Modal.Title>
                      </Modal.Header>
                      <Modal.Body >  
+                     <p>  {userData.name} </p>
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
-                     <p>  {userData.votes} votes you have contributed so far.</p>
+                     <p>  Contributed {userData.votes} votes.</p>
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 
                     <p></p>
-                    <p> {userData.messages && userData.messages.map((m) => m.text)}</p>
+                    {userData.messages && (
+
+                      <div className="alert alert-warning">
+                       { userData.messages.map((m) => m.text)}
+                      </div>
+                    )}
+                   
 
                     </Modal.Body>
                      <Modal.Footer>                                                            

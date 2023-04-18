@@ -17,17 +17,30 @@ export default function Layout() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
-  const loadUser = useCallback(async ({force, email, locale, name, address, birthdate, gender, userTag}) => {        
+  const loadUser = useCallback(async ({force, email, locale, name, address, birthdate, gender, userTag, lastLoggedIn, loggedInCount}) => {        
     if ( !state.user || force === true) { 
      
       let user = await Queries.GetUserByEmail(email);
+      
       if (!user) {
         //The user is created in cognito but not in GraphQL. 
         //Create user in GraphQL with the attributes from Cognito
-        user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
+        if ( lastLoggedIn && loggedInCount){
+          console.log("create user with lastLoggedIn date ")
+          user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag, lastLoggedIn, loggedInCount);    
+        }else{
+          //updates to Profile doesn't require updating lastLoggedIn
+          user = await Mutations.CreateUser(email, locale, name, address, birthdate, gender, userTag);    
+         }
+       
+       }else{
+        //user already exist, update last Logged In and Login count
+        console.log("update user lastLoggedIn and logged in count");
+        const logInCloud = user.loggedInCount ? user.loggedInCount : 0;
+       
+       // await Mutations.UpdateUser({ id: user.id, lastLoggedIn: new Date(), loggedInCount: logInCloud++ });
       }
 
-      
      //Update language and user in context
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale || user.locale });
       dispatch({ type: TYPES.UPDATE_USER, payload: user });
@@ -60,6 +73,8 @@ export default function Layout() {
           address: attributes.address ? attributes.address : "",
           birthdate: attributes.birthdate ? attributes.birthdate : null,
           userTag: "",
+          lastLoggedIn: new Date(),
+          loggedInCount: 1,
         });
 
         //deep link

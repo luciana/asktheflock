@@ -10,6 +10,8 @@ export const onCreateUser = /* GraphQL */ `
       name
       userTag
       birthdate
+      lastLoggedIn
+      loggedInCount
       gender
       address
       votes
@@ -28,6 +30,8 @@ export const onUpdateUser = /* GraphQL */ `
       name
       userTag
       birthdate
+      lastLoggedIn
+      loggedInCount
       gender
       address
       votes
@@ -46,6 +50,8 @@ export const onDeleteUser = /* GraphQL */ `
       name
       userTag
       birthdate
+      lastLoggedIn
+      loggedInCount
       gender
       address
       votes

@@ -10,6 +10,8 @@ export const getUser = /* GraphQL */ `
       name
       userTag
       birthdate
+      lastLoggedIn
+      loggedInCount
       gender
       address
       votes
@@ -41,6 +43,8 @@ export const listUsers = /* GraphQL */ `
         name
         userTag
         birthdate
+        lastLoggedIn
+        loggedInCount
         gender
         address
         votes
@@ -213,6 +217,8 @@ export const userByEmail = /* GraphQL */ `
         name
         userTag
         birthdate
+        lastLoggedIn
+        loggedInCount
         gender
         address
         votes
@@ -248,6 +254,8 @@ export const usersByUserTagAndId = /* GraphQL */ `
         name
         userTag
         birthdate
+        lastLoggedIn
+        loggedInCount
         gender
         address
         votes
