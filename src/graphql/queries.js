@@ -13,9 +13,9 @@ export const getUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -44,9 +44,9 @@ export const listUsers = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -216,9 +216,9 @@ export const userByEmail = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -251,9 +251,9 @@ export const usersByUserTagAndId = /* GraphQL */ `
         gender
         address
         votes
+        owner
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }

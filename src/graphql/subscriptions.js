@@ -16,9 +16,9 @@ export const onCreateUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -37,9 +37,9 @@ export const onUpdateUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -58,9 +58,9 @@ export const onDeleteUser = /* GraphQL */ `
       gender
       address
       votes
+      owner
       createdAt
       updatedAt
-      owner
     }
   }
 `;

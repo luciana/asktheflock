@@ -336,6 +336,7 @@ const Questions = () => {
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
         try{
          // console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
+         //console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
           //once validate that the stats and options were added to the new Stat table
           //then clear the options in the Question table below.
           return await Mutations.UpdateQuestionOptions(
@@ -448,8 +449,10 @@ const Questions = () => {
         }
       }
 
-      const updateQuestion = async (question, option) => {       
+      const updateQuestion = async (question, option) => {            
+
         if(! question.options) return; //TODO: alert
+      
 
         //Update Options
         let optionsInQuestion = JSON.parse(question.options);
@@ -464,9 +467,9 @@ const Questions = () => {
                 }
               }            
             }
-          }
+          }         
           const newA = [];  
-          const stats = updateStats(question, optID, optionsInQuestion);    
+          updateStats(question, optID, optionsInQuestion);    
             
          
         }catch(err){
@@ -668,8 +671,9 @@ const Questions = () => {
          }else{
            console.log("user vote has been emptied from the migration. just create item in votes table");
            await createVote(user.id, user.name, question.id, option.id, false);  
-          updateQuestion(question, option);        
+              
          }
+         updateQuestion(question, option);   
          setLoading(false);     
          clearUrlParamsAfterVote();
          
