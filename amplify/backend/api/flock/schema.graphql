@@ -13,7 +13,7 @@ type User @model @auth(rules: [
   name: String
   userTag: String @index(name: "byUserTag", sortKeyFields: ["id"])
   birthdate: AWSDate
-  lastLoggedIn: AWSDate
+  lastLoggedIn: AWSDateTime
   loggedInCount: Int
   gender: String
   address: String

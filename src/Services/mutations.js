@@ -39,6 +39,14 @@ const UpdateUser = async ( {id, email, locale, name, gender, address, birthdate,
   
 };
 
+const UpdateUserLoggedInData = async ( {id, lastLoggedIn, loggedInCount} ) => {
+  const data  = await API.graphql(
+    graphqlOperation(mutations.updateUser, {
+      input: { id, lastLoggedIn, loggedInCount },
+    })
+  );  
+  return data.data.updateUser ? data.data.updateUser : null;
+};
 
 const UpdateUserName = async ( {id, name} ) => {
   const {
@@ -216,7 +224,6 @@ const DeleteComment = async ( id ) => {
       input: { id },
     })
   );
-  console.log("Mutations DeleteComment ", data);
   return data.data.deleteComment ? data.data.deleteComment : null;
 };
 
@@ -262,6 +269,7 @@ const Mutations = {
   UpdateUserZip,
   UpdateUserBirthdate,
   UpdateUserName,
+  UpdateUserLoggedInData,
   CreateComment,
   UpdateComment,
   DeleteComment,

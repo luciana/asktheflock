@@ -88,20 +88,24 @@ function Admin() {
       
     }
 
-    const numberOfOpenQuestionsSinceThatIhaventVoted = (lastUsed, questionsVoted) => {   
+    const numberOfOpenQuestionsSinceThatIhaventVoted = (lastLoggedIn, questionsVoted) => {   
 
       let votedList = [];
       if (questionsVoted){
         votedList = questionsVoted.map((m)=> m.questionId);
       }
 
-       const result = openQuestion.filter(
+      let result = [];
+      if( lastLoggedIn && lastLoggedIn !== "") {
+         result = openQuestion.filter(
           (question) => (
-              (lastUsed  - new Date(question.createdAt) > 1) 
+              (lastLoggedIn  - new Date(question.createdAt) > 1) 
                &&(!votedList.includes(question.id)) 
                && (question.userID !== user.id)
               )
         );
+      }
+       
      // console.log("numberOfOpenQuestionsSince", result);  
       return result;
            
@@ -253,7 +257,7 @@ function Admin() {
         if( users ) {         
           userData = users.filter((u) => u.id === userId)[0];
         }              
-        console.log("user data retrieved" , userData);
+      //  console.log("user data retrieved" , userData);
 
         if( userId) {              
          console.log("user id to get votes count" , userId);
@@ -263,12 +267,15 @@ function Admin() {
         if (userData  ){
           const userVotes = userData.votes ? JSON.parse(userData.votes) : votesByUserId;
           if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet. It means that user hasn't migrated to the new Voting table"});
+          const loggedInData = userData.loggedInData ? userData.loggedInData : "";
+          const loggedInCount = userData.loggedInCount ? userData.loggedInCount : 0;
+
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
-            new Date(userData.updatedAt), 
+            loggedInData, 
             userVotes);
-         console.log("openQuestions", openQuestions);
-         const needsAVote =  ( openQuestions || openQuestions.length !== 0 ) ? openQuestions : 0;  
-         const voteCount = ( userVotes.length > 0 ) ? userVotes.length : 0;
+          //console.log("openQuestions", openQuestions);
+          const needsAVote =  ( openQuestions || openQuestions.length !== 0 ) ? openQuestions : 0;  
+          const voteCount = ( userVotes.length > 0 ) ? userVotes.length : 0;
                                       
           
           setUserData({
@@ -278,6 +285,9 @@ function Admin() {
               votes: voteCount,
               messages: messages,
               needsAVote: needsAVote.length,
+              loggedInDate: loggedInData,
+              loggedInCount: loggedInCount,
+
   
           });
             setAlert();
@@ -349,6 +359,8 @@ function Admin() {
                      <p>  {userData.name} </p>
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
+                     <p>  Last Logged In on {userData.loggedInDate}</p>
+                     <p>  Logged in {userData.loggedInCount} time(s)</p>
                      <p>  Contributed {userData.votes} votes.</p>
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 

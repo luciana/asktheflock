@@ -35,10 +35,9 @@ export default function Layout() {
        
        }else{
         //user already exist, update last Logged In and Login count
-        console.log("update user lastLoggedIn and logged in count");
-        const logInCloud = user.loggedInCount ? user.loggedInCount : 0;
-       
-       // await Mutations.UpdateUser({ id: user.id, lastLoggedIn: new Date(), loggedInCount: logInCloud++ });
+       // console.log("update user" , user, user.loggedInCount);
+        const logInCloud = user.loggedInCount ? user.loggedInCount : 0;              
+        user =  await Mutations.UpdateUserLoggedInData({ id: user.id, lastLoggedIn: new Date(), loggedInCount: logInCloud+1 });
       }
 
      //Update language and user in context
