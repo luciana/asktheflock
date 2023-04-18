@@ -16,7 +16,7 @@ const GetUserById = async ( id ) => {
   return data.data.getUser ? data.data.getUser : null;
 }
 
-const CommentByQuestionId = async(questionID) =>{ 
+const GetCommentsByQuestionId = async(questionID) =>{ 
   const data = await API.graphql(graphqlOperation(queries.commentByQuestionId, { questionID }));  
   return data.data.commentByQuestionId.items.length ? data.data.commentByQuestionId.items : null;
 }
@@ -45,7 +45,12 @@ const GetVotesByUserId = async( userID ) => {
   return data.data.voteByUserId.items.length ? data.data.voteByUserId.items : null;
 }
 
-const GetAllVotes = async( userID) => {
+const GetVotesByQuestionId = async( questionID ) => {
+  const data = await API.graphql(graphqlOperation(queries.voteByQuestionId, { questionID }));
+  return data.data.voteByQuestionId.items.length ? data.data.voteByQuestionId.items : null;
+}
+
+const GetAllVotes = async() => {
   const data = await API.graphql(graphqlOperation(queries.listVotes));
   return data.data.listVotes.items.length ? data.data.listVotes.items : null;
 }
@@ -57,9 +62,10 @@ const Queries = {
   GetSingleQuestion,
   GetQuestionByUserId,
   GetUserById,
-  CommentByQuestionId,
+  GetCommentsByQuestionId,
   GetVotesByUserId,
   GetAllVotes,
+  GetVotesByQuestionId,
 };
 
 

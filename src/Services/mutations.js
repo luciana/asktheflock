@@ -210,6 +210,16 @@ const UpdateComment = async ( questionID, userID, optionID, optionText, comment 
   return updateComment;
 };
 
+const DeleteComment = async ( id ) => {
+  const data = await API.graphql(
+    graphqlOperation(mutations.deleteComment, {
+      input: { id },
+    })
+  );
+  console.log("Mutations DeleteComment ", data);
+  return data.data.deleteComment ? data.data.deleteComment : null;
+};
+
 const CreateVote = async (
   userID,
   userName,
@@ -229,6 +239,16 @@ const CreateVote = async (
   return data.data.createVote ? data.data.createVote : null;
 }
 
+const DeleteVote = async ( id ) => {
+  const data = await API.graphql(
+    graphqlOperation(mutations.deleteVote, {
+      input: { id },
+    })
+  );
+  console.log("Mutations DeleteVote ", data);
+  return data.data.deleteVote ? data.data.deleteVote : null;
+};
+
 const Mutations = {
   CreateUser,
   UpdateUser,
@@ -244,7 +264,9 @@ const Mutations = {
   UpdateUserName,
   CreateComment,
   UpdateComment,
+  DeleteComment,
   CreateVote,
+  DeleteVote,
 };
 
 export default Mutations;   

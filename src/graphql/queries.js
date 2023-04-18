@@ -114,9 +114,9 @@ export const getComment = /* GraphQL */ `
       optionID
       optionText
       comment
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -142,9 +142,9 @@ export const listComments = /* GraphQL */ `
         optionID
         optionText
         comment
-        owner
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -315,9 +315,9 @@ export const commentByQuestionId = /* GraphQL */ `
         optionID
         optionText
         comment
-        owner
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

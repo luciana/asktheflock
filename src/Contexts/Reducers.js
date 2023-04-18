@@ -19,12 +19,8 @@ function updateUser(state, payload) {
 
 function updateVotes(state, payload) {
   
-  // const result = Array.isArray(payload);
-  // if(!result) {
-  //   payload =[];
-  // }
   const newState = { ...state, myVotes: payload };
-  console.log("updateVotes state = new is ", newState);
+ // console.log("updateVotes state = new is ", newState);
   return newState;
 }
 

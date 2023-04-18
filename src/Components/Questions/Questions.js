@@ -354,7 +354,7 @@ const Questions = () => {
 
 
       const getComment = async(questionID) => {       
-        const result  = await Queries.CommentByQuestionId(questionID );                
+        const result  = await Queries.GetCommentsByQuestionId(questionID );                
         return result && result.length > 0 ? result : null;          
       }
 
@@ -527,13 +527,62 @@ const Questions = () => {
         }        
       };
 
+      const deleteVotes = async ( id ) => {
+        try{
+
+          const votes = await Queries.GetVotesByQuestionId(id);
+         // console.log("votes to be deleted for this question id", id, votes);
+
+          if (votes && votes.length>0) {
+            votes.map((item)=>{       
+            //  console.log("iterating thru votes to be deleted ", item);             
+              Mutations.DeleteVote(item.id);                               
+            });        
+            dispatch({ type: TYPES.UPDATE_VOTES, payload: null }); 
+            return true;
+           }          
+          return false;
+        }catch ( error ){
+          console.error("Error on delete Vote ", error);
+          return false;
+        }
+      }
+
+      const deleteComments = async ( id ) => {
+        try{
+
+          const comments = await Queries.GetCommentsByQuestionId(id);
+          //console.log("comments to be deleted for this question id", id, comments);
+
+          if (comments && comments.length>0) {
+            comments.map((item)=>{       
+              //console.log("iterating thru comments to be delete ", item);             
+              Mutations.DeleteComment(item.id);                           
+            });                 
+            return true;
+           }           
+        }catch ( error ){
+          console.error("Error on delete Comments ", error);
+          return false;
+        }
+      }
+
       const deleteQuestion = async (id) => {
         if (window.confirm("Are you sure you want to remove question?")) {
           try{        
             setLoading(true);  
-            await Mutations.DeleteQuestion(
-              id             
-            );
+           
+
+            const successVoteDeletion = deleteVotes(id);
+            
+            const successCommentDeletion = deleteComments(id);
+
+            if (successVoteDeletion && successCommentDeletion ) {              
+                // await Mutations.DeleteQuestion(
+              //   id             
+              // );
+            }
+             
 
             const updatedBackendQuestions = filterList.filter(
                   (backendQuestion) => backendQuestion.id !== id
@@ -609,7 +658,7 @@ const Questions = () => {
                   createVote(user.id, user.name, item.questionId, item.optionId, true);          
                        
             });               
-            console.log("empty user votes in user table - not doing it at this time. not emptying user.myvotes yet");
+            console.log("empty user votes in user table");
             let userVotesUpdated = await Mutations.UpdateUserVotes(
               user.id,
               null

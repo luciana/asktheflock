@@ -133,9 +133,9 @@ export const onCreateComment = /* GraphQL */ `
       optionID
       optionText
       comment
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -151,9 +151,9 @@ export const onUpdateComment = /* GraphQL */ `
       optionID
       optionText
       comment
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -169,9 +169,9 @@ export const onDeleteComment = /* GraphQL */ `
       optionID
       optionText
       comment
-      owner
       createdAt
       updatedAt
+      owner
     }
   }
 `;

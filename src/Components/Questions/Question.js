@@ -82,7 +82,7 @@ function Question({
     (vote) => vote.questionID === question.id
   );
   //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
- }else{
+ }else if (user.votes){
   alreadyVotedForQuestionList = JSON.parse(user.votes).filter(
     (vote) => vote.questionId === question.id
   );

@@ -44,20 +44,19 @@ type Comment @model
             @auth( rules: [ 
                { allow: owner , operations: [ read, create, update, delete]},
                { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] },
-               { allow: private, operations: [read ,create, update] }])           
+               { allow: private, operations: [read ,create, update, delete] }])           
    {
      id: ID! @primaryKey
      questionID: ID!  @index(name:"byQuestionId", queryField: "commentByQuestionId") 
      userID: ID   
      optionID: Int!
      optionText: String
-     comment: AWSJSON!
-     owner: String @auth(rules: [{ allow: owner, operations: [read, update] },  { allow: private, operations: [read ,create] }]) 
+     comment: AWSJSON!    
 }
 
 type Vote @model            
              @auth(rules: [                    
-                   { allow: private, operations: [read, create] },                   
+                   { allow: private, operations: [read, create, delete] },                   
                   ])
               {
   id: ID!  @primaryKey 
