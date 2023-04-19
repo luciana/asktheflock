@@ -69,7 +69,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     };
 
     if(backendQuestions.length>0){
-      if(votedList.length>0){
+      if(votedList && votedList.length>0){
         //Those who I helped the most
         const votedOnQuestions = backendQuestions.filter((questions) => {
             return votedList.some((voted) => {
