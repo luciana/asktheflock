@@ -334,11 +334,7 @@ const Questions = () => {
       }
 
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
-        try{
-         // console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
-         //console.log("updateStatsAndOptionsInQuestionTable",question, optionsInQuestion, statsInQuestion);
-          //once validate that the stats and options were added to the new Stat table
-          //then clear the options in the Question table below.
+        try{        
           return await Mutations.UpdateQuestionOptions(
             question.id,
             JSON.stringify(optionsInQuestion),
@@ -422,7 +418,8 @@ const Questions = () => {
       }
 
       const updateStats = (question, optID, optionsInQuestion) => {          
-        const statsInQuestion = prepStatData(question, user, optID);      
+        const statsInQuestion = prepStatData(question, user, optID);    
+
         return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
       }
 
@@ -452,7 +449,11 @@ const Questions = () => {
       const updateQuestion = async (question, option) => {            
 
         if(! question.options) return; //TODO: alert
-      
+        // let questionOption = {         
+        //   "id": id,
+        //   "text": text,  
+        //   "votes": item.votes, 
+        //   } 
 
         //Update Options
         let optionsInQuestion = JSON.parse(question.options);
@@ -469,6 +470,18 @@ const Questions = () => {
             }
           }         
           const newA = [];  
+
+              
+          let questionOption = optionsInQuestion;
+         // console.log("questionOption to compare to count from database", optionsInQuestion);       
+          const votesByOptionId = await Queries.GetVotesByOptionId(optID);
+         // console.log("votesByOptionId from database", votesByOptionId.length);
+          const voteCount = votesByOptionId && votesByOptionId.length ? votesByOptionId.length : 0;
+          questionOption.votes = voteCount;
+
+          optionsInQuestion = questionOption;
+          console.log("questionOption from database", optionsInQuestion);      
+
           updateStats(question, optID, optionsInQuestion);    
             
          

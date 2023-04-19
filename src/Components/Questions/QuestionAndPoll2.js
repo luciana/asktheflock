@@ -141,6 +141,7 @@ function QuestionAndPoll2({
         gtag('event', 'click_publish_question_button', {
           //poll_title: 'some title',
         });   
+        setTodos([]);
         addQuestion(question);     
       }
     return(

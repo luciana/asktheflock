@@ -27,6 +27,10 @@ function Admin() {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const [showUserQuestionModal, setShowUserQuestionModal] = useState(false);
+    const [showVoteMattersEmail, setShowVoteMattersEmail] = useState(false);
+    const [showNeQuestionEmail, setShowNeQuestionEmail] = useState(false);
+    const [voteMatterEmailData, setVoteMatterEmailData] = useState({});
+    const [newQuestionEmailData, setNewQuestionEmailData] = useState({});
     const [expertOverallMessage, setExpertOverallMessage] = useState(null);
     const [genderOverallMessage, setGenderOverallMessage] = useState(null);
     const [genderWinningMessage, setGenderWinningMessage] = useState(null);
@@ -35,9 +39,10 @@ function Admin() {
     const [winnerOptionItem, setWinnerOptionItem] = useState(null);
     const [optionWinnerOptionId, setOptionWinnerOptionId] = useState(null);
     const [totalVotes, setTotalVotes] = useState(null);
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState({});
     const [users, setUsers] = useState([]);
     const [openQuestion, setOpenQuestion] = useState([]);
+    const [comments, setComments] = useState([]);
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
     useEffect(() => {   
@@ -52,14 +57,16 @@ function Admin() {
           if(q){                     
 
             //closed questions that have has a minimum of stats
-              setBackendQuestions(q.filter(
-                (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
-                && (backendQuestion.parentID === null)) 
-               // && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT
-               )
-              )            
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));   
+
+            const closedQuestions = q.filter(
+              (backendQuestion) => (((new Date() - new Date(backendQuestion.voteEndAt)  > 1 ) 
+              && (backendQuestion.parentID === null)) 
+              && (JSON.parse(backendQuestion.stats) && JSON.parse(backendQuestion.stats).length) > process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT
+             )).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)));
+
+              setBackendQuestions(closedQuestions);           
+              
               
               const openQuestions = (q.filter(
                 (question) => ((new Date(question.voteEndAt) - new Date() > 1 ))
@@ -82,10 +89,21 @@ function Admin() {
         navigate(ROUTES[user.locale].MAIN);
        }
        getAllUsers(); 
-       getAllVotes();
+       //getAllVotes();
+       getAllComments();
        loadQuestions();
        setIsAuthorized(t);   
       
+    }
+
+    const commentsOnQuestion = (question) =>  {
+     // console.log("all comments ", comments, question.id);
+      const result = comments.filter(
+        (comment) => (comment.questionID === question.id)
+      );
+     // console.log("comments result for one question", result);
+
+      return result && result.length > 0 ? result.length : 0;
     }
 
     const numberOfOpenQuestionsSinceThatIhaventVoted = (lastLoggedIn, questionsVoted) => {   
@@ -227,6 +245,23 @@ function Admin() {
       } 
     }
 
+    const prepareVoteMattersEmail = async ( question ) => {
+      setShowVoteMattersEmail(!showVoteMattersEmail);
+      const emailData = await getUserInfoForQuestion(question);   
+      console.log("emailData for Vote Matter Email", emailData);
+      if (emailData.needsAVote > 0) {
+        setVoteMatterEmailData(emailData);
+      }else{
+        setAlert({ type: "error", text: "there are not enough data to send a Vote Matters email. Could be because the user is up to date on voting." });
+      }
+     
+    }
+
+    const prepareNewQuestionEmail = async ( question ) => {
+      setShowNeQuestionEmail(!showNeQuestionEmail);
+      setNewQuestionEmailData(question);
+    }
+
     const getAllUsers = async () => {
       try{
         const users= await Queries.GetAllUsers();
@@ -237,31 +272,38 @@ function Admin() {
       }      
     }
 
-    const getAllVotes = async () => {
+    // const getAllVotes = async () => {
+    //   try{
+    //     const votes = await Queries.GetAllVotes();
+    //    // console.log("all votes", votes);
+    //   }catch(error){
+    //     console.error("Error getting All Votes", error);
+    //   }      
+    // }
+
+    const getAllComments = async () => {
       try{
-        const votes = await Queries.GetAllVotes();
-       // console.log("all votes", votes);
+        const comments = await Queries.GetAllComments();
+        setComments(comments);
       }catch(error){
         console.error("Error getting All Votes", error);
       }      
     }
 
 
-    const userInfo = async(question) => {
-      const userId = question.userID;  
-      const userName = question.userName;
-      const messages = [];
-      let votesByUserId = [];
+    const getUserInfoForQuestion = async(question)=>{
       try{
+        const userId = question.userID;  
+        const userName = question.userName;
+        const messages = [];
+        let votesByUserId = [];
         let userData =[];
         if( users ) {         
           userData = users.filter((u) => u.id === userId)[0];
-        }              
-      //  console.log("user data retrieved" , userData);
-
+        }
         if( userId) {              
          console.log("user id to get votes count" , userId);
-          votesByUserId = await Queries.GetVotesByUserId(userId);
+         votesByUserId = await Queries.GetVotesByUserId(userId);
          console.log("get votes by userid", votesByUserId);
         }
         if (userData  ){
@@ -276,23 +318,32 @@ function Admin() {
           //console.log("openQuestions", openQuestions);
           const needsAVote =  ( openQuestions || openQuestions.length !== 0 ) ? openQuestions : 0;  
           const voteCount = ( userVotes.length > 0 ) ? userVotes.length : 0;
-                                      
-          
-          setUserData({
-              name: userName,
-              expert: userData.userTag,
-              email:  userData.email,
-              votes: voteCount,
-              messages: messages,
-              needsAVote: needsAVote.length,
-              loggedInDate: loggedInDate,
-              loggedInCount: loggedInCount,
+          return {
+            name: userName,
+            expert: userData.userTag,
+            email:  userData.email,
+            votes: voteCount,
+            messages: messages,
+            needsAVote: needsAVote.length,
+            loggedInDate: loggedInDate,
+            loggedInCount: loggedInCount,
+          }          
+        }else{
+          return null;         
+        }      
+      }catch(error){
+        console.error("Error Getting User Info Object For A Question", error);
+        return null;
+      }
+    }
 
-  
-          });
+    const userInfo = async(question) => {      
+      try{
+         const userInfoObject = await getUserInfoForQuestion(question);           
+        if( userInfoObject){
+            setUserData(userInfoObject);
             setAlert();
-            setShowUserQuestionModal(true);
-          
+            setShowUserQuestionModal(true);          
         }else{
           setAlert({ type: "error", text: "no data provided" });
         }      
@@ -303,7 +354,7 @@ function Admin() {
     }
 
     return (
-    <section className="App ">
+    <section className="App container ">
      {loading && <Loading />}
       <Alert type={alert?.type} text={alert?.text} />
 
@@ -312,7 +363,28 @@ function Admin() {
              <div className="white-bg container p-2 ">
                 <Alert type="error" text="THIS IS AN ADMIN PAGE - USE WISELY!" />   
 
-                <div className="my-3 pb-3"> Total number of users: {users.length}         </div>
+
+                <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+                  <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
+                    <h4>Users</h4> 
+                    <span className="text-lg fs-1 text align-self-centerr">{users.length}  </span> 
+                  </div>
+                  <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
+                  <h4>Open Questions</h4> 
+                    <span className="text-lg fs-1 text">{openQuestion.length}  </span> 
+                  </div>
+                  <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
+                  <h4>Closed Questions</h4> 
+                    <span className="text-lg fs-1 text">{backendQuestions.length}  </span> 
+                  </div>     
+                  <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
+                  <h4>Comments</h4> 
+                    <span className="text-lg fs-1 text">{comments && comments.length > 0 ? comments.length : 0}  </span> 
+                  </div>                   
+                            
+                </div>
+
+                <div className="my-3 pb-3">        </div>
                 {backendQuestions && (  
                   <>
                   <div className="title">This table shows all the questions that are closed with has enough votes to show meaningful stats.</div>               
@@ -323,7 +395,9 @@ function Admin() {
                         <th scope="col">Author</th>
                         <th scope="col">Votes Ended</th>
                         <th scope="col"># of Options</th>     
-                        <th scope="col"># Votes</th>     
+                        <th scope="col"># Votes</th>  
+                        <th scope="col"># Comments</th>  
+                        <th scope="col">Email Templates</th>   
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -335,9 +409,16 @@ function Admin() {
                       <td>{formatDateTime(question.voteEndAt)}</td>
                       <td>{JSON.parse(question.options).length}</td>
                       <td>{question.stats && JSON.parse(question.stats).length}</td>
+                      <td>{commentsOnQuestion(question)}</td>
                       <td>
-                      <button type="button" className="btn btn-outline-dark rounded-pill"                            
-                          onClick={()=> prepareEmail(question)}> Prepare Email </button>
+                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=> prepareEmail(question)}> Results </button>
+                        <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=>prepareNewQuestionEmail(question)}> Question </button>
+                        <button type="button" className="btn btn-outline-dark rounded-pill"                            
+                          onClick={()=>prepareVoteMattersEmail(question)}> Voting </button>                       
+                      </td>
+                      <td>                
                       <button type="button" className="btn btn-outline-dark rounded-pill"                            
                           onClick={()=>  navigate(`/main/${question.id}/stats`)}> Stats </button>
                        <button type="button" className="btn btn-outline-dark rounded-pill"                            
@@ -386,6 +467,76 @@ function Admin() {
                      </Modal.Footer>
                    </Modal>
                 )}
+
+                { newQuestionEmailData && (
+                   <Modal  fullscreen={true} show={showNeQuestionEmail} >
+                   <Modal.Header closeButton onClick={() => {setShowNeQuestionEmail(false)}}>
+                     <Modal.Title>Keep the Questions Coming on AskTheFlock.com!</Modal.Title>
+                   </Modal.Header>
+                   <Modal.Body > 
+                    <div className="fs-4 text mb-3">Hey {newQuestionEmailData.userName},</div>
+
+                     <p> It's been a while since we've heard from you, and we're getting a bit worried. We need your help to keep the community buzzing with fresh content.</p>
+                      
+                     <p> If you have any burning decisions or curious conundrums, we can help. Your fellow flockmates are eagerly waiting to share their thoughts and opinions.</p>
+
+                     <p>  <a href="AskTheFlock.com" className="btn btn-primary my-2">Let Us Help You With A Decision Today</a></p>
+                      
+                     <p> No question is too big or too small. Whether you're pondering the meaning of life or wondering why your cat always licks its paws, we want to hear from you. </p>
+                      
+                      <p>So, what are you waiting for? Start typing away, and let's keep the conversation going!      </p>            
+                
+                  <p>Thanks for your support, </p>
+                    <p> LoriKeet <br/>
+                    <a href="http://www.asktheflock.com">http://www.asktheflock.com</a></p>
+                  </Modal.Body>
+                     <Modal.Footer>                                                            
+                           <button
+                             type="button"
+                             className="btn btn-outline-dark rounded-pill"
+                             onClick={() => {setShowNeQuestionEmail(false)}}
+                           >
+                             Close
+                           </button>                  
+                     </Modal.Footer>
+                   </Modal>
+                )}
+
+                { voteMatterEmailData && voteMatterEmailData.needsAVote > 0 && (
+                    <Modal  fullscreen={true} show={showVoteMattersEmail} >
+                    <Modal.Header closeButton onClick={() => {setShowVoteMattersEmail(false)}}>
+                      <Modal.Title>Your Vote Matters... and So Do You!</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >  
+                    <div className="fs-4 text mb-3">Hey {voteMatterEmailData.name},</div>
+
+                    <p>There are {voteMatterEmailData.needsAVote} new opportunities to help others with their decisions on <a href="AskTheFlock.com">AskTheFlock.com</a>. 
+                    Your participation is vital! Other people are would appreciate your valuable opnion.</p>
+
+                    
+                    <p>So, let's not keep them waiting any longer! Head over to <a href="AskTheFlock.com">AskTheFlock.com</a>, cast your vote, and feel like a hero. You'll be doing your part in helping us make informed decisions and keeping the flock happy.</p>
+
+                    <p>  <a href="AskTheFlock.com" className="btn btn-primary my-2">Start Helping Today</a></p>
+
+                    <p>Thanks for your support, and don't forget to have some fun while you're at it!</p>
+
+                    <p>Best regards, </p>
+                    <p> LoriKeet <br/>
+                    <a href="http://www.asktheflock.com">http://www.asktheflock.com</a></p>
+                    </Modal.Body>
+                     <Modal.Footer>                                                            
+                           <button
+                             type="button"
+                             className="btn btn-outline-dark rounded-pill"
+                             onClick={() => {setShowVoteMattersEmail(false)}}
+                           >
+                             Close
+                           </button>                  
+                     </Modal.Footer>
+                   </Modal>
+                )}
+
+                
                 { activeQuestion && (
                      <Modal  fullscreen={true} show={showSingleQuestionModal} >
                      <Modal.Header closeButton onClick={() => {setShowSingleQuestionModal(false)}}>

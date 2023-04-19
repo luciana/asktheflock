@@ -76,7 +76,7 @@ function Question({
   //console.log("my vote from state in question", myVotes);
   let alreadyVotedForQuestionList =[];
   if (myVotes && myVotes.length>0){
-    //console.log("my votes data retrieved from state", myVotes);
+  //console.log("my votes data retrieved from state", myVotes);
   
    alreadyVotedForQuestionList = myVotes.filter(
     (vote) => vote.questionID === question.id
@@ -191,20 +191,20 @@ function Question({
 
   const displayCopyLinkDialog = async () => {
     const url = window.location.origin +"/main?id=" + question.id;
-    const s = await shortenURL(url);   
+   // const s = await shortenURL(url);   
     try{
       setLoading(true);
       
-      if(s){
-        setQuestionLink(s);
-        setShowQuestionCopyLink(true);
-        setLoading(false);
-      }else{
-        console.warning("shorten URL didn't return link");
+      // if(s){
+      //   setQuestionLink(s);
+      //   setShowQuestionCopyLink(true);
+      //   setLoading(false);
+      // }else{
+       // console.warning("shorten URL didn't return link");
         setShowQuestionCopyLink(true);
         setQuestionLink(url);
         setLoading(false);
-        }
+      //  }
       
     }catch (error){
       setShowQuestionCopyLink(true);

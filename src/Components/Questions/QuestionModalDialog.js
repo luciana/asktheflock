@@ -80,7 +80,8 @@ function QuestionModalDialog(
         questionTag: expertTag
       });
       setShowQuestionModal(false);
-    
+      setInput("");
+      setVotePeriod(10080);
   }
   const minQuestionOptions = 2;
   const maxQuestionOptions = 5;
@@ -90,7 +91,7 @@ function QuestionModalDialog(
   const maxQuestionCharacter = process.env.REACT_APP_MAX_QUESTION_CHARACTER;
 
   const onEmojiClick = (event, emojiObject) => { 
-    setInput(prevInput => prevInput + emojiObject.emoji);
+    setInput(prevInput => emojiObject.emoji + prevInput );
     setShowPicker(false);
   };
 

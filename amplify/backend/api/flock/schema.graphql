@@ -65,6 +65,6 @@ type Vote @model
   userID: ID! @index(name:"byUserId", queryField: "voteByUserId") 
   userName: String
   questionID: ID! @index(name:"byQuestionId", queryField: "voteByQuestionId") 
-  optionID: Int!
+  optionID: Int! @index(name:"byOptionId", queryField: "voteByOptionId") 
  }
 

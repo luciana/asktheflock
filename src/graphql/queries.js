@@ -387,3 +387,31 @@ export const voteByQuestionId = /* GraphQL */ `
     }
   }
 `;
+export const voteByOptionId = /* GraphQL */ `
+  query VoteByOptionId(
+    $optionID: Int!
+    $sortDirection: ModelSortDirection
+    $filter: ModelVoteFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    voteByOptionId(
+      optionID: $optionID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userID
+        userName
+        questionID
+        optionID
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

@@ -1,4 +1,4 @@
-import { API, graphqlOperation, Auth } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import * as queries from "../graphql/queries";
 
 const GetUserByEmail = async (email) => {
@@ -50,9 +50,19 @@ const GetVotesByQuestionId = async( questionID ) => {
   return data.data.voteByQuestionId.items.length ? data.data.voteByQuestionId.items : null;
 }
 
+const GetVotesByOptionId = async( optionID ) => {
+  const data = await API.graphql(graphqlOperation(queries.voteByOptionId, { optionID }));
+  return data.data.voteByOptionId.items.length ? data.data.voteByOptionId.items : null;
+}
+
 const GetAllVotes = async() => {
   const data = await API.graphql(graphqlOperation(queries.listVotes));
   return data.data.listVotes.items.length ? data.data.listVotes.items : null;
+}
+
+const GetAllComments = async() => {
+  const data = await API.graphql(graphqlOperation(queries.listComments));
+  return data.data.listComments.items.length ? data.data.listComments.items : null;
 }
 
 const Queries = {
@@ -63,9 +73,11 @@ const Queries = {
   GetQuestionByUserId,
   GetUserById,
   GetCommentsByQuestionId,
+  GetAllComments,
   GetVotesByUserId,
   GetAllVotes,
   GetVotesByQuestionId,
+  GetVotesByOptionId,
 };
 
 
