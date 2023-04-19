@@ -387,7 +387,7 @@ function Admin() {
                 <div className="my-3 pb-3">        </div>
                 {backendQuestions && (  
                   <>
-                  <div className="title">This table shows all the questions that are closed with has enough votes to show meaningful stats.</div>               
+                  <div className="title">This table shows all the questions that are closed and has enough votes to show meaningful stats.</div>               
                   <table className="table table-sm table-hover">
                   <thead>
                       <tr>

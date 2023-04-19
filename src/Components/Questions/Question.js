@@ -39,6 +39,7 @@ function Question({
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
+
   const { state, dispatch } = useContext(AppContext);
   
   const { user, myVotes } = state;
@@ -46,7 +47,7 @@ function Question({
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
-    getCommentDataForOptions();    
+    getCommentDataForOptions();   
     // if(!myVotes){
     //   console.log("myVotes didn't populate");
     // }  
@@ -72,25 +73,22 @@ function Question({
                               voteEnded &&
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
-
-  //console.log("my vote from state in question", myVotes);
-  let alreadyVotedForQuestionList =[];
-  if (myVotes && myVotes.length>0){
-  //console.log("my votes data retrieved from state", myVotes);
+  let list = [];
+    //let alreadyVotedForQuestionList =[];
+  if (myVotes && myVotes.length>0){    
+       list  = myVotes.filter(
+        (vote) => vote.questionID === question.id
+      );   
+    //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
+  }else if (user.votes){
+     list = JSON.parse(user.votes).filter(
+      (vote) => vote.questionId === question.id
+    ); 
+    //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
+  }
   
-   alreadyVotedForQuestionList = myVotes.filter(
-    (vote) => vote.questionID === question.id
-  );
-  //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
- }else if (user.votes){
-  alreadyVotedForQuestionList = JSON.parse(user.votes).filter(
-    (vote) => vote.questionId === question.id
-  );
-
-  //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
- }
-
-  let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
+  const alreadyVotedForQuestionList = list;
+  const alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
@@ -314,7 +312,7 @@ function Question({
                 items={optionItem}                 
                 voteUp={voteUp}     
                 myOwnQuestion={myOwnQuestion}                               
-                alreadyVotedForQuestionList={alreadyVotedForQuestionList}
+                alreadyVotedForQuestionList={alreadyVotedForQuestionList}        
                 voteEnded={voteEnded}
                 createVoteCommentObject={createVoteCommentObject}
                 comments={commentData}
