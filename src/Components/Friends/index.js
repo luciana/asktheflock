@@ -73,7 +73,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
         //Those who I helped the most
         const votedOnQuestions = backendQuestions.filter((questions) => {
             return votedList.some((voted) => {
-            return voted.questionId === questions.id&& voted.questionId === questions.id;
+            return voted.questionID === questions.id&& voted.questionID === questions.id;
                 });
             });            
       

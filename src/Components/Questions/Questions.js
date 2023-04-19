@@ -14,7 +14,7 @@ import { Modal } from 'react-bootstrap';
 const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
-    const [votedList, setVotedList] = useState([]);
+    //const [votedList, setVotedList] = useState([]);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [loading, setLoading] = useState(false);
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
@@ -103,7 +103,7 @@ const Questions = () => {
         if(!isAlreadyVotedFilterChecked){
           // already voted switch is on     
           const myVotesList = myVotes.map((p) => p.questionId);      
-          console.log("my Votes needed for handleAlreadyVotedFilterSwitch ", myVotes);
+          //console.log("my Votes needed for handleAlreadyVotedFilterSwitch ", myVotes);
           const haventVotedYet = filterList.filter(
                 (backendQuestion) => ( !myVotesList.includes(backendQuestion.id) &&
                                       (backendQuestion.parentID === null))
@@ -116,7 +116,7 @@ const Questions = () => {
 
          
           if(isQuestionFilterChecked && isVoteFilterChecked){     
-            console.log("Already voted clicked - all three swithes are on "); 
+            //console.log("Already voted clicked - all three swithes are on "); 
             const filterListTwoArrays = inBoth(voteFilteredList,questionFilteredList);              
             const filterListArray = inBoth(filterListTwoArrays,haventVotedYet);        
             setFilterList(filterListArray);
@@ -378,27 +378,27 @@ const Questions = () => {
 
           let itemAlreadyInVoteTable = [];
           //logic to present duplicates in Vote table 
-          console.log("checking if should create new vote item");
+         // console.log("checking if should create new vote item");
           if(checkInTable){
             //this is used during the migration
-            console.log("checking by looking directly at the table");
+           // console.log("checking by looking directly at the table");
             const myVotesFromTable =  await Queries.GetVotesByUserId(userID);
-            console.log("what is myVotesFromTable" , myVotesFromTable);
+          //  console.log("what is myVotesFromTable" , myVotesFromTable);
             if(myVotesFromTable && myVotesFromTable.length > 0){           
               itemAlreadyInVoteTable = myVotesFromTable.filter((vote) => vote.questionID === questionID);
             }
            
           }else{
             //after migration is completed, we just check the context if a vote is already registered
-            console.log("checking by looking at save context");
+          //  console.log("checking by looking at save context");
             itemAlreadyInVoteTable = myVotes.filter((vote) => vote.questionID === questionID);
           }
       
-           console.log("is this item already in vote table? ",itemAlreadyInVoteTable);
+          // console.log("is this item already in vote table? ",itemAlreadyInVoteTable);
            if(!itemAlreadyInVoteTable || itemAlreadyInVoteTable.length === 0){
-              console.log("no", itemAlreadyInVoteTable);
-              console.log("create new vote in table because it doesn't exist in Vote table already");
-              console.log("input to createVote", userID, userName, questionID, optionID);
+              // console.log("no", itemAlreadyInVoteTable);
+              // console.log("create new vote in table because it doesn't exist in Vote table already");
+              // console.log("input to createVote", userID, userName, questionID, optionID);
               const result =  await Mutations.CreateVote(
                 userID,
                 userName,
@@ -407,13 +407,13 @@ const Questions = () => {
               );
               let myVotesArray = myVotes ? myVotes : [];
               myVotesArray.push(result);
-              console.log("new vote - new entry created in Vote table", result);
-              console.log("dispatch state change ", myVotesArray);
+              // console.log("new vote - new entry created in Vote table", result);
+              // console.log("dispatch state change ", myVotesArray);
               dispatch({ type: TYPES.UPDATE_VOTES, payload: myVotesArray }); 
             // } else if (itemAlreadyInVoteTable.length === 0){
             //   console.log("itemAlreadyInVoteTable length is 0.. does it mean that item is already on table", questionID, itemAlreadyInVoteTable);
             }else{
-              console.log("yes", itemAlreadyInVoteTable);
+             // console.log("yes", itemAlreadyInVoteTable);
             }            
         }catch(error){
           console.error("Error on creating vote", error);      
@@ -606,7 +606,7 @@ const Questions = () => {
       //this is used during the migration only
       const isVoteRegistered = async( userID, questionID, optionID) =>{
 
-        console.log("is vote for .. already in Vote db?",  userID, questionID, optionID);
+      //  console.log("is vote for .. already in Vote db?",  userID, questionID, optionID);
         try{
           const myVotes = await getVotesByUserID(userID);
          
@@ -614,9 +614,9 @@ const Questions = () => {
             const myVotesForThisQuestion = myVotes.filter((vote) => vote.questionID === questionID 
                                   && vote.optionID === optionID);
            
-            console.log("myVotesForThisQuestion - ", myVotesForThisQuestion);
+           // console.log("myVotesForThisQuestion - ", myVotesForThisQuestion);
             if(myVotesForThisQuestion && myVotesForThisQuestion.length >0){
-              console.log("isVoteRegistered");
+             // console.log("isVoteRegistered");
               return true;
             }else{
               return false;
@@ -636,34 +636,34 @@ const Questions = () => {
       const migratingUserVotesToVoteTable = async(userVotes)=> {
         try{
            //check if this user has votes in the vote model
-           console.log("about to get votes in Votes table for ", user.id);
+          // console.log("about to get votes in Votes table for ", user.id);
           const votesByUserId = await Queries.GetVotesByUserId(user.id);
-          console.log("get votes by userid in vote table", votesByUserId);
+         // console.log("get votes by userid in vote table", votesByUserId);
           let optionItemsNotYetInVoteModel =[];
 
           if(votesByUserId && votesByUserId.length > 0 ){
-            console.log("there are some votes for this user in the vote model");          
+          //  console.log("there are some votes for this user in the vote model");          
             //get list of optionsId that user has voted and it is stored in vote model
             const optionIDInVoteModel = votesByUserId.map((v)=> v.optionID);           
             optionItemsNotYetInVoteModel = userVotes.filter((v) => !optionIDInVoteModel.includes(v.optionId));
           }else{
-            console.log("there are NO votes for this user in the vote model");    
+           // console.log("there are NO votes for this user in the vote model");    
             optionItemsNotYetInVoteModel = userVotes;
           }
-          console.log("optionItemsNotYetInVoteModel", optionItemsNotYetInVoteModel);
+         // console.log("optionItemsNotYetInVoteModel", optionItemsNotYetInVoteModel);
           
           if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
               optionItemsNotYetInVoteModel.map((item)=>{       
-                console.log("iterating thry optionItemsNotYetInVoteModel ", item);             
+               // console.log("iterating thry optionItemsNotYetInVoteModel ", item);             
                   createVote(user.id, user.name, item.questionId, item.optionId, true);          
                        
             });               
-            console.log("empty user votes in user table");
+            //console.log("empty user votes in user table");
             let userVotesUpdated = await Mutations.UpdateUserVotes(
               user.id,
               null
             ); 
-            console.log("user votes in user table is updated to empty", userVotesUpdated);
+           // console.log("user votes in user table is updated to empty", userVotesUpdated);
             dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
           }        
          
@@ -680,7 +680,7 @@ const Questions = () => {
          
           userVotes = JSON.parse(user.votes);          
           userVotes.push(userVote);
-          console.log("updateUserVotes", userVotes);
+         // console.log("updateUserVotes", userVotes);
           
           let userVotesUpdated = await Mutations.UpdateUserVotes(
             user.id,
@@ -690,7 +690,7 @@ const Questions = () => {
           dispatch({ type: TYPES.UPDATE_USER, payload: userVotesUpdated });
          
           if (userVotesUpdated){
-            console.log("mutation updated in user.vote with",userVotesUpdated);          
+           // console.log("mutation updated in user.vote with",userVotesUpdated);          
             if(JSON.parse(user.votes) && JSON.parse(user.votes).length > 0){
               console.log("initiate migration");
               migratingUserVotesToVoteTable(userVotes);    
@@ -713,12 +713,12 @@ const Questions = () => {
          setLoading(true);         
         
 
-        console.log("does user has user votes entries", user.votes);
+       // console.log("does user has user votes entries", user.votes);
          if (user.votes) {
-          console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
+         // console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
           updateUserVotes(userVote);
          }else{
-           console.log("user vote has been emptied from the migration. just create item in votes table");
+         //  console.log("user vote has been emptied from the migration. just create item in votes table");
            await createVote(user.id, user.name, question.id, option.id, false);  
               
          }
@@ -747,7 +747,7 @@ const Questions = () => {
 
              {/* Friends Sections    */}
              <div className="white-bg px-2 ">
-                {(!loading) && <Friends votedList={votedList} 
+                {(!loading) && <Friends votedList={myVotes} 
                                         backendQuestions={backendQuestions} 
                                         userId={user.id}
                                         handleSwitch={handleFriendsQuestionFilterSwitch}/>}

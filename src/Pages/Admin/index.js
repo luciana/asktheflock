@@ -394,8 +394,7 @@ function Admin() {
                      <Modal.Body >                              
                      <div className="container m-2 border border-1">
                         <p className="align-center" >We are here to help you with your decision:</p>
-                        <p>  {activeQuestion.text} </p>
-                        <p>  <img src={logo} /></p>
+                        <p>  {activeQuestion.text} </p>                       
                         <p>  {activeQuestion.userName}, here is  the data to help you finalize your decision. </p>                          
                         <ul>  
                         {winner && (
@@ -419,16 +418,6 @@ function Admin() {
                         <a href={`/main/${activeQuestion.id}/stats`} className="btn btn-primary my-2">Dig into the results details</a>
 
 
-                        <table className="table table-sm table-hover">                  
-                        <tbody>
-                      
-                          <tr>                        
-                          <td> <WinningStats  dataInput={optionList} total={totalVotes}/>   </td>
-                          <td>  <GenderStats dataInput={statData} optionId={null} /> </td>
-                          <td> <LanguageStats dataInput={statData} optionId={null} />      </td>                          
-                          </tr>                                                             
-                        </tbody>
-                      </table>
 
                          
 
