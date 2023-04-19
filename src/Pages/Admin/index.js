@@ -365,6 +365,7 @@ function Admin() {
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 
                     <p></p>
+                    <div> Messages for Internal use only:</div>
                     {userData.messages && (
 
                       <div className="alert alert-warning">

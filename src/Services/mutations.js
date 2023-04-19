@@ -252,7 +252,6 @@ const DeleteVote = async ( id ) => {
       input: { id },
     })
   );
-  console.log("Mutations DeleteVote ", data);
   return data.data.deleteVote ? data.data.deleteVote : null;
 };
 
