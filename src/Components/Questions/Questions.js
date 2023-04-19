@@ -539,8 +539,9 @@ const Questions = () => {
               Mutations.DeleteVote(item.id);                               
             });        
             dispatch({ type: TYPES.UPDATE_VOTES, payload: null }); 
-            return true;
-           }          
+            
+           }    
+           return true;      
           return false;
         }catch ( error ){
           console.error("Error on delete Vote ", error);
@@ -552,15 +553,17 @@ const Questions = () => {
         try{
 
           const comments = await Queries.GetCommentsByQuestionId(id);
-          //console.log("comments to be deleted for this question id", id, comments);
+         // console.log("comments to be deleted for this question id", id, comments);
 
           if (comments && comments.length>0) {
             comments.map((item)=>{       
               //console.log("iterating thru comments to be delete ", item);             
               Mutations.DeleteComment(item.id);                           
             });                 
-            return true;
-           }           
+           
+           }    
+           //there are no comments 
+           return true;      
         }catch ( error ){
           console.error("Error on delete Comments ", error);
           return false;
@@ -578,9 +581,9 @@ const Questions = () => {
             const successCommentDeletion = deleteComments(id);
 
             if (successVoteDeletion && successCommentDeletion ) {              
-                // await Mutations.DeleteQuestion(
-              //   id             
-              // );
+                await Mutations.DeleteQuestion(
+                id             
+              );
             }
              
 
