@@ -267,11 +267,11 @@ function Admin() {
         if (userData  ){
           const userVotes = userData.votes ? JSON.parse(userData.votes) : votesByUserId;
           if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet. It means that user hasn't migrated to the new Voting table"});
-          const loggedInData = userData.loggedInData ? userData.loggedInData : "";
+          const loggedInDate = userData.lastLoggedIn ? userData.lastLoggedIn : "";
           const loggedInCount = userData.loggedInCount ? userData.loggedInCount : 0;
 
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
-            loggedInData, 
+            loggedInDate, 
             userVotes);
           //console.log("openQuestions", openQuestions);
           const needsAVote =  ( openQuestions || openQuestions.length !== 0 ) ? openQuestions : 0;  
@@ -285,7 +285,7 @@ function Admin() {
               votes: voteCount,
               messages: messages,
               needsAVote: needsAVote.length,
-              loggedInDate: loggedInData,
+              loggedInDate: loggedInDate,
               loggedInCount: loggedInCount,
 
   
