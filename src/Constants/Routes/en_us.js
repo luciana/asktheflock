@@ -11,6 +11,7 @@ const en_us_routes = {
     PROFILE: "/profile",
     PRIVACY: "/privacy",
     ADMIN: "/Admin",
+    ADMINUSERS: '/Users',
   };
   
   export default en_us_routes;

@@ -18,6 +18,7 @@ const Layout = lazy(() => import("./Pages/Layout/Layout"));
 const Main = lazy(() => import("./Pages/Main"));
 const Stats = lazy(() => import("./Pages/Main/Stats"));
 const Admin = lazy(() => import("./Pages/Admin"));
+const AdminUsers = lazy(() => import("./Pages/Admin/Users"));
 const Home = lazy(() => import("./Pages/Home"));
 const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
 const Profile = lazy(() => import("./Pages/Profile"));
@@ -49,6 +50,7 @@ function App() {
           <Route path={ROUTES[state.lang].QUESTION_STATS}  element={<Stats />} />
           <Route path={ROUTES[state.lang].PROFILE} element={<Profile />} />         
           <Route path={ROUTES[state.lang].ADMIN} element={<Admin />} /> 
+          <Route path={ROUTES[state.lang].ADMINUSERS} element={<AdminUsers />} /> 
         </Route>
         <Route path="*" element={<NotFound />} />
        

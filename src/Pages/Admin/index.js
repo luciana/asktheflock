@@ -367,7 +367,7 @@ function Admin() {
                 <div className="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
                   <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
                     <h4>Users</h4> 
-                    <span className="text-lg fs-1 text align-self-centerr">{users.length}  </span> 
+                    <span className="text-lg fs-1 text align-self-centerr"><a href="/users">{users.length} </a> </span> 
                   </div>
                   <div className="col m-3 p-3 rounded border-secondary border border-2 bg-light text-dark">
                   <h4>Open Questions</h4> 

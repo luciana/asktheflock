@@ -449,16 +449,12 @@ const Questions = () => {
       const updateQuestion = async (question, option) => {            
 
         if(! question.options) return; //TODO: alert
-        // let questionOption = {         
-        //   "id": id,
-        //   "text": text,  
-        //   "votes": item.votes, 
-        //   } 
+    
 
         //Update Options
         let optionsInQuestion = JSON.parse(question.options);
         let optID = option.id;        
-        try{        
+         try{        
           if (optionsInQuestion && optionsInQuestion.length >0 ){
             if (optID){
               for (var i = 0, len = optionsInQuestion.length; i < len; i++) {               
@@ -469,13 +465,13 @@ const Questions = () => {
               }            
             }
           }         
-          const newA = [];  
+        //  const newA = [];  
 
               
           let questionOption = optionsInQuestion;
          // console.log("questionOption to compare to count from database", optionsInQuestion);       
           const votesByOptionId = await Queries.GetVotesByOptionId(optID);
-         // console.log("votesByOptionId from database", votesByOptionId.length);
+          console.log("votesByOptionId from database to add to questionOption ", votesByOptionId.length);
           const voteCount = votesByOptionId && votesByOptionId.length ? votesByOptionId.length : 0;
           questionOption.votes = voteCount;
 

@@ -11,6 +11,7 @@ const pt_br_routes = {
     PROFILE: "/profile",
     PRIVACY: "/privacy",
     ADMIN: "/Admin",
+    ADMINUSERS: '/Users',
   };
   
   export default pt_br_routes;

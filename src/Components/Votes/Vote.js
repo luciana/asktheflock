@@ -25,9 +25,6 @@ const [selectedItem, setSelectedItem] = useState(null);
 const [showCommentDialog, setShowCommentDialog] = useState(false);
 const [justSentComment, setJustSentComment] = useState(false);
 
-
-    
-
 let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
 const iVotedForIt = ( id ) =>  {    

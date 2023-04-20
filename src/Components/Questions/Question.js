@@ -16,14 +16,9 @@ import { AppContext} from '../../Contexts';
 
 function Question({ 
   question,   
-  // votedList,
-  // updateVotedList,
-  // votedOptionsList,
-  // updateVotedOptionsList,
   updateQuestionVoteTime,
   handleVote,
   deleteQuestion,
-  openQuestion,
   parentId = null,
   createComment,
   getComment,
@@ -74,7 +69,6 @@ function Question({
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
   let list = [];
-    //let alreadyVotedForQuestionList =[];
   if (myVotes && myVotes.length>0){    
        list  = myVotes.filter(
         (vote) => vote.questionID === question.id
