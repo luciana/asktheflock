@@ -241,8 +241,7 @@ const CreateVote = async (
         questionID, 
         optionID
       } })
-  );
-
+  );     
   return data.data.createVote ? data.data.createVote : null;
 }
 

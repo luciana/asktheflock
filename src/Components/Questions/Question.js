@@ -118,7 +118,7 @@ function Question({
   }
 
     const getCommentDataForOptions = async() => {
-    const items  = JSON.parse(question.options);
+    const items  = JSON.parse(question.options);  
     if( items ){
       try{
          const commentData =  await getComment(question.id);               
@@ -171,12 +171,12 @@ function Question({
       "optionId": id,
       "questionId": question.id,  
     };
-    let questionOption = {         
-      "id": id,
-      "text": text,  
-      "votes": item.votes, 
-      }         
-    handleVote(question, questionOption, userVote);     
+    // let questionOption = {         
+    //   "id": id,
+    //   "text": text,  
+    //   "votes": item.votes, 
+    //   }         
+    handleVote(question, userVote);     
   };
 
   

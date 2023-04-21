@@ -369,7 +369,7 @@ const Questions = () => {
          }
       }
 
-      const createVote = async ( userID, userName, questionID, optionID, checkInTable)=>{
+      const createVote = async ( userID, userName, questionID, optionID, checkInTable, question)=>{
         try{
 
           let itemAlreadyInVoteTable = [];
@@ -389,12 +389,7 @@ const Questions = () => {
           //  console.log("checking by looking at save context");
             itemAlreadyInVoteTable = myVotes.filter((vote) => vote.questionID === questionID);
           }
-      
-          // console.log("is this item already in vote table? ",itemAlreadyInVoteTable);
-           if(!itemAlreadyInVoteTable || itemAlreadyInVoteTable.length === 0){
-              // console.log("no", itemAlreadyInVoteTable);
-              // console.log("create new vote in table because it doesn't exist in Vote table already");
-              // console.log("input to createVote", userID, userName, questionID, optionID);
+           if(!itemAlreadyInVoteTable || itemAlreadyInVoteTable.length === 0){              
               const result =  await Mutations.CreateVote(
                 userID,
                 userName,
@@ -402,15 +397,12 @@ const Questions = () => {
                 optionID
               );
               let myVotesArray = myVotes ? myVotes : [];
-              myVotesArray.push(result);
-              // console.log("new vote - new entry created in Vote table", result);
-              // console.log("dispatch state change ", myVotesArray);
-              dispatch({ type: TYPES.UPDATE_VOTES, payload: myVotesArray }); 
-            // } else if (itemAlreadyInVoteTable.length === 0){
-            //   console.log("itemAlreadyInVoteTable length is 0.. does it mean that item is already on table", questionID, itemAlreadyInVoteTable);
-            }else{
-             // console.log("yes", itemAlreadyInVoteTable);
-            }            
+              myVotesArray.push(result);              
+              dispatch({ type: TYPES.UPDATE_VOTES, payload: myVotesArray });  
+              if(question){
+                updateQuestionOptions(question, optionID); 
+              }                          
+            }         
         }catch(error){
           console.error("Error on creating vote", error);      
           console.log("do not create new vote in table because it  exist in Vote table already - question", questionID);
@@ -446,43 +438,40 @@ const Questions = () => {
         }
       }
 
-      const updateQuestion = async (question, option) => {            
+      const updateQuestionOptions = async (question, optionID) => {            
 
         if(! question.options) return; //TODO: alert
+        if(! optionID ) return; //TODO: alert
     
-
         //Update Options
-        let optionsInQuestion = JSON.parse(question.options);
-        let optID = option.id;        
-         try{        
-          if (optionsInQuestion && optionsInQuestion.length >0 ){
-            if (optID){
+        let optionsInQuestion = JSON.parse(question.options);             
+         try{            
+          let updatedOption = optionsInQuestion.filter((f) => f.id === optionID)[0];
+          if ( updatedOption ){
+            // console.log("updatedOption to compare to count from database", optionsInQuestion);       
+            const votesByOptionId = await Queries.GetVotesByOptionId(optionID);           
+            const voteCount = votesByOptionId && votesByOptionId.length ? votesByOptionId.length : 0;
+            //console.log("voteCount from database to add to updatedOption ", voteCount);
+            updatedOption.votes = voteCount;
+            //console.log("updatedOption from database", updatedOption);   
+
+            if ( updatedOption.votes ){
               for (var i = 0, len = optionsInQuestion.length; i < len; i++) {               
-                if (optionsInQuestion[i].id === optID){
-                  optionsInQuestion[i] = option;      
-                  break;
-                }
-              }            
-            }
-          }         
-        //  const newA = [];  
-
-              
-          let questionOption = optionsInQuestion;
-         // console.log("questionOption to compare to count from database", optionsInQuestion);       
-          const votesByOptionId = await Queries.GetVotesByOptionId(optID);
-          console.log("votesByOptionId from database to add to questionOption ", votesByOptionId.length);
-          const voteCount = votesByOptionId && votesByOptionId.length ? votesByOptionId.length : 0;
-          questionOption.votes = voteCount;
-
-          optionsInQuestion = questionOption;
-          console.log("questionOption from database", optionsInQuestion);      
-
-          updateStats(question, optID, optionsInQuestion);    
-            
+                  if (optionsInQuestion[i].id === optionID){
+                    optionsInQuestion[i] = updatedOption;      
+                    break;
+                  }
+              }
+             }
+           // console.log("item to update options with votes ", optionsInQuestion);
+            updateStats(question, optionID, optionsInQuestion);    
+          }else{
+            console.error("No update to option votes happened");
+          }
+        
          
         }catch(err){
-          console.error("Mutations.UpdateQuestion error", err);
+          console.error("updateQuestionOptions error", err);
         } 
       };
 
@@ -667,7 +656,7 @@ const Questions = () => {
           if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
               optionItemsNotYetInVoteModel.map((item)=>{       
                // console.log("iterating thry optionItemsNotYetInVoteModel ", item);             
-                  createVote(user.id, user.name, item.questionId, item.optionId, true);          
+                  createVote(user.id, user.name, item.questionId, item.optionId, true, null);          
                        
             });               
             //console.log("empty user votes in user table");
@@ -720,7 +709,7 @@ const Questions = () => {
         }
       }
 
-      const handleVote = async (question, option, userVote) =>{                     
+      const handleVote = async (question, userVote) =>{                     
         try{      
          setLoading(true);         
         
@@ -728,13 +717,13 @@ const Questions = () => {
        // console.log("does user has user votes entries", user.votes);
          if (user.votes) {
          // console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
-          updateUserVotes(userVote);
+          updateUserVotes( userVote);
          }else{
          //  console.log("user vote has been emptied from the migration. just create item in votes table");
-           await createVote(user.id, user.name, question.id, option.id, false);  
+           await createVote(user.id, user.name, question.id, userVote.optionId, false, question);  
               
          }
-         updateQuestion(question, option);   
+         
          setLoading(false);     
          clearUrlParamsAfterVote();
          
@@ -801,7 +790,7 @@ const Questions = () => {
                           handleVote={handleVote}                                                 
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
-                          updateQuestion={updateQuestion}  
+                          updateQuestion={updateQuestionOptions}  
                           createComment={createComment}                      
                           getComment={getComment}                                         
                       />
@@ -821,7 +810,7 @@ const Questions = () => {
                             handleVote={handleVote}                     
                           // openQuestion={openQuestion}                                       
                             deleteQuestion={deleteQuestion}
-                            updateQuestion={updateQuestion}                        
+                            updateQuestion={updateQuestionOptions}                        
                             user={user}
                         />                                                 
                     </Modal.Body>

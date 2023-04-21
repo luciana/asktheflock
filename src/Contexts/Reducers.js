@@ -22,7 +22,7 @@ function updateUser(state, payload) {
 function updateVotes(state, payload) {
   
   const newState = { ...state, myVotes: payload };
-  console.log("updateVotes state = ", newState);
+ // console.log("updateVotes state = ", newState);
   return newState;
 }
 
