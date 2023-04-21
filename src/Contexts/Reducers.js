@@ -6,6 +6,7 @@ function saveState(state) {
 
 function updateLang(state, payload) {
   const newState = { ...state, lang: payload };
+  //console.log("updateLang state = ", newState);
   //saveState(newState); 
   return newState;
 }
@@ -13,6 +14,7 @@ function updateLang(state, payload) {
 function updateUser(state, payload) {
   //localStorage.removeItem(STATENAME);
   const newState = { ...state, user: payload };
+ // console.log("updateUser state = ", newState);
   //saveState(newState);
   return newState;
 }

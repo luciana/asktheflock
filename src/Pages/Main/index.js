@@ -40,6 +40,8 @@ function Main() {
     }
   }
 
+  
+
   useEffect(() => {
     showProfileMissingMessage();     
   }, []);

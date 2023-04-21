@@ -6,6 +6,8 @@ import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import Auth from "../../Services/auth";
 import { Alert, Loading, HomeNav } from "../../Components";
 import '../../Pages/pages.css';
+import Queries from "../../Services/queries";
+import Mutations from "../../Services/mutations";
 import gtag from 'ga-gtag';
 
 
@@ -36,12 +38,26 @@ export default function AuthLayout() {
     setAlert({ type: "error", text: errorMessage });
   };
 
+  const recordLoginInfo = async (attributes) => { 
+    const userEmail = attributes.email ? attributes.email : null;
+    if( userEmail ){
+      let user = await Queries.GetUserByEmail(userEmail);
+        
+      if (user) {
+      //user already exist in dynamo, update last Logged In and Login count   
+        console.log("update user login info", user.loggedInCount, user.lastLoggedIn);
+        const logInCloud = user.loggedInCount ? user.loggedInCount : 0;            
+        user =  await Mutations.UpdateUserLoggedInData({ id: user.id, lastLoggedIn: new Date(), loggedInCount: logInCloud+1 });
+      }
+    }
+  }
   const signIn = async (email, pwd, remember) => {
     startLoading();
     try {     
       const { attributes } = await Auth.SignIn(email, pwd, remember);
-       
-      const locale =  attributes.locale ? attributes.locale : "en-US";
+
+      const locale =  attributes.locale ? attributes.locale : "en-US";      
+      sessionStorage.setItem('logged_in', true);   
       dispatch({ type: TYPES.UPDATE_LANG, payload: locale });
       stopLoading();     
       navigate(ROUTES[locale].MAIN);
@@ -58,6 +74,7 @@ export default function AuthLayout() {
   function signInWithGoogle() {
       gtag('event', 'click_sign_with_google_button', {}); 
       Auth.SignInWithGoogle();
+      sessionStorage.setItem('logged_in', true); 
       stopLoading();
      
    }
@@ -65,6 +82,7 @@ export default function AuthLayout() {
    function signInWithFacebook() {   
       gtag('event', 'click_sign_with_facebook_button', {});   
       Auth.SignInWithFacebook(); 
+      sessionStorage.setItem('logged_in', true); 
       stopLoading();
 
     }
@@ -190,7 +208,7 @@ export default function AuthLayout() {
       setLoading(true);
       try {
         const attributes = await Auth.GetUser();
-
+        console.log("do I get there?");
         if ( attributes){
           setLoading(false);
           navigate(ROUTES[state.lang].MAIN);
