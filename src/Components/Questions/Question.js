@@ -34,6 +34,7 @@ function Question({
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
+  const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
 
   const { state, dispatch } = useContext(AppContext);
   
@@ -121,8 +122,10 @@ function Question({
     const items  = JSON.parse(question.options);  
     if( items ){
       try{
-         const commentData =  await getComment(question.id);               
+         const commentData =  await getComment(question.id);      
+              
         if (commentData && commentData.length > 0){ 
+          setCommentDataForQuestion(commentData);   
           setAlreadyCommented(alreadycommentedOnQuestion(commentData)); 
          // console.log("there are comments sent", commentData);
           setCommentData(commentData);
@@ -286,7 +289,8 @@ function Question({
 
               {isThereEnoughStats && (
                 <StatsDialogIcon question={question}
-                            locale={user.locale}/>
+                            locale={user.locale}
+                            commentDataForQuestion={commentDataForQuestion}/>
               )}
               <button className="btn btn-sm  mx-1" title="copy link" onClick={displayCopyLinkDialog}>
                   <FaLink alt="Link to Question" /></button>

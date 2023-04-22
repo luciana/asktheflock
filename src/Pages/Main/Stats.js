@@ -21,6 +21,7 @@ function Stats() {
   const navigate = useNavigate();
   const { id } = useParams();
   const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT;
+  const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
 
 
   useEffect(() => {   
@@ -35,6 +36,7 @@ const check = async () =>{
     loadSingleQuestion();
     setIsAuthorized(t);    
  }
+
  
  const loadSingleQuestion = async () => {
     try{
@@ -49,6 +51,8 @@ const check = async () =>{
                                       singleQuestion.options && singleQuestion.stats && 
                                       new Date() - new Date(singleQuestion.voteEndAt) > 1 &&
                                       JSON.parse(singleQuestion.stats).length >= minStatVoteCount) ;
+          const comments  = await Queries.GetCommentsByQuestionId(singleQuestion.id); 
+          setCommentDataForQuestion( comments && comments.length>0 ? comments : null);
                                       
         }else{
             setQuestion(null);  
@@ -76,6 +80,7 @@ const check = async () =>{
              <StatsDialog question={question}
              locale={user.locale}
              statData={statData}
+             commentDataForQuestion={commentDataForQuestion}
              showStatModalWindow={true}
              />
         )}  

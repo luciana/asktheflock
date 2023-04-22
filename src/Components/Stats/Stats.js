@@ -1,12 +1,12 @@
 
 
 import { useEffect, useState, useContext } from "react";
-import { LANGUAGES } from "../../Constants";
+
 import { AppContext } from "../../Contexts";
 import { Alert, Loading } from "../../Components";
-import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './';
+import { GenderStats, CommentStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './';
 
-export default function Stats({data, options, text, questionTag}) {
+export default function Stats({data, options, text, commentDataForQuestion, questionTag}) {
   const { state } = useContext(AppContext);
   const { user } = state;
   const [alert, setAlert] = useState();
@@ -23,7 +23,7 @@ export default function Stats({data, options, text, questionTag}) {
   const questionCallOut = questionTag ? questionTag : "";
 
   const statListFor = (optionId) => (data).filter((i) => i.optionId === optionId);
-
+ 
   const totalVotes = () =>{
     let totalVoteCount = 0;
     if (data) {
@@ -33,6 +33,7 @@ export default function Stats({data, options, text, questionTag}) {
   }
   const tv = totalVotes();
 
+  
   const renderSingleOptionStats = (option) => (
     <div className="card">
         <div className="card-header"> {option.text}</div>
@@ -65,7 +66,11 @@ export default function Stats({data, options, text, questionTag}) {
                     <h5>Age:</h5>
                     <AgeStats dataInput={data} optionId={option.id} statListFor={statListFor} />                     
                 </div>
-            </div>
+            </div>        
+            <CommentStats optionId={option.id} commentDataForQuestion={commentDataForQuestion} />
+          
+                                                              
+       
         </div>
     </div>
   );

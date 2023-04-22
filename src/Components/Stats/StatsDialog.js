@@ -4,7 +4,7 @@ import { LANGUAGES, ROUTES } from '../../Constants';
 import Stats from './Stats';
 import { useNavigate } from 'react-router-dom';
 
-function StatsDialog({question, statData, locale, showStatModalWindow}) { 
+function StatsDialog({question, statData, locale, commentDataForQuestion, showStatModalWindow}) { 
   const [showStatModal, setShowStatModal] = useState(false);
   const navigate = useNavigate();
 
@@ -12,13 +12,14 @@ function StatsDialog({question, statData, locale, showStatModalWindow}) {
     setShowStatModal( showStatModalWindow);
   
   }, []);
+  
 
   const handleModalClose = () => {
     setShowStatModal(false);
     navigate(ROUTES["en-US"].MAIN);
   }
 
- // console.log("showStatModal",showStatModal);
+ console.log("commentDataForQuestion",commentDataForQuestion);
   return (
     <> 
         <Modal fullscreen={true} show={showStatModal} >
@@ -29,6 +30,7 @@ function StatsDialog({question, statData, locale, showStatModalWindow}) {
                   <Stats data={statData}
                          options={question.options}
                          text={question.text}
+                         commentDataForQuestion={commentDataForQuestion}
                          questionTag={question.questionTag} />                
               </Modal.Body>
               <Modal.Footer>                                                         

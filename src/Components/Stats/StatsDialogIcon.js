@@ -3,7 +3,7 @@ import { FaChartPie} from 'react-icons/fa';
 import { LANGUAGES } from '../../Constants';
 import StatsDialog from './StatsDialog';
 
-function StatsDialogIcon({question, locale}) {
+function StatsDialogIcon({question, locale, commentDataForQuestion}) {
     const [showStatModal, setShowStatModal] = useState(false);
     const [statData, setStatData] = useState([]);
     const initModal = () => {   
@@ -20,6 +20,7 @@ function StatsDialogIcon({question, locale}) {
           <StatsDialog question={question}
           statData={statData}
           locale={locale}
+          commentDataForQuestion={commentDataForQuestion}
           showStatModalWindow={showStatModal} />   
       )}
                    

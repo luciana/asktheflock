@@ -155,7 +155,8 @@ function Admin() {
                         <th scope="col">Email</th>
                         <th scope="col">Logged in Count</th>
                         <th scope="col">Last Logged In</th>   
-                        <th scope="col">Expertise</th>                                                
+                        <th scope="col">Expertise</th>   
+                        <th scope="col">Migrated</th>                                                
                       </tr>
                     </thead>  
                     <tbody>
@@ -165,7 +166,8 @@ function Admin() {
                       <td>{user.email}</td>
                       <td>{user.loggedInCount}</td>
                       <td>{formatDateTime(user.lastLoggedIn)}</td>                     
-                      <td>{user.userTag}</td>                                        
+                      <td>{user.userTag}</td>   
+                      <td>{user.votes ? "not migrated" : "migrated"}</td>                                     
                       </tr>
                     ))}                                         
                     </tbody>
