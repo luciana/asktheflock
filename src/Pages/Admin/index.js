@@ -311,8 +311,7 @@ function Admin() {
           const userVotes = userData.votes ? JSON.parse(userData.votes) : votesByUserId;
           if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet. It means that user hasn't migrated to the new Voting table"});
           const loggedInDate = userData.lastLoggedIn ? userData.lastLoggedIn : "";
-          const loggedInCount = userData.loggedInCount ? userData.loggedInCount : 0;
-
+          const loggedInCount = userData.loggedInCount ? userData.loggedInCount : 0;         
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
             loggedInDate, 
             userVotes);
@@ -441,7 +440,7 @@ function Admin() {
                      <p>  {userData.name} </p>
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
-                     <p>  Last Logged In on {userData.loggedInDate}</p>
+                     <p>  Last Logged In on {userData.loggedInDate === "" ? userData.loggedInDate : ""}</p>
                      <p>  Logged in {userData.loggedInCount} time(s)</p>
                      <p>  Contributed {userData.votes} votes.</p>
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>

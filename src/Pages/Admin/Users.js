@@ -92,7 +92,7 @@ function Admin() {
           if(userData.votes) messages.push({type:"vote", text:"user.vote is not empty yet. It means that user hasn't migrated to the new Voting table"});
           const loggedInDate = userData.lastLoggedIn ? userData.lastLoggedIn : "";
           const loggedInCount = userData.loggedInCount ? userData.loggedInCount : 0;
-
+          console.log(" ahw aldaf loggedInDate", loggedInDate);
           let openQuestions = numberOfOpenQuestionsSinceThatIhaventVoted(
             loggedInDate, 
             userVotes);
@@ -165,7 +165,7 @@ function Admin() {
                       <th scope="row"><strong>{user.name}</strong></th>
                       <td>{user.email}</td>
                       <td>{user.loggedInCount}</td>
-                      <td>{formatDateTime(user.lastLoggedIn)}</td>                     
+                      <td>{user.lastLoggedIn ? formatDateTime(user.lastLoggedIn) : ""}</td>                     
                       <td>{user.userTag}</td>   
                       <td>{user.votes ? "not migrated" : "migrated"}</td>                                     
                       </tr>
@@ -185,7 +185,7 @@ function Admin() {
                      <p>  {userData.email} </p>
                      <p>  {userData.userTag} </p>
                      <p>  Last Logged In on {userData.loggedInDate}</p>
-                     <p>  Logged in {userData.loggedInCount} time(s)</p>
+                     <p>  Logged in {userData.loggedInCount=="" ? userData.loggedInCount : ""} time(s)</p>
                      <p>  Contributed {userData.votes} votes.</p>
                      <p>  {userData.needsAVote} new question(s) have been posted since last time you helped someone ( = voted for a question on this site).</p>
 
