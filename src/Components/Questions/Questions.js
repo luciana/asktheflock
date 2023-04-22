@@ -26,6 +26,7 @@ const Questions = () => {
     const navigate = useNavigate();
     const { state, dispatch } = useContext(AppContext);
     const { user, myVotes } = state;
+    const [alert, setAlert] = useState(); 
     const [filterList, setFilterList]= useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
@@ -366,6 +367,7 @@ const Questions = () => {
           )        
         }catch(error){
           console.error("Error on creating comments", error);
+          setAlert({ type: "error", text: "Oops, we couldn't save your comment. Please try it again in a moment or contact support@asktheflock.com" });
          }
       }
 
@@ -406,6 +408,7 @@ const Questions = () => {
         }catch(error){
           console.error("Error on creating vote", error);      
           console.log("do not create new vote in table because it  exist in Vote table already - question", questionID);
+          setAlert({ type: "error", text: "Uh-oh, we couldn't save your opnion. Please try it again in a moment or contact support@asktheflock.com" });
         }
       }
 
@@ -742,6 +745,7 @@ const Questions = () => {
       return ( 
         <>
             {loading && <Loading />}
+            <Alert type={alert?.type} text={alert?.text} />
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             
             <QuestionAndPoll2 user={user} addQuestion={addQuestion} />
