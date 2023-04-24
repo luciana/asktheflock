@@ -5,6 +5,7 @@ import { GrUserExpert } from 'react-icons/gr';
 import Avatar from 'react-avatar';
 //import ReplyModalDialog from './ReplyModalDialog';
 //import QuestionForm from './QuestionForm';
+import Queries from "../../Services/queries";
 import StatsDialogIcon from '../Stats/StatsDialogIcon';
 import { SocialShare } from '../Social';
 import { formatDateTime, formatName, findCounts } from '../../Helpers';
@@ -34,6 +35,7 @@ function Question({
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
+  const [alreadyVotedList, setAlreadyVotedList] = useState([]);
   const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
 
   const { state, dispatch } = useContext(AppContext);
@@ -44,6 +46,7 @@ function Question({
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
     getCommentDataForOptions();   
+    checkIfAlreadyVoted();
     // if(!myVotes){
     //   console.log("myVotes didn't populate");
     // }  
@@ -69,20 +72,34 @@ function Question({
                               voteEnded &&
                               JSON.parse(question.stats).length >= minStatVoteCount ;
 
-  let list = [];
-  if (myVotes && myVotes.length>0){    
-       list  = myVotes.filter(
-        (vote) => vote.questionID === question.id
-      );   
-    //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
-  }else if (user.votes){
-     list = JSON.parse(user.votes).filter(
-      (vote) => vote.questionId === question.id
-    ); 
-    //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
+  const checkIfAlreadyVoted = async() => {
+    let list = [];
+    if (myVotes && myVotes.length>0){    
+        list  = myVotes.filter(
+          (vote) => vote.questionID === question.id
+        );   
+      //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
+    }else if (user.votes){
+      list = JSON.parse(user.votes).filter(
+        (vote) => vote.questionId === question.id
+      ); 
+      //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
+    }else{
+      //check directly at the Vote table.
+      //this is used during the migration or when myVotes context is not available
+      console.log("checking by looking directly at the table");
+      const myVotesFromTable =  await Queries.GetVotesByUserId(user.id);
+    //  console.log("what is myVotesFromTable" , myVotesFromTable);
+      if(myVotesFromTable && myVotesFromTable.length > 0){           
+        list = myVotesFromTable.filter((vote) => vote.questionID === question.id);
+        //console.log("alreadyVotedForQuestionList coming directly from Vote table", alreadyVotedForQuestionList);  
+      }      
+    }
+    setAlreadyVotedList(list);
   }
   
-  const alreadyVotedForQuestionList = list;
+  
+  const alreadyVotedForQuestionList = alreadyVotedList;
   const alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;

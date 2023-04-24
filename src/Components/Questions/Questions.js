@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import Question from "./Question";
 import { Loading, Alert, Switch, Friends }  from '../../Components';
 import QuestionAndPoll2 from '../../Components/Questions/QuestionAndPoll2';
@@ -10,6 +10,8 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
+import { onUpdateQuestion, onCreateQuestion } from '../../graphql/subscriptions';
+import { API, graphqlOperation } from "aws-amplify";
 
 const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
@@ -31,6 +33,7 @@ const Questions = () => {
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const questionQueryId = query.get("id");    
+    const subscriptionRef = useRef()
 
     useEffect(() => {
 
@@ -92,7 +95,33 @@ const Questions = () => {
         }
       };     
         loadQuestions();
-        loadSingleQuestion();                                  
+        loadSingleQuestion();       
+        
+        
+        // subscribe to listen to creation of new vote in DynamoDB
+        subscriptionRef.current  = API.graphql(
+            graphqlOperation(onCreateQuestion)
+          ).subscribe({
+            next: (payload) => {
+              const createdQuestionInput = payload.value.data?.onCreateQuestion;
+              console.log(`new data from sub: ${JSON.stringify(createdQuestionInput)}`);  
+              
+              const updatedBackendQuestions = [...filterList];
+              updatedBackendQuestions.push(createdQuestionInput); 
+               setFilterList(updatedBackendQuestions.filter(
+              (backendQuestion) => ((backendQuestion.parentID === null) )
+              )
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+
+             //console.log(`new data from sub: ${JSON.stringify(newData.value.data.onUpdateQuestion)}`);
+            }
+          });
+          return () => {
+            //cleanup
+            subscriptionRef.current.unsubscribe()
+          }
+
       }, [user,setFilterList ]);
       
 
@@ -376,20 +405,20 @@ const Questions = () => {
 
           let itemAlreadyInVoteTable = [];
           //logic to present duplicates in Vote table 
-         // console.log("checking if should create new vote item");
-          if(checkInTable){
-            //this is used during the migration
-           // console.log("checking by looking directly at the table");
+          console.log("checking if should create new vote item, myVote context", myVotes);
+          if(checkInTable || !myVotes){
+            //this is used during the migration or when myVotes context is not available
+            console.log("checking by looking directly at the table");
             const myVotesFromTable =  await Queries.GetVotesByUserId(userID);
           //  console.log("what is myVotesFromTable" , myVotesFromTable);
             if(myVotesFromTable && myVotesFromTable.length > 0){           
               itemAlreadyInVoteTable = myVotesFromTable.filter((vote) => vote.questionID === questionID);
-            }
-           
+              console.log("checking by looking at db directly. Is it already voted?", itemAlreadyInVoteTable);   
+            }           
           }else{
-            //after migration is completed, we just check the context if a vote is already registered
-          //  console.log("checking by looking at save context");
+            //after migration is completed, we just check the context if a vote is already registered                 
             itemAlreadyInVoteTable = myVotes.filter((vote) => vote.questionID === questionID);
+            console.log("checking by looking at save context. Is it already voted?", itemAlreadyInVoteTable);    
           }
            if(!itemAlreadyInVoteTable || itemAlreadyInVoteTable.length === 0){              
               const result =  await Mutations.CreateVote(
@@ -404,7 +433,9 @@ const Questions = () => {
               if(question){
                 updateQuestionOptions(question, optionID); 
               }                          
-            }         
+            }else{
+              setAlert({ type: "error", text: "Wait a minute! You already gave your opnion on this question. It won't be counted." });
+            } 
         }catch(error){
           console.error("Error on creating vote", error);      
           console.log("do not create new vote in table because it  exist in Vote table already - question", questionID);
@@ -502,20 +533,20 @@ const Questions = () => {
           );          
                        
           if(q){
-            const updatedBackendQuestions = [...backendQuestions];
-            updatedBackendQuestions.push(q);          
+            // const updatedBackendQuestions = [...backendQuestions];
+            // updatedBackendQuestions.push(q);          
   
-            setBackendQuestions(updatedBackendQuestions.filter(
-              (backendQuestion) => ((backendQuestion.parentID === null) )
-            )
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+            // setBackendQuestions(updatedBackendQuestions.filter(
+            //   (backendQuestion) => ((backendQuestion.parentID === null) )
+            // )
+            // .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            // .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
   
-            setFilterList(updatedBackendQuestions.filter(
-              (backendQuestion) => ((backendQuestion.parentID === null) )
-            )
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+            // setFilterList(updatedBackendQuestions.filter(
+            //   (backendQuestion) => ((backendQuestion.parentID === null) )
+            // )
+            // .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            // .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
           
             setLoading(false); 
           }else{
@@ -543,7 +574,7 @@ const Questions = () => {
             
            }    
            return true;      
-          return false;
+         
         }catch ( error ){
           console.error("Error on delete Vote ", error);
           return false;
@@ -608,35 +639,6 @@ const Questions = () => {
       }
 
       //this is used during the migration only
-      const isVoteRegistered = async( userID, questionID, optionID) =>{
-
-      //  console.log("is vote for .. already in Vote db?",  userID, questionID, optionID);
-        try{
-          const myVotes = await getVotesByUserID(userID);
-         
-          if(myVotes && myVotes.length > 0 ){
-            const myVotesForThisQuestion = myVotes.filter((vote) => vote.questionID === questionID 
-                                  && vote.optionID === optionID);
-           
-           // console.log("myVotesForThisQuestion - ", myVotesForThisQuestion);
-            if(myVotesForThisQuestion && myVotesForThisQuestion.length >0){
-             // console.log("isVoteRegistered");
-              return true;
-            }else{
-              return false;
-            }            
-          }else{
-            //nothing in the Vote Table
-            return false;
-          }
-        }catch(error){
-          console.error("Error checking if vote is already registered", error);
-          return false;
-        }
-        
-      }
-
-      //this is used during the migration only
       const migratingUserVotesToVoteTable = async(userVotes)=> {
         try{
            //check if this user has votes in the vote model
@@ -658,7 +660,7 @@ const Questions = () => {
           
           if (optionItemsNotYetInVoteModel && optionItemsNotYetInVoteModel.length>0) {
               optionItemsNotYetInVoteModel.map((item)=>{       
-               // console.log("iterating thry optionItemsNotYetInVoteModel ", item);             
+                 console.log("migration process:iterating thry optionItemsNotYetInVoteModel ", item);             
                   createVote(user.id, user.name, item.questionId, item.optionId, true, null);          
                        
             });               
@@ -722,7 +724,7 @@ const Questions = () => {
          // console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
           updateUserVotes( userVote);
          }else{
-         //  console.log("user vote has been emptied from the migration. just create item in votes table");
+          console.log("user vote has been emptied from the migration. just create item in votes table");
            await createVote(user.id, user.name, question.id, userVote.optionId, false, question);  
               
          }
