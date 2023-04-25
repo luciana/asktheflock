@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import Question from "./Question";
 import { Loading, Alert, Switch, Friends }  from '../../Components';
 import QuestionAndPoll2 from '../../Components/Questions/QuestionAndPoll2';
@@ -10,13 +10,13 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
-import { onUpdateQuestion, onCreateQuestion } from '../../graphql/subscriptions';
-import { API, graphqlOperation } from "aws-amplify";
+import {subscribeToQuestion, subscribeToVote} from "../../Services/Subscriptions";
+import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
+import { Hub } from 'aws-amplify';
 
 const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
-    //const [votedList, setVotedList] = useState([]);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
     const [loading, setLoading] = useState(false);
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
@@ -27,17 +27,14 @@ const Questions = () => {
     const [alreadyVotedFilterList, setAlreadyVotedFilterList] = useState([]);
     const navigate = useNavigate();
     const { state, dispatch } = useContext(AppContext);
-    const { user, myVotes } = state;
+    const { user, myVotes, questions } = state;
     const [alert, setAlert] = useState(); 
     const [filterList, setFilterList]= useState([]);
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const questionQueryId = query.get("id");    
-    const subscriptionRef = useRef()
 
     useEffect(() => {
-
-
       const loadSingleQuestion = async () => {
         try{
           setLoading(true);       
@@ -62,71 +59,63 @@ const Questions = () => {
       }
 
       const loadQuestions = async () => {
+        //console.log("about to load questions");
         try{
-          setLoading(true);     
-         
-
-          let q = await Queries.GetAllQuestions();
-         
-          if(q){                     
-              setBackendQuestions(q.filter(
-                (backendQuestion) => ((backendQuestion.parentID === null) )
-              )            
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
-          
-          // initial setFilter list is the same as backendquestions retrieved from the server.
-              setFilterList(q.filter(
-                (backendQuestion) => ((backendQuestion.parentID === null) )
-              )
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))));           
-          }
-         
-          
-          
+          setLoading(true);         
+          let priorConnectionState = ConnectionState;
+          Hub.listen('api', (data) => {
+            const { payload } = data;
+            if (payload.event === CONNECTION_STATE_CHANGE) {
+              const connectionState = payload.data.connectionState;
+              console.log(connectionState);
+            }
+          });            
+            Hub.listen("api", (data) => {
+              const { payload } = data;
+              if (
+                payload.event === CONNECTION_STATE_CHANGE
+              ) {
+            
+                if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
+                   fetchQuestions();
+                }
+                priorConnectionState = payload.data.connectionState;
+              }
+            });
           setLoading(false);
         }catch(err){
-          console.error("Questions.js Loading Questions from queries error", err);
-        
+          console.error("Questions.js Loading Questions from queries error", err);        
           setBackendQuestions([]);
-          setLoading(false);
-         // alert("Error getting all the questions from database");
+          setFilterList([]);
+          setLoading(false);        
         }
       };     
         loadQuestions();
         loadSingleQuestion();       
-        
-        
-        // subscribe to listen to creation of new vote in DynamoDB
-        subscriptionRef.current  = API.graphql(
-            graphqlOperation(onCreateQuestion)
-          ).subscribe({
-            next: (payload) => {
-              const createdQuestionInput = payload.value.data?.onCreateQuestion;
-              console.log(`new data from sub: ${JSON.stringify(createdQuestionInput)}`);  
-              
-              const updatedBackendQuestions = [...filterList];
-              updatedBackendQuestions.push(createdQuestionInput); 
-               setFilterList(updatedBackendQuestions.filter(
-              (backendQuestion) => ((backendQuestion.parentID === null) )
-              )
-              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-              .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+        subscribeToQuestion(dispatch);
 
-             //console.log(`new data from sub: ${JSON.stringify(newData.value.data.onUpdateQuestion)}`);
-            }
-          });
-          return () => {
-            //cleanup
-            subscriptionRef.current.unsubscribe()
-          }
-
-      }, [user,setFilterList ]);
+      }, [user ]);
       
 
-      
+      const fetchQuestions = async () => {       
+        setLoading(true);      
+        let q = await Queries.GetAllQuestions();         
+        if(q){        
+          const questions = q.filter(
+            (backendQuestion) => ((backendQuestion.parentID === null) )
+          )            
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)));
 
+            // initial setFilter list is the same as backendquestions retrieved from the server.
+          setBackendQuestions(questions);                  
+          setFilterList(questions);      
+            
+          dispatch({type: TYPES.ADD_QUESTIONS, payload: questions});
+          setLoading(false);
+        }
+      }
+      
       const handleAlreadyVotedFilterSwitch = () => {
         setIsAlreadyVotedFilterChecked(!isAlreadyVotedFilterChecked);  
              
@@ -742,8 +731,10 @@ const Questions = () => {
         navigate(ROUTES[user.locale].MAIN);
       }
       
-      const showNoQuestions = filterList.length === 0;
+      const showNoQuestions = questions?.length === 0;
  
+
+      console.log("state questions", questions);
       return ( 
         <>
             {loading && <Loading />}
@@ -789,7 +780,7 @@ const Questions = () => {
            
             {/* Question List Section */}
               <div id="all-questions" className="py-1 my-1">
-                  {filterList.map((rootQuestion) => (
+                  {questions?.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}
                           question={rootQuestion}                       

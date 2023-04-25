@@ -5,6 +5,8 @@ import AppReducer from "./Reducers";
 const initial = { 
     lang: "en-US",
     user: null,
+    myVotes: null,
+    questions: null,
  };
 
 const getState = () => { 
