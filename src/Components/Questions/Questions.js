@@ -1,16 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback, useSelector } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Question from "./Question";
+import QuestionAndPoll from './QuestionAndPoll';
+import { Modal } from 'react-bootstrap';
 import { Loading, Alert, Switch, Friends }  from '../../Components';
-import QuestionAndPoll2 from '../../Components/Questions/QuestionAndPoll2';
-import Queries from "../../Services/queries";
-import Mutations from "../../Services/mutations";
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Modal } from 'react-bootstrap';
-import {subscribeToQuestion, subscribeToVote} from "../../Services/Subscriptions";
+import Queries from "../../Services/queries";
+import Mutations from "../../Services/mutations";
+import {subscribeToQuestion} from "../../Services/Subscriptions";
 import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
 import { Hub } from 'aws-amplify';
 
@@ -33,8 +33,40 @@ const Questions = () => {
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const questionQueryId = query.get("id");    
+    
+    const loadQuestions = useCallback(() => { 
+        //console.log("about to load questions");
+        try{
+          setLoading(true);         
+          let priorConnectionState = ConnectionState;
+          Hub.listen('api', (data) => {
+            const { payload } = data;
+            if (payload.event === CONNECTION_STATE_CHANGE) {
+              const connectionState = payload.data.connectionState;
+              console.log(connectionState);
+            }
+          });            
+            Hub.listen("api", (data) => {
+              const { payload } = data;
+              if (
+                payload.event === CONNECTION_STATE_CHANGE
+              ) {
+            
+                if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
+                    fetchQuestions();
+                }
+                priorConnectionState = payload.data.connectionState;
+              }
+            });
+          setLoading(false);
+        }catch(err){
+          console.error("Questions.js Loading Questions from queries error", err);        
+          setBackendQuestions([]);
+          setFilterList([]);
+          setLoading(false);        
+        }
+      }, []); 
 
-    useEffect(() => {
       const loadSingleQuestion = async () => {
         try{
           setLoading(true);       
@@ -56,47 +88,22 @@ const Questions = () => {
           setActiveQuestion(null);    
           setShowSingleQuestionModal(false);          
         }
-      }
+      } 
 
-      const loadQuestions = async () => {
-        //console.log("about to load questions");
-        try{
-          setLoading(true);         
-          let priorConnectionState = ConnectionState;
-          Hub.listen('api', (data) => {
-            const { payload } = data;
-            if (payload.event === CONNECTION_STATE_CHANGE) {
-              const connectionState = payload.data.connectionState;
-              console.log(connectionState);
-            }
-          });            
-            Hub.listen("api", (data) => {
-              const { payload } = data;
-              if (
-                payload.event === CONNECTION_STATE_CHANGE
-              ) {
-            
-                if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
-                   fetchQuestions();
-                }
-                priorConnectionState = payload.data.connectionState;
-              }
-            });
-          setLoading(false);
-        }catch(err){
-          console.error("Questions.js Loading Questions from queries error", err);        
-          setBackendQuestions([]);
-          setFilterList([]);
-          setLoading(false);        
+    useEffect(() => {    
+      const initQuestions = async () => {
+        try {   
+          await loadQuestions();
+          subscribeToQuestion(dispatch);
+        }catch(error){
+          console.error("Error on init questions", error);
         }
-      };     
-        loadQuestions();
-        loadSingleQuestion();       
-        subscribeToQuestion(dispatch);
-
-      }, [user ]);
+      }
+      initQuestions();
+      loadSingleQuestion();
+    }, [loadQuestions]); //tells React to execute the load method on first mount.
       
-
+   
       const fetchQuestions = async () => {       
         setLoading(true);      
         let q = await Queries.GetAllQuestions();         
@@ -487,7 +494,9 @@ const Questions = () => {
               }
              }
            // console.log("item to update options with votes ", optionsInQuestion);
-            updateStats(question, optionID, optionsInQuestion);    
+            const questionUpdated = updateStats(question, optionID, optionsInQuestion);    
+            console.log("question updated", questionUpdated);
+            setActiveQuestion(questionUpdated);
           }else{
             console.error("No update to option votes happened");
           }
@@ -522,8 +531,12 @@ const Questions = () => {
           );          
                        
           if(q){
+            setBackendQuestions(state?.questions);                  
+            setFilterList(state?.questions);              
             // const updatedBackendQuestions = [...backendQuestions];
             // updatedBackendQuestions.push(q);          
+
+            // console.log("add question setting state", updatedBackendQuestions);
   
             // setBackendQuestions(updatedBackendQuestions.filter(
             //   (backendQuestion) => ((backendQuestion.parentID === null) )
@@ -729,19 +742,16 @@ const Questions = () => {
       const handleSingleQuestionClose = () => {
         setShowSingleQuestionModal(false);
         navigate(ROUTES[user.locale].MAIN);
-      }
-      
+      }      
       const showNoQuestions = questions?.length === 0;
- 
-
-      console.log("state questions", questions);
       return ( 
         <>
             {loading && <Loading />}
             <Alert type={alert?.type} text={alert?.text} />
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             
-            <QuestionAndPoll2 user={user} addQuestion={addQuestion} />
+             {/* New Question Section    */}
+            <QuestionAndPoll user={user} addQuestion={addQuestion} />
 
              {/* Friends Sections    */}
              <div className="white-bg px-2 ">
@@ -780,16 +790,16 @@ const Questions = () => {
            
             {/* Question List Section */}
               <div id="all-questions" className="py-1 my-1">
-                  {questions?.map((rootQuestion) => (
+                  {state?.questions?.map((rootQuestion) => (
                       <Question 
                           key={rootQuestion.id}
                           question={rootQuestion}                       
                           handleVote={handleVote}                                                 
                           updateQuestionVoteTime={updateQuestionVoteTime}                                        
                           deleteQuestion={deleteQuestion}
-                          updateQuestion={updateQuestionOptions}  
+                          //updateQuestion={updateQuestionOptions}  
                           createComment={createComment}                      
-                          getComment={getComment}                                         
+                          getComment={getComment}                                                              
                       />
                   ))}
               </div>   
@@ -804,11 +814,13 @@ const Questions = () => {
                         <Question 
                             key={activeQuestion.id}
                             question={activeQuestion}                                                                      
-                            handleVote={handleVote}                     
-                          // openQuestion={openQuestion}                                       
+                            handleVote={handleVote}           
+                            updateQuestionVoteTime={updateQuestionVoteTime}                                                           
                             deleteQuestion={deleteQuestion}
-                            updateQuestion={updateQuestionOptions}                        
-                            user={user}
+                            createComment={createComment}                      
+                            getComment={getComment}    
+                            //updateQuestion={updateQuestionOptions}                        
+                           // user={user}
                         />                                                 
                     </Modal.Body>
                     <Modal.Footer>                                                            

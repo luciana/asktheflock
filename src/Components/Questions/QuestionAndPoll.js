@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import QuestionModalDialog from './QuestionModalDialog';
 import { useNavigate } from 'react-router-dom';
-import { Loading }  from '../../Components';
+import { Loading }  from '..';
 import Mutations from "../../Services/mutations";
 import { ROUTES } from "../../Constants";
 import gtag from 'ga-gtag';
 
 const TAG = "#flocks";
 
-function QuestionAndPoll2({
+function QuestionAndPoll({
     parentId = null,
     user,
     addQuestion,
@@ -17,39 +17,9 @@ function QuestionAndPoll2({
     const [todos, setTodos] = useState([]); 
     const [question, setQuestion] = useState([]);     
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-
-    // const addQuestion = async (question) => {       
-    //   try{
-       
-    //     const text = question.text;
-    //     const parentID = question.parentId;
-    //     const questionTag = question.questionTag;
-    //     const userID = question.userId;
-    //     const voteEndAt = question.voteEndAt;
-    //     const sentiment = question.sentiment;
-    //     const options  = JSON.stringify(question.options);
-    //     const userName = user.name;
-
-    //     let q = await Mutations.CreateQuestion(
-    //       text, 
-    //       userID,
-    //       voteEndAt,
-    //       sentiment,
-    //       userName,
-    //       parentID,
-    //       questionTag,
-    //       options
-    //     );
-           
-    //     navigate(ROUTES[user.locale].MAIN);        
- 
-    //   }catch(err){
-    //     console.error("Error on Mutations.CreateQuestion ", err);
-    //   }        
-    // };
-    
-      const addTodo = todo => {
+    const [loading, setLoading] = useState(false);  
+      
+    const addTodo = todo => {
         //console.log('add Todo', todo);
         if (!todo.text || /^\s*$/.test(todo.text)) {
           return;
@@ -161,4 +131,4 @@ function QuestionAndPoll2({
         </>
     );
 };
-export default QuestionAndPoll2;
+export default QuestionAndPoll;

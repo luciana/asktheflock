@@ -16,13 +16,13 @@ import  shortenURL  from './../../Services/shortenURL';
 import { AppContext} from '../../Contexts'; 
 
 function Question({ 
-  question,   
-  updateQuestionVoteTime,
+  question,    
   handleVote,
+  updateQuestionVoteTime,
   deleteQuestion,
-  parentId = null,
   createComment,
   getComment,
+  parentId = null,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -36,28 +36,27 @@ function Question({
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
   const [alreadyVotedList, setAlreadyVotedList] = useState([]);
+  const [alreadyVotedForQuestionListBool, setAlreadyVotedForQuestionListBool] = useState(false);
   const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
 
-  const { state, dispatch } = useContext(AppContext);
-  
-  const { user, myVotes } = state;
+  const { state } = useContext(AppContext);  
+  const { user, myVotes, questions } = state;
 
   useEffect(() => {
     setQuestionLink( window.location.origin +"/main?id=" + question.id);
     getExpertVoteCount();
     getCommentDataForOptions();   
     checkIfAlreadyVoted();
-    // if(!myVotes){
-    //   console.log("myVotes didn't populate");
-    // }  
-  }, []);
+    console.log("rendering Question component");
+  }, [myVotes, questions]);
+ 
  
   const isAReply = question.parentId != null;
+  const replyId = parentId ? parentId : question.id;
   const canDelete = user.id === question.userID  && !isAReply; 
   //don't want to show the option to reply yet. setting bool to false 
  // const canReply = user.id === question.userID && !isAReply && replies.length === 0 && false;
   const createdAt = formatDateTime(question.createdAt);
-  const replyId = parentId ? parentId : question.id;
   const voteEnded = new Date() - new Date(question.voteEndAt) > 1;
   const canRepost = user.id === question.userID  && voteEnded; 
   const canClose = user.id === question.userID  && !isAReply && !voteEnded; 
@@ -65,7 +64,6 @@ function Question({
   //   activeQuestion &&
   //   activeQuestion.id === question.id &&
   //   activeQuestion.type === "replying";
-
   const minStatVoteCount = process.env.REACT_APP_MIN_VOTES_TO_SHOW_STAT; //statistically 100 is min value
   const isThereEnoughStats =  question && user.id === question.userID && 
                               question.options && question.stats && 
@@ -78,12 +76,12 @@ function Question({
         list  = myVotes.filter(
           (vote) => vote.questionID === question.id
         );   
-      //console.log("alreadyVotedForQuestionList if my votes exist in state", alreadyVotedForQuestionList);
+     // console.log("alreadyVotedForQuestionList if my votes exist in state", list);
     }else if (user.votes){
       list = JSON.parse(user.votes).filter(
         (vote) => vote.questionId === question.id
       ); 
-      //console.log("alreadyVotedForQuestionList coming from user.votes", alreadyVotedForQuestionList);
+      console.log("alreadyVotedForQuestionList coming from user.votes", list);
     }else{
       //check directly at the Vote table.
       //this is used during the migration or when myVotes context is not available
@@ -92,16 +90,15 @@ function Question({
     //  console.log("what is myVotesFromTable" , myVotesFromTable);
       if(myVotesFromTable && myVotesFromTable.length > 0){           
         list = myVotesFromTable.filter((vote) => vote.questionID === question.id);
-        //console.log("alreadyVotedForQuestionList coming directly from Vote table", alreadyVotedForQuestionList);  
+        console.log("alreadyVotedForQuestionList coming directly from Vote table", list);  
       }      
     }
     setAlreadyVotedList(list);
+    setAlreadyVotedForQuestionListBool(list.length !== 0);
   }
-  
-  
-  const alreadyVotedForQuestionList = alreadyVotedList;
-  const alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
 
+  //const alreadyVotedForQuestionList = alreadyVotedList;
+  //const alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
   const expertNeeded = question.questionTag && question.questionTag !== "" && !voteEnded;
   const expertNeededWithYourSkill = expertNeeded && user.userTag === question.questionTag;
   const myOwnQuestion = question.userID === user.id;
@@ -178,24 +175,39 @@ function Question({
     }  
   }
     
+  const iVotedForIt = ( id ) =>  {    
+    const voteForOption = alreadyVotedList.filter((v)=> 
+     v.questionID === question.id  && v.optionID === id
+   );
+   //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
+   if (voteForOption.length > 0){
+     return true;
+   }else{
+    return false;  
+   }
+ }
+
   const voteUp = (item) => {
+   
     if (myOwnQuestion) return; 
-    if (alreadyVotedForQuestionListBool) {      
-      console.log("alreadyVotedForQuestion for this question.. can't vote again",alreadyVotedForQuestionListBool);
+    if (alreadyVotedForQuestionListBool) {            
       return;
     }
     const id = item.id;
-    const text = item.text;
+    //const text = item.text;
     item.votes++;  
     let userVote ={
       "optionId": id,
       "questionId": question.id,  
+      "userID": user.id,
+      "userName": user.name,
     };
-    // let questionOption = {         
-    //   "id": id,
-    //   "text": text,  
-    //   "votes": item.votes, 
-    //   }         
+    let list = alreadyVotedList;
+    list.push(userVote);
+    console.log("Vote up: added new item to list", list);
+    setAlreadyVotedList(list);
+    setAlreadyVotedForQuestionListBool(list.length !== 0);
+
     handleVote(question, userVote);     
   };
 
@@ -327,12 +339,12 @@ function Question({
                 items={optionItem}                 
                 voteUp={voteUp}     
                 myOwnQuestion={myOwnQuestion}                               
-                alreadyVotedForQuestionList={alreadyVotedForQuestionList}        
+                alreadyVotedForQuestionListBool={alreadyVotedForQuestionListBool}        
                 voteEnded={voteEnded}
-                createVoteCommentObject={createVoteCommentObject}
-                comments={commentData}
+                createVoteCommentObject={createVoteCommentObject}   
                 alreadyCommented={alreadyCommented}
-                user={user}/>    
+                user={user}
+                iVotedForIt={iVotedForIt} />    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 

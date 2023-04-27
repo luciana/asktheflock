@@ -8,13 +8,13 @@ import { LANGUAGES } from '../../Constants';
 const Vote = ({ question,     
              items,               
              voteUp,            
-             myOwnQuestion,
-             alreadyVotedForQuestionList,        
+             myOwnQuestion,                
+             alreadyVotedForQuestionListBool,
              voteEnded,
              createVoteCommentObject,
-             comments,
              alreadyCommented,
-             user }) => {
+             user,
+             iVotedForIt }) => {
 
 const [edit, setEdit] = useState({
   id: null,
@@ -24,27 +24,9 @@ const [edit, setEdit] = useState({
 const [selectedItem, setSelectedItem] = useState(null);
 const [showCommentDialog, setShowCommentDialog] = useState(false);
 const [justSentComment, setJustSentComment] = useState(false);
-
-let alreadyVotedForQuestionListBool = alreadyVotedForQuestionList.length !== 0;
-
-const iVotedForIt = ( id ) =>  {    
-   const voteForOption = alreadyVotedForQuestionList.filter((v)=> 
-    v.questionID === question.id  && v.optionID === id
-  );
-  //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
-  if (voteForOption.length > 0){
-    return true;
-  }else{
-   return false;  
-  }
-}
-
 const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;
-
-const handleSubmit = ({comment}) => {  
-  //console.log("from vote inputs into creating a comment",question.id,edit.id, edit.value, comment);
+const handleSubmit = ({comment}) => {   
   createVoteCommentObject(question.id,edit.id, edit.value, comment);
-  //after you vote, I want to change the icon so you don't comment again instead reloading the refreshing the page.
   setJustSentComment(true);
   setEdit({
     id: null,
@@ -59,8 +41,6 @@ const handleCancel = () =>{
  setEdit({ id: null, value: '', index: null })
 }
 
-
-
 const openCommentDetails = (item) => {
   if(myOwnQuestion){
     setSelectedItem(item);
@@ -68,7 +48,6 @@ const openCommentDetails = (item) => {
   }else{
     alert("You don't have access to this information");
   }
-  
 }
 
 return (
