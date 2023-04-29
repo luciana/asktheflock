@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext, useCallback, useSelector } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Question from "./Question";
+import QuestionList from "./QuestionsList";
 import QuestionAndPoll from './QuestionAndPoll';
 import { Modal } from 'react-bootstrap';
 import { Loading, Alert, Switch, Friends }  from '../../Components';
@@ -786,12 +787,15 @@ const Questions = () => {
                   
               </div>           
             </div>  
-
+                     {/* Question List Section */}
            
-            {/* Question List Section */}
-              <div id="all-questions" className="py-1 my-1">
+              
+           
+           
+                  
+              {/* <div id="all-questions" className="py-1 my-1">
                   {state?.questions?.map((rootQuestion) => (
-                      <Question 
+                      <Question
                           key={rootQuestion.id}
                           question={rootQuestion}                       
                           handleVote={handleVote}                                                 
@@ -802,8 +806,17 @@ const Questions = () => {
                           getComment={getComment}                                                              
                       />
                   ))}
-              </div>   
-
+              </div>    */}
+               {state?.questions && (
+                 <QuestionList                                  
+                  handleVote={handleVote}                                                 
+                  updateQuestionVoteTime={updateQuestionVoteTime}                                        
+                  deleteQuestion={deleteQuestion}                
+                  createComment={createComment}                      
+                  getComment={getComment}                                                              
+               />
+                
+                )}
 
               { ( activeQuestion ) && (
                   <Modal  fullscreen={true} show={showSingleQuestionModal} >

@@ -38,18 +38,18 @@ function Question({
   const [alreadyVotedList, setAlreadyVotedList] = useState([]);
   const [alreadyVotedForQuestionListBool, setAlreadyVotedForQuestionListBool] = useState(false);
   const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
-
   const { state } = useContext(AppContext);  
   const { user, myVotes, questions } = state;
 
+
   useEffect(() => {
-    setQuestionLink( window.location.origin +"/main?id=" + question.id);
+    setQuestionLink( window.location.origin +"/main?id=" + question?.id);
     getExpertVoteCount();
     getCommentDataForOptions();   
     checkIfAlreadyVoted();
     console.log("rendering Question component");
-  }, [myVotes, questions]);
- 
+  }, [state]);
+
  
   const isAReply = question.parentId != null;
   const replyId = parentId ? parentId : question.id;
