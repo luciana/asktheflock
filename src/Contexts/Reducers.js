@@ -20,7 +20,8 @@ function updateUser(state, payload) {
 }
 
 function updateVotes(state, payload) {  
-  const newState = { ...state, myVotes: payload };
+  const newState = { ...state, myVotes: payload, votesCount: payload.length ? payload.length :0 };
+  
  // console.log("updateVotes state = ", newState);
   return newState;
 }

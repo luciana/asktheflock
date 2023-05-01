@@ -1,9 +1,9 @@
 
 
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import { AppContext } from "../../Contexts";
-import { Alert, Loading } from "../../Components";
+import { Alert } from "../../Components";
 import { GenderStats, CommentStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './';
 
 export default function Stats({data, options, text, commentDataForQuestion, questionTag}) {

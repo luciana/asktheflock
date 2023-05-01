@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { FaCircle, FaRegCircle } from 'react-icons/fa';
 import QuestionCommentForm from '../Questions/QuestionCommentForm';
 import { FaRegCommentDots, FaRegComment } from 'react-icons/fa';
 import CommentModalDialog from '../Comments/CommentModalDialog';
 import { LANGUAGES } from '../../Constants';
-
+import { AppContext } from '../../Contexts';
 const Vote = ({ question,     
              items,               
              voteUp,            
@@ -13,8 +13,9 @@ const Vote = ({ question,
              voteEnded,
              createVoteCommentObject,
              alreadyCommented,
-             user,
-             iVotedForIt }) => {
+             //user,
+             iVotedForIt
+             }) => {
 
 const [edit, setEdit] = useState({
   id: null,
@@ -24,7 +25,32 @@ const [edit, setEdit] = useState({
 const [selectedItem, setSelectedItem] = useState(null);
 const [showCommentDialog, setShowCommentDialog] = useState(false);
 const [justSentComment, setJustSentComment] = useState(false);
+const { state } = useContext(AppContext);  
+const { user, myVotes } = state;
+
+useEffect(() => {
+
+  //console.log("rendering Vote component", myVotes);
+}, []);
+
 const isOpenQuestion = new Date(question.voteEndAt) - new Date() > 1 ;
+
+// const iVotedForIt = ( id ) =>  {    
+
+//   let voteForOption = null;
+//   if (myVotes && myVotes.length>0){    
+//      voteForOption  = myVotes.filter(
+//       (vote) => vote.questionID === question.id  && vote.optionID === id
+//     );  
+//   }
+//   //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
+//   if (voteForOption.length > 0){
+//     return true;
+//   }else{
+//     return false;  
+//   }
+// }
+
 const handleSubmit = ({comment}) => {   
   createVoteCommentObject(question.id,edit.id, edit.value, comment);
   setJustSentComment(true);
@@ -50,12 +76,15 @@ const openCommentDetails = (item) => {
   }
 }
 
+
+
 return (
 <>
   {items.map((item, index) => (
    
     <div className='container p-3 border-bottom bg-light ' key={index} >
           <div className="row ">            
+           <span> here {iVotedForIt(item.id) === true ? "yes" : "no" }</span>
               <div key={item.id} onClick={() => voteUp(item)} className={iVotedForIt(item.id) ? 'col  ' : 'col  '}>
                 <span className="badge fs-6 text rounded-pill bg-dark  mx-2 ">
                   {item.votes}

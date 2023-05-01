@@ -6,6 +6,7 @@ const initial = {
     lang: "en-US",
     user: null,
     myVotes: null,
+    votesCount: 0,
     questions: null,
  };
 

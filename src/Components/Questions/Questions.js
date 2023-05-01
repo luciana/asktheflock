@@ -405,17 +405,17 @@ const Questions = () => {
           console.log("checking if should create new vote item, myVote context", myVotes);
           if(checkInTable || !myVotes){
             //this is used during the migration or when myVotes context is not available
-            console.log("checking by looking directly at the table");
+           // console.log("checking by looking directly at the table");
             const myVotesFromTable =  await Queries.GetVotesByUserId(userID);
           //  console.log("what is myVotesFromTable" , myVotesFromTable);
             if(myVotesFromTable && myVotesFromTable.length > 0){           
               itemAlreadyInVoteTable = myVotesFromTable.filter((vote) => vote.questionID === questionID);
-              console.log("checking by looking at db directly. Is it already voted?", itemAlreadyInVoteTable);   
+          //    console.log("checking by looking at db directly. Is it already voted?", itemAlreadyInVoteTable);   
             }           
           }else{
             //after migration is completed, we just check the context if a vote is already registered                 
             itemAlreadyInVoteTable = myVotes.filter((vote) => vote.questionID === questionID);
-            console.log("checking by looking at save context. Is it already voted?", itemAlreadyInVoteTable);    
+        //    console.log("checking by looking at save context. Is it already voted?", itemAlreadyInVoteTable);    
           }
            if(!itemAlreadyInVoteTable || itemAlreadyInVoteTable.length === 0){              
               const result =  await Mutations.CreateVote(
@@ -808,7 +808,7 @@ const Questions = () => {
                   ))}
               </div>    */}
                {state?.questions && (
-                 <QuestionList                                  
+                 <QuestionList                                           
                   handleVote={handleVote}                                                 
                   updateQuestionVoteTime={updateQuestionVoteTime}                                        
                   deleteQuestion={deleteQuestion}                

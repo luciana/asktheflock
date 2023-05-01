@@ -12,7 +12,7 @@ import { formatDateTime, formatName, findCounts } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
-import  shortenURL  from './../../Services/shortenURL';
+//import  shortenURL  from './../../Services/shortenURL';
 import { AppContext} from '../../Contexts'; 
 
 function Question({ 
@@ -39,16 +39,18 @@ function Question({
   const [alreadyVotedForQuestionListBool, setAlreadyVotedForQuestionListBool] = useState(false);
   const [commentDataForQuestion, setCommentDataForQuestion] = useState(null);
   const { state } = useContext(AppContext);  
-  const { user, myVotes, questions } = state;
+  const { user, myVotes } = state;
 
 
   useEffect(() => {
+   // console.log("what is myvotes in state inside of effect in question", myVotes);
     setQuestionLink( window.location.origin +"/main?id=" + question?.id);
+    setOptionItem(JSON.parse(question.options));
     getExpertVoteCount();
     getCommentDataForOptions();   
     checkIfAlreadyVoted();
     console.log("rendering Question component");
-  }, [state]);
+  }, [question.options]);
 
  
   const isAReply = question.parentId != null;
@@ -90,7 +92,7 @@ function Question({
     //  console.log("what is myVotesFromTable" , myVotesFromTable);
       if(myVotesFromTable && myVotesFromTable.length > 0){           
         list = myVotesFromTable.filter((vote) => vote.questionID === question.id);
-        console.log("alreadyVotedForQuestionList coming directly from Vote table", list);  
+        //console.log("alreadyVotedForQuestionList coming directly from Vote table", list);  
       }      
     }
     setAlreadyVotedList(list);
@@ -176,15 +178,19 @@ function Question({
   }
     
   const iVotedForIt = ( id ) =>  {    
-    const voteForOption = alreadyVotedList.filter((v)=> 
-     v.questionID === question.id  && v.optionID === id
-   );
-   //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
-   if (voteForOption.length > 0){
-     return true;
-   }else{
-    return false;  
-   }
+    if (alreadyVotedList && alreadyVotedList.length >0 ){
+        const voteForOption = alreadyVotedList.filter((v)=> 
+        v.questionID === question.id  && v.optionID === id
+      );
+      //console.log("I voted for this option", voteForOption, voteForOption.length > 0);
+      if (voteForOption.length > 0){
+        return true;
+      }else{
+        return false;  
+      }
+    }else{
+      return false;
+    }
  }
 
   const voteUp = (item) => {
@@ -206,6 +212,7 @@ function Question({
     list.push(userVote);
     console.log("Vote up: added new item to list", list);
     setAlreadyVotedList(list);
+    setOptionItem(JSON.parse(question.options));
     setAlreadyVotedForQuestionListBool(list.length !== 0);
 
     handleVote(question, userVote);     
@@ -344,7 +351,8 @@ function Question({
                 createVoteCommentObject={createVoteCommentObject}   
                 alreadyCommented={alreadyCommented}
                 user={user}
-                iVotedForIt={iVotedForIt} />    
+                iVotedForIt={iVotedForIt} 
+                />    
         </div>     
           {/* {replies && replies.length > 0 && (             
              <div> 

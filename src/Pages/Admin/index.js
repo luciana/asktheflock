@@ -1,18 +1,15 @@
 //import { Auth } from 'aws-amplify';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import '../pages.css';
 import './../profile-nav.css';
 import { AppContext} from '../../Contexts';
-import { Alert, Loading, Button } from '../../Components';
+import { Alert, Loading } from '../../Components';
 import  {isAdmin, findCounts, formatDateTime}   from '../../Helpers';
 import { ROUTES } from "../../Constants";
 import { useNavigate, useLocation } from "react-router-dom";
 import Queries from "../../Services/queries";
-import logo from'../../Assets/Images/logos/logo-image-blue-small.png';
 import { Modal } from 'react-bootstrap';
-import { GenderStats, GenerationStats, LanguageStats, AgeStats, ExpertStats, LocationStats, WinningStats } from './../../Components/Stats';
-import { use } from 'echarts';
-import { listenToAuthHub } from '@aws-amplify/ui';
+
 
 function Admin() {
     const { state } = useContext(AppContext);
@@ -45,10 +42,24 @@ function Admin() {
     const [comments, setComments] = useState([]);
     const questionQueryId = query.get("id");    
     const navigate = useNavigate();
+
+    const check = useCallback(async () => {           
+      const t = await isAdmin();       
+      if ( !t ) {
+       navigate(ROUTES[user.locale].MAIN);
+      }
+      getAllUsers(); 
+      //getAllVotes();
+      getAllComments();
+      loadQuestions();
+      setIsAuthorized(t);   
+     
+    }, [navigate, user.locale]);
+
     useEffect(() => {   
        check();
      
-      }, []);
+      }, [check]);
 
       const loadQuestions = async () => {
         try{
@@ -84,18 +95,7 @@ function Admin() {
         }
       };   
 
-    const check = async () =>{
-       const t = await isAdmin();       
-       if ( !t ) {
-        navigate(ROUTES[user.locale].MAIN);
-       }
-       getAllUsers(); 
-       //getAllVotes();
-       getAllComments();
-       loadQuestions();
-       setIsAuthorized(t);   
-      
-    }
+   
 
     const commentsOnQuestion = (question) =>  {
      // console.log("all comments ", comments, question.id);
@@ -152,7 +152,7 @@ function Admin() {
       const expertsTags = findCounts(statData, "userTag", "userTag")
       .map((item) => {
             Object.keys(item).map((key) => {
-              item[key] = (item[key] == '' ? 'No data' : item[key]); return item[key]
+              item[key] = (item[key] === '' ? 'No data' : item[key]); return item[key]
             });
             return item;
         })
