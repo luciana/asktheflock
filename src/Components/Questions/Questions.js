@@ -362,11 +362,16 @@ const Questions = () => {
 
       const updateStatsAndOptionsInQuestionTable = async(question, optionsInQuestion, statsInQuestion) => {     
         try{        
-          return await Mutations.UpdateQuestionOptions(
+            
+          const result = await Mutations.UpdateQuestionOptions(
             question.id,
             JSON.stringify(optionsInQuestion),
             JSON.stringify(statsInQuestion),
-          );                   
+          );           
+          
+          setActiveQuestion(result);
+          return result && result.length > 0 ? result : null;  
+
           }catch(error){
             console.error("Mutations.UpdateQuestionOptions error", error);
             navigate(ROUTES[user.locale].MAIN);
@@ -440,10 +445,11 @@ const Questions = () => {
         }
       }
 
-      const updateStats = (question, optID, optionsInQuestion) => {          
+      const updateStats = async (question, optID, optionsInQuestion) => {          
         const statsInQuestion = prepStatData(question, user, optID);    
 
-        return updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
+        const result = await updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
+        return result && result.length > 0 ? result : null;  
       }
 
       const updateQuestionVoteTime = async (question, voteEndAt) => {
@@ -497,7 +503,7 @@ const Questions = () => {
            // console.log("item to update options with votes ", optionsInQuestion);
             const questionUpdated = updateStats(question, optionID, optionsInQuestion);    
             console.log("question updated", questionUpdated);
-            setActiveQuestion(questionUpdated);
+            //setActiveQuestion(questionUpdated);
           }else{
             console.error("No update to option votes happened");
           }
