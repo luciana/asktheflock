@@ -208,7 +208,7 @@ export default function AuthLayout() {
       setLoading(true);
       try {
         const attributes = await Auth.GetUser();
-        console.log("do I get there?");
+        console.log("do I get there?", attributes);
         if ( attributes){
           setLoading(false);
           navigate(ROUTES[state.lang].MAIN);

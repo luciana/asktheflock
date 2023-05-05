@@ -15,6 +15,7 @@ const Friends = ({votedList, backendQuestions, userId, handleSwitch}) => {
     let thoseWhoHelpedMeCount=[];
     let friends=[];
 
+    if (!backendQuestions) return;
     const handleClick = (u, index) => {
 
       setShowRelationshipDialog(true);

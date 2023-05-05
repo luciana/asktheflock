@@ -57,8 +57,8 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: ID!) {
-    getQuestion(id: $id) {
+  query GetQuestion($id: ID!, $voteEndAt: AWSDateTime!) {
+    getQuestion(id: $id, voteEndAt: $voteEndAt) {
       id
       text
       userID
@@ -78,6 +78,7 @@ export const getQuestion = /* GraphQL */ `
 export const listQuestions = /* GraphQL */ `
   query ListQuestions(
     $id: ID
+    $voteEndAt: ModelStringKeyConditionInput
     $filter: ModelQuestionFilterInput
     $limit: Int
     $nextToken: String
@@ -85,6 +86,7 @@ export const listQuestions = /* GraphQL */ `
   ) {
     listQuestions(
       id: $id
+      voteEndAt: $voteEndAt
       filter: $filter
       limit: $limit
       nextToken: $nextToken

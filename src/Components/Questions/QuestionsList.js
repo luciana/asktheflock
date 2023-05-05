@@ -1,32 +1,43 @@
-import React, {useEffect , useState, useRef, useContext} from 'react';
+import React, {useEffect , useState, useContext, useRef} from 'react';
 import Question from "./Question";
 import { AppContext} from '../../Contexts'; 
 
 
 
-function QuestionsList({handleVote, updateQuestionVoteTime, deleteQuestion, createComment, getComment}) {
+function QuestionsList({next,hasMore, handleVote, updateQuestionVoteTime, deleteQuestion, createComment, getComment}) {
 
-    const [items, setItems] = useState([]);
     const { state } = useContext(AppContext);  
-    const { user, myVotes, questions } = state;
+    const { questions } = state;
+   
+    const elementRef = useRef(null);
+
+    function onIntersection(entries){
+      const firstElement = entries[0]; //only observing one element
+      if (firstElement.isIntersecting && hasMore){
+        console.log("call NEXT in Question List component");
+        next();
+
+      }
+    }
 
     useEffect(() => {   
-     if(questions && questions.length > 0 ){
-      setItems(questions.filter(
-        (backendQuestion) => ((backendQuestion.parentID === null) )
-      )
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))) );    
-      console.log("rendering Question List component");
-     }
-      
-       
-      }, [state]); //only option at this point is look if state changed.
+    
+      const observer = new IntersectionObserver(onIntersection);
+      if( observer && elementRef.current){
+        observer.observe(elementRef.current);
+      }
+
+      return ()=>{
+        if(observer){
+          observer.disconnect();
+        }
+      }
+      }, [questions]); //only option at this point is look if state changed.
     
 
   return (
     <div id="all-questions" className="py-1 my-1">
-      {items && items.map((rootQuestion) => (
+      {questions && questions.map((rootQuestion) => (
             <Question
                 key={rootQuestion.id}
                 question={rootQuestion}                       
@@ -36,8 +47,11 @@ function QuestionsList({handleVote, updateQuestionVoteTime, deleteQuestion, crea
                 createComment={createComment}                      
                 getComment={getComment}                                                              
             />
+           
         ))}
-    
+     {hasMore && (
+        <div ref={elementRef}>Load more items ...</div>
+     )}
                   
      </div> 
    

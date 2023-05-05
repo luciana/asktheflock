@@ -11,11 +11,15 @@ import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
-import {subscribeToQuestion} from "../../Services/Subscriptions";
-import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
-import { Hub } from 'aws-amplify';
+// import {subscribeToQuestion} from "../../Services/Subscriptions";
+// import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
+// import { Hub } from 'aws-amplify';
 
 const Questions = () => {
+  const SORT = {
+    ASC: 'ASC',
+    DESC: 'DESC',
+  }
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
@@ -34,31 +38,36 @@ const Questions = () => {
     const [showSingleQuestionModal, setShowSingleQuestionModal] = useState(false);
     const query = new URLSearchParams(useLocation().search);
     const questionQueryId = query.get("id");    
-    
+    const [nextToken, setNextToken] = useState(undefined);
+    const [nextNextToken, setNextNextToken] = useState();
+    const [previousTokens, setPreviousTokens] = useState([]);
+    const [hasMore, setHasMore] = useState(true); 
+    const limit = 5;
+
     const loadQuestions = useCallback(() => { 
-        //console.log("about to load questions");
+        console.log("about to load questions");
         try{
           setLoading(true);         
-          let priorConnectionState = ConnectionState;
-          Hub.listen('api', (data) => {
-            const { payload } = data;
-            if (payload.event === CONNECTION_STATE_CHANGE) {
-              const connectionState = payload.data.connectionState;
-              console.log(connectionState);
-            }
-          });            
-            Hub.listen("api", (data) => {
-              const { payload } = data;
-              if (
-                payload.event === CONNECTION_STATE_CHANGE
-              ) {
+          // let priorConnectionState = ConnectionState;
+          // Hub.listen('api', (data) => {
+          //   const { payload } = data;
+          //   if (payload.event === CONNECTION_STATE_CHANGE) {
+          //     const connectionState = payload.data.connectionState;
+          //     console.log(connectionState);
+          //   }
+          // });            
+          //   Hub.listen("api", (data) => {
+          //     const { payload } = data;
+          //     if (
+          //       payload.event === CONNECTION_STATE_CHANGE
+          //     ) {
             
-                if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
+          //       if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
                     fetchQuestions();
-                }
-                priorConnectionState = payload.data.connectionState;
-              }
-            });
+            //     }
+            //     priorConnectionState = payload.data.connectionState;
+            //   }
+            // });
           setLoading(false);
         }catch(err){
           console.error("Questions.js Loading Questions from queries error", err);        
@@ -66,7 +75,7 @@ const Questions = () => {
           setFilterList([]);
           setLoading(false);        
         }
-      }, []); 
+      }, [nextToken]); 
 
       const loadSingleQuestion = async () => {
         try{
@@ -95,7 +104,7 @@ const Questions = () => {
       const initQuestions = async () => {
         try {   
           await loadQuestions();
-          subscribeToQuestion(dispatch);
+         // subscribeToQuestion(dispatch);
         }catch(error){
           console.error("Error on init questions", error);
         }
@@ -106,24 +115,59 @@ const Questions = () => {
       
    
       const fetchQuestions = async () => {       
-        setLoading(true);      
-        let q = await Queries.GetAllQuestions();         
-        if(q){        
-          const questions = q.filter(
-            (backendQuestion) => ((backendQuestion.parentID === null) )
-          )            
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)));
-
-            // initial setFilter list is the same as backendquestions retrieved from the server.
-          setBackendQuestions(questions);                  
-          setFilterList(questions);      
-            
-          dispatch({type: TYPES.ADD_QUESTIONS, payload: questions});
+        setLoading(true);            
+        let questions = await Queries.GetAllOpenQuestions(limit, nextNextToken);        
+        console.log("Fetch data no questions returned", questions);   
+        if(nextNextToken === null){    
+          console.log("Fetch no more data .. has more is false");    
+          setHasMore(false);
           setLoading(false);
+        }else{
+          console.log("Fetch data questions return", questions);
+          let items = questions?.items;
+          if( items ){        
+            const sortedItems = items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                     .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
+  
+            console.log("Fetch data questions sorted", sortedItems);
+            setNextNextToken(questions.nextToken);      
+            setBackendQuestions(prevQuestions => [...prevQuestions, ...sortedItems]);                  
+            setFilterList(prevQuestions => [...prevQuestions, ...sortedItems]);      
+            // let newQuestions = [];
+            // if ( state?.questions ){
+            //   newQuestions = (state?.questions).concat(sortedItems);
+            // }else{
+            //   newQuestions = sortedItems;
+            // }
+            //console.log("newQuestions", newQuestions);
+            dispatch({type: TYPES.ADD_QUESTIONS, payload: sortedItems});
+            setLoading(false);
+          }else{
+
+            setLoading(false);
+          }
+          
         }
       }
       
+      const next = () => {
+        setPreviousTokens((prev) => [...prev, nextToken])
+        setNextToken(nextNextToken)
+        setNextNextToken(null)
+      }
+    
+      const prev = () => {
+        setNextToken(previousTokens.pop())
+        setPreviousTokens([...previousTokens])
+        setNextNextToken(null)
+      }
+    
+      const reset = () => {
+        setNextToken(undefined)
+        setPreviousTokens([])
+        setNextNextToken(null)
+      }
+
       const handleAlreadyVotedFilterSwitch = () => {
         setIsAlreadyVotedFilterChecked(!isAlreadyVotedFilterChecked);  
              
@@ -537,26 +581,22 @@ const Questions = () => {
             options,      
           );          
                        
-          if(q){
-            setBackendQuestions(state?.questions);                  
-            setFilterList(state?.questions);              
-            // const updatedBackendQuestions = [...backendQuestions];
-            // updatedBackendQuestions.push(q);          
+          if(q){                            
+            const updatedBackendQuestions = [...backendQuestions];
+            updatedBackendQuestions.push(q);
+  
+            const sortedQuestions = updatedBackendQuestions.filter(
+              (backendQuestion) => ((backendQuestion.parentID === null) )
+            )
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
+  
 
-            // console.log("add question setting state", updatedBackendQuestions);
-  
-            // setBackendQuestions(updatedBackendQuestions.filter(
-            //   (backendQuestion) => ((backendQuestion.parentID === null) )
-            // )
-            // .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            // .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
-  
-            // setFilterList(updatedBackendQuestions.filter(
-            //   (backendQuestion) => ((backendQuestion.parentID === null) )
-            // )
-            // .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            // .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1)))); 
+            setBackendQuestions(prevQuestions => [...prevQuestions, ...sortedQuestions]);
+            setFilterList(prevQuestions => [...prevQuestions, ...sortedQuestions]); 
           
+            dispatch({type: TYPES.ADD_QUESTION, payload: q});
+
             setLoading(false); 
           }else{
             console.error("Error on Mutations.CreateQuestion ");
@@ -814,7 +854,9 @@ const Questions = () => {
                   ))}
               </div>    */}
                {state?.questions && (
-                 <QuestionList                                           
+                 <QuestionList          
+                  next={next}      
+                  hasMore={hasMore}                           
                   handleVote={handleVote}                                                 
                   updateQuestionVoteTime={updateQuestionVoteTime}                                        
                   deleteQuestion={deleteQuestion}                

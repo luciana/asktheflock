@@ -83,8 +83,7 @@ return (
   {items.map((item, index) => (
    
     <div className='container p-3 border-bottom bg-light ' key={index} >
-          <div className="row ">            
-           <span> here {iVotedForIt(item.id) === true ? "yes" : "no" }</span>
+          <div className="row ">                      
               <div key={item.id} onClick={() => voteUp(item)} className={iVotedForIt(item.id) ? 'col  ' : 'col  '}>
                 <span className="badge fs-6 text rounded-pill bg-dark  mx-2 ">
                   {item.votes}

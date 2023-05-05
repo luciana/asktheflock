@@ -46,14 +46,19 @@ function updateQuestions(state, payload) {
 }
 
 function addQuestions(state, payload) {  
+  
   const newState = { ...state, questions: payload };
   console.log("addQuestions state = ", newState);
   return newState;
 }
 
 function addQuestion(state, payload) {  
-  const questions = state?.questions;
-  questions.push(payload);
+  let questions = state?.questions;
+  if(questions){
+    questions.push(payload);
+  }else{
+    questions = [payload];
+  }
   const newState = { ...state, questions: questions };
   console.log("addQuestion one new question state = ", newState);
   return newState;
@@ -80,3 +85,23 @@ export default function AppReducer(state, { type, payload }) {
       throw new Error("TYPE NOT FOUND");
   }
 }
+
+ //function QuestionReducer(state, { type, payload }) {
+
+//   switch (type) {   
+//     case TYPES.UPDATE_VOTES:
+//         return updateVotes(state, payload);
+//     case TYPES.UPDATE_QUESTION:
+//         return updateQuestions(state, payload);
+//     case TYPES.ADD_QUESTIONS:
+//           return addQuestions(state, payload);
+//     case TYPES.ADD_QUESTION:
+//           return addQuestion(state, payload);
+//     case TYPES.DELETE_QUESTION:
+//           return deleteQuestion(state, payload);
+//     default:
+//       throw new Error("TYPE NOT FOUND");
+//   }
+// }
+
+// export default {AppReducer, QuestionReducer};

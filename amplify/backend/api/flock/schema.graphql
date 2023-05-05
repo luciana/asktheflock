@@ -29,11 +29,11 @@ type Question @model
                    { allow: groups, groups: ["asktheflockadmin"], operations: [ read, create, update, delete] }
                   ])
               {
-  id: ID!  @primaryKey 
+  id: ID!  @primaryKey(sortKeyFields: ["voteEndAt"])
   text: String! 
   userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
   userName: String 
-  voteEndAt: AWSDateTime 
+  voteEndAt: AWSDateTime!
   sentiment: String 
   parentID: ID 
   questionTag: String 
