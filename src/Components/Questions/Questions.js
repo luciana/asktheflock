@@ -116,38 +116,44 @@ const Questions = () => {
    
       const fetchQuestions = async () => {       
         setLoading(true);            
-        let questions = await Queries.GetAllOpenQuestions(limit, nextNextToken);        
-        console.log("Fetch data no questions returned", questions);   
-        if(nextNextToken === null){    
-          console.log("Fetch no more data .. has more is false");    
-          setHasMore(false);
-          setLoading(false);
-        }else{
+        let questions = await Queries.GetAllOpenQuestions(limit, nextToken);        
+        //console.log("Fetch data returned", questions);   
+        if(questions){
           console.log("Fetch data questions return", questions);
-          let items = questions?.items;
-          if( items ){        
-            const sortedItems = items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                                     .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
-  
-            console.log("Fetch data questions sorted", sortedItems);
-            setNextNextToken(questions.nextToken);      
-            setBackendQuestions(prevQuestions => [...prevQuestions, ...sortedItems]);                  
-            setFilterList(prevQuestions => [...prevQuestions, ...sortedItems]);      
-            // let newQuestions = [];
-            // if ( state?.questions ){
-            //   newQuestions = (state?.questions).concat(sortedItems);
-            // }else{
-            //   newQuestions = sortedItems;
-            // }
-            //console.log("newQuestions", newQuestions);
-            dispatch({type: TYPES.ADD_QUESTIONS, payload: sortedItems});
+          setNextNextToken(questions.nextToken);  
+          let items = questions.items;
+          if( items ){                    
+            let newQuestions = [];
+            if ( state?.questions ){
+              newQuestions = (state?.questions).concat(items);
+            }else{
+              newQuestions = items;
+            }
+
+            const sortedNewQuestions = newQuestions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
+
+            console.log("newQuestions", sortedNewQuestions);
+
+            setBackendQuestions(prevQuestions => [...prevQuestions, ...sortedNewQuestions]);                  
+            setFilterList(prevQuestions => [...prevQuestions, ...sortedNewQuestions]);   
+
+            dispatch({type: TYPES.ADD_QUESTIONS, payload: sortedNewQuestions});
+            
             setLoading(false);
           }else{
-
             setLoading(false);
           }
-          
-        }
+
+          if(questions.nextToken === null){    
+            console.log("Fetch no more data .. has more is false");    
+            setHasMore(false);
+            setLoading(false);
+          }                
+      }else{
+        console.log("Fetched no questions");
+        setLoading(false);
+      }
       }
       
       const next = () => {

@@ -27,7 +27,7 @@ const GetQuestionByUserId = async (userID) => {
 };
 
 const GetAllOpenQuestions = async(limit, nextToken) => {
-  console.log("next next token",nextToken );
+  console.log(" next token",nextToken );
   const data = await API.graphql(graphqlOperation(queries.listQuestions, {   
     limit: limit,
     nextToken: nextToken,
@@ -39,7 +39,7 @@ const GetAllOpenQuestions = async(limit, nextToken) => {
       ]
     }, 
   }));
-//console.log(" query all questions with limits and next token", data.data.listQuestions);
+  console.log(" next next Token", data.data.listQuestions.nextToken);
   return data.data.listQuestions.items.length ? data.data.listQuestions : null;
 }
 
