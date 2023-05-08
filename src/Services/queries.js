@@ -41,10 +41,10 @@ const GetAllQuestions = async(limit, nextToken) => {
   return data.data.listQuestions.items.length ? data.data.listQuestions : null;
 }
 
-const GetAllQuestionsByVoteEndDate = async(limit, nextToken) => {
+const GetAllQuestionsByVoteEndDate = async(limit, nextToken, type) => {
   const data = await API.graphql(graphqlOperation(queries.questionsByVoteEndDate, {   
-    type: "Question",
-    sortDirection: 'DESC',
+    type,
+  
     filter: {
       parentID: {
             eq: null

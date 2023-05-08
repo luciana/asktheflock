@@ -5,6 +5,7 @@ import QuestionList from "./QuestionsList";
 import QuestionAndPoll from './QuestionAndPoll';
 import { Modal } from 'react-bootstrap';
 import { Loading, Alert, Switch, Friends }  from '../../Components';
+import ContentLoader, { Facebook } from 'react-content-loader'
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
@@ -38,10 +39,10 @@ const Questions = () => {
     const [nextNextToken, setNextNextToken] = useState();
     const [previousTokens, setPreviousTokens] = useState([]);
     const [hasMore, setHasMore] = useState(true); 
-    const limit = 5;
+    const limit = process.env.REACT_APP_PAGE_SIZE_FOR_QUESTIONS;
 
     const loadQuestions = useCallback(() => { 
-        console.log("about to load questions");
+      //  console.log("about to load questions");
         try{
           setLoading(true);         
           // let priorConnectionState = ConnectionState;
@@ -112,7 +113,7 @@ const Questions = () => {
    
       const fetchQuestions = async () => {       
         setLoading(true);            
-        let questions = await Queries.GetAllQuestionsByVoteEndDate(limit, nextToken);        
+        let questions = await Queries.GetAllQuestionsByVoteEndDate(limit, nextToken, "Question");        
         //console.log("Fetch data returned", questions);   
         if(questions){
           console.log("Fetch data questions return", questions);
@@ -800,7 +801,7 @@ const Questions = () => {
       const showNoQuestions = questions?.length === 0;
       return ( 
         <>
-            {loading && <Loading />}
+            {loading && <Facebook />}
             <Alert type={alert?.type} text={alert?.text} />
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             
