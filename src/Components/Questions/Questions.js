@@ -16,10 +16,6 @@ import Mutations from "../../Services/mutations";
 // import { Hub } from 'aws-amplify';
 
 const Questions = () => {
-  const SORT = {
-    ASC: 'ASC',
-    DESC: 'DESC',
-  }
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
@@ -116,7 +112,7 @@ const Questions = () => {
    
       const fetchQuestions = async () => {       
         setLoading(true);            
-        let questions = await Queries.GetAllOpenQuestions(limit, nextToken);        
+        let questions = await Queries.GetAllQuestionsByVoteEndDate(limit, nextToken);        
         //console.log("Fetch data returned", questions);   
         if(questions){
           console.log("Fetch data questions return", questions);
@@ -135,10 +131,10 @@ const Questions = () => {
 
             console.log("newQuestions", sortedNewQuestions);
 
-            setBackendQuestions(prevQuestions => [...prevQuestions, ...sortedNewQuestions]);                  
-            setFilterList(prevQuestions => [...prevQuestions, ...sortedNewQuestions]);   
+            setBackendQuestions(prevQuestions => [...prevQuestions, ...newQuestions]);                  
+            setFilterList(prevQuestions => [...prevQuestions, ...newQuestions]);   
 
-            dispatch({type: TYPES.ADD_QUESTIONS, payload: sortedNewQuestions});
+            dispatch({type: TYPES.ADD_QUESTIONS, payload: newQuestions});
             
             setLoading(false);
           }else{
@@ -152,11 +148,13 @@ const Questions = () => {
           }                
       }else{
         console.log("Fetched no questions");
+        setHasMore(false);
         setLoading(false);
       }
       }
       
       const next = () => {
+        console.log("calling next, setting next next token to null");
         setPreviousTokens((prev) => [...prev, nextToken])
         setNextToken(nextNextToken)
         setNextNextToken(null)
@@ -417,10 +415,12 @@ const Questions = () => {
             question.id,
             JSON.stringify(optionsInQuestion),
             JSON.stringify(statsInQuestion),
+            question.voteEndAt
           );           
           
+          console.log("set active question in Mutations.UpdateQuestionOptions", result);
           setActiveQuestion(result);
-          return result && result.length > 0 ? result : null;  
+          dispatch({type: TYPES.UPDATE_QUESTION, payload: result});
 
           }catch(error){
             console.error("Mutations.UpdateQuestionOptions error", error);
@@ -498,8 +498,7 @@ const Questions = () => {
       const updateStats = async (question, optID, optionsInQuestion) => {          
         const statsInQuestion = prepStatData(question, user, optID);    
 
-        const result = await updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
-        return result && result.length > 0 ? result : null;  
+       await updateStatsAndOptionsInQuestionTable(question, optionsInQuestion, statsInQuestion);        
       }
 
       const updateQuestionVoteTime = async (question, voteEndAt) => {
@@ -549,11 +548,9 @@ const Questions = () => {
                     break;
                   }
               }
-             }
-           // console.log("item to update options with votes ", optionsInQuestion);
-            const questionUpdated = updateStats(question, optionID, optionsInQuestion);    
-            console.log("question updated", questionUpdated);
-            //setActiveQuestion(questionUpdated);
+             }    
+           updateStats(question, optionID, optionsInQuestion);    
+            
           }else{
             console.error("No update to option votes happened");
           }
@@ -580,6 +577,7 @@ const Questions = () => {
             text, 
             userID,            
             voteEndAt,
+            "Question",
             sentiment,  
             userName,          
             parentID,

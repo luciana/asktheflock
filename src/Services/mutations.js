@@ -122,12 +122,12 @@ const UpdateUserVotes = async ( id, votes ) => {
 
 // updateQuestion(input: {id: "b35d6d5e-4160-40d2-951d-6444d7fe90a2"
 //   options:"[{\"votes\":1,\"id\":1,\"text\":\"reactjs\"},{\"votes\":0,\"id\":2,\"text\":\"vuejs\"}]"})
-const UpdateQuestionOptions = async ( id, options, stats ) => { 
+const UpdateQuestionOptions = async ( id, options, stats, voteEndAt ) => { 
   const {
     data: { updateQuestion },
   } = await API.graphql(
     graphqlOperation(mutations.updateQuestion, {
-      input: { id, options, stats },
+      input: { id, options, stats, voteEndAt },
     })
   );
   return updateQuestion;
@@ -148,6 +148,7 @@ const CreateQuestion = async (
   text, 
   userID,
   voteEndAt,
+  type,
   sentiment,
   userName,
   parentID,
@@ -162,11 +163,12 @@ const CreateQuestion = async (
       {   text, 
         userID,
         voteEndAt,
+        type,
         sentiment,
         userName,
         parentID,
         questionTag,
-        options
+        options,
       } })
   );
   return createQuestion;

@@ -63,7 +63,7 @@ function addQuestion(state, payload) {
   const sortedItems = questions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                                      .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
   
-  const newState = { ...state, questions: sortedItems };
+  const newState = { ...state, questions: questions };
   console.log("addQuestion one new question state = ", newState);
   return newState;
 }

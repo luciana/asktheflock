@@ -26,15 +26,13 @@ const GetQuestionByUserId = async (userID) => {
   return data.data.questionByUserId.items.length ? data.data.questionByUserId.items.length : null;
 };
 
-const GetAllOpenQuestions = async(limit, nextToken) => {
+const GetAllQuestions = async(limit, nextToken) => {
   console.log(" next token",nextToken );
   const data = await API.graphql(graphqlOperation(queries.listQuestions, {   
     limit: limit,
     nextToken: nextToken,
-    //sortDirection: 'ASC',
     filter: {
-      and: [       
-       // { voteEndAt: { gt: new Date() } },
+      and: [             
         { parentID:  { eq: null } },      
       ]
     }, 
@@ -43,8 +41,10 @@ const GetAllOpenQuestions = async(limit, nextToken) => {
   return data.data.listQuestions.items.length ? data.data.listQuestions : null;
 }
 
-const GetAllQuestions = async(limit, nextToken) => {
-  const data = await API.graphql(graphqlOperation(queries.listQuestions, {   
+const GetAllQuestionsByVoteEndDate = async(limit, nextToken) => {
+  const data = await API.graphql(graphqlOperation(queries.questionsByVoteEndDate, {   
+    type: "Question",
+    sortDirection: 'DESC',
     filter: {
       parentID: {
             eq: null
@@ -54,8 +54,8 @@ const GetAllQuestions = async(limit, nextToken) => {
     nextToken: nextToken,
   
 }));
-console.log(" query all questions with limits ", data.data.listQuestions.items);
-  return data.data.listQuestions.items.length ? data.data.listQuestions : null;
+console.log(" query all questions with limits ", data.data.questionsByVoteEndDate);
+  return data.data.questionsByVoteEndDate.items.length ? data.data.questionsByVoteEndDate : null;
 }
 
 const GetAllUsers = async() => {
@@ -95,8 +95,8 @@ const GetAllComments = async() => {
 
 const Queries = {
   GetUserByEmail,
+  GetAllQuestionsByVoteEndDate,
   GetAllQuestions,
-  GetAllOpenQuestions,
   GetAllUsers,
   GetSingleQuestion,
   GetQuestionByUserId,

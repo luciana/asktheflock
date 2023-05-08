@@ -81,6 +81,7 @@ export const createQuestion = /* GraphQL */ `
       userID
       userName
       voteEndAt
+      type
       sentiment
       parentID
       questionTag
@@ -103,6 +104,7 @@ export const updateQuestion = /* GraphQL */ `
       userID
       userName
       voteEndAt
+      type
       sentiment
       parentID
       questionTag
@@ -125,6 +127,7 @@ export const deleteQuestion = /* GraphQL */ `
       userID
       userName
       voteEndAt
+      type
       sentiment
       parentID
       questionTag

@@ -57,13 +57,14 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getQuestion = /* GraphQL */ `
-  query GetQuestion($id: ID!, $voteEndAt: AWSDateTime!) {
-    getQuestion(id: $id, voteEndAt: $voteEndAt) {
+  query GetQuestion($id: ID!) {
+    getQuestion(id: $id) {
       id
       text
       userID
       userName
       voteEndAt
+      type
       sentiment
       parentID
       questionTag
@@ -78,7 +79,6 @@ export const getQuestion = /* GraphQL */ `
 export const listQuestions = /* GraphQL */ `
   query ListQuestions(
     $id: ID
-    $voteEndAt: ModelStringKeyConditionInput
     $filter: ModelQuestionFilterInput
     $limit: Int
     $nextToken: String
@@ -86,7 +86,6 @@ export const listQuestions = /* GraphQL */ `
   ) {
     listQuestions(
       id: $id
-      voteEndAt: $voteEndAt
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -98,6 +97,7 @@ export const listQuestions = /* GraphQL */ `
         userID
         userName
         voteEndAt
+        type
         sentiment
         parentID
         questionTag
@@ -290,6 +290,44 @@ export const questionByUserId = /* GraphQL */ `
         userID
         userName
         voteEndAt
+        type
+        sentiment
+        parentID
+        questionTag
+        options
+        stats
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const questionsByVoteEndDate = /* GraphQL */ `
+  query QuestionsByVoteEndDate(
+    $type: String!
+    $voteEndAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelQuestionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    questionsByVoteEndDate(
+      type: $type
+      voteEndAt: $voteEndAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        text
+        userID
+        userName
+        voteEndAt
+        type
         sentiment
         parentID
         questionTag
