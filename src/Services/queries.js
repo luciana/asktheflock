@@ -44,7 +44,7 @@ const GetAllQuestions = async(limit, nextToken) => {
 const GetAllQuestionsByVoteEndDate = async(limit, nextToken) => {
   const data = await API.graphql(graphqlOperation(queries.questionsByVoteEndDate, {   
     type: "Question",
-    sortDirection: 'ASC',
+    sortDirection: 'DESC',
     filter: {
       parentID: {
             eq: null

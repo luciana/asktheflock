@@ -415,7 +415,8 @@ const Questions = () => {
             question.id,
             JSON.stringify(optionsInQuestion),
             JSON.stringify(statsInQuestion),
-            question.voteEndAt
+            question.voteEndAt,
+            question.createdAt
           );           
           
           console.log("set active question in Mutations.UpdateQuestionOptions", result);
@@ -508,6 +509,7 @@ const Questions = () => {
           const updatedQuestions = await Mutations.UpdateQuestionVoteEndAt(
             question.id,
             voteEndAt,
+            question.createdAt
           );
                   
           const newA = [];             
