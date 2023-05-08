@@ -153,7 +153,8 @@ const CreateQuestion = async (
   userName,
   parentID,
   questionTag,
-  options
+  options,
+  createdAt,
     ) => {
 
   const {
@@ -169,6 +170,7 @@ const CreateQuestion = async (
         parentID,
         questionTag,
         options,
+        createdAt,
       } })
   );
   return createQuestion;

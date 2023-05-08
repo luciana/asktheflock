@@ -69,9 +69,9 @@ export const getQuestion = /* GraphQL */ `
       parentID
       questionTag
       options
+      createdAt
       stats
       owner
-      createdAt
       updatedAt
     }
   }
@@ -102,9 +102,9 @@ export const listQuestions = /* GraphQL */ `
         parentID
         questionTag
         options
+        createdAt
         stats
         owner
-        createdAt
         updatedAt
       }
       nextToken
@@ -295,9 +295,9 @@ export const questionByUserId = /* GraphQL */ `
         parentID
         questionTag
         options
+        createdAt
         stats
         owner
-        createdAt
         updatedAt
       }
       nextToken
@@ -307,7 +307,7 @@ export const questionByUserId = /* GraphQL */ `
 export const questionsByVoteEndDate = /* GraphQL */ `
   query QuestionsByVoteEndDate(
     $type: String!
-    $voteEndAt: ModelStringKeyConditionInput
+    $createdAtVoteEndAt: ModelQuestionQuestionsByVoteEndDateCompositeKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelQuestionFilterInput
     $limit: Int
@@ -315,7 +315,7 @@ export const questionsByVoteEndDate = /* GraphQL */ `
   ) {
     questionsByVoteEndDate(
       type: $type
-      voteEndAt: $voteEndAt
+      createdAtVoteEndAt: $createdAtVoteEndAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -332,9 +332,9 @@ export const questionsByVoteEndDate = /* GraphQL */ `
         parentID
         questionTag
         options
+        createdAt
         stats
         owner
-        createdAt
         updatedAt
       }
       nextToken

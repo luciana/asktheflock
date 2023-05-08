@@ -129,7 +129,7 @@ const Questions = () => {
             const sortedNewQuestions = newQuestions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
 
-            console.log("newQuestions", sortedNewQuestions);
+            console.log("newQuestions", newQuestions);
 
             setBackendQuestions(prevQuestions => [...prevQuestions, ...newQuestions]);                  
             setFilterList(prevQuestions => [...prevQuestions, ...newQuestions]);   
@@ -583,6 +583,7 @@ const Questions = () => {
             parentID,
             questionTag,
             options,      
+            new Date(),
           );          
                        
           if(q){                            

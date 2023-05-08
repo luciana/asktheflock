@@ -34,12 +34,14 @@ type Question @model
   userID: ID! @index(name:"byUserId", queryField: "questionByUserId") 
   userName: String 
   voteEndAt: AWSDateTime 
-  type: String! @index(name: "questionsByVoteEndDate", queryField: "questionsByVoteEndDate", sortKeyFields: ["voteEndAt"])
+  type: String! @index(name: "questionsByVoteEndDate", queryField: "questionsByVoteEndDate", sortKeyFields: ["createdAt","voteEndAt"])
   sentiment: String 
   parentID: ID 
   questionTag: String 
   options: AWSJSON! 
+  createdAt: AWSDateTime,
   stats: AWSJSON 
+
   owner: String @auth(rules: [{ allow: owner, operations: [read, delete] },   { allow: private, operations: [read, update, delete] }]) 
  }
 

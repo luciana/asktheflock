@@ -86,9 +86,9 @@ export const createQuestion = /* GraphQL */ `
       parentID
       questionTag
       options
+      createdAt
       stats
       owner
-      createdAt
       updatedAt
     }
   }
@@ -109,9 +109,9 @@ export const updateQuestion = /* GraphQL */ `
       parentID
       questionTag
       options
+      createdAt
       stats
       owner
-      createdAt
       updatedAt
     }
   }
@@ -132,9 +132,9 @@ export const deleteQuestion = /* GraphQL */ `
       parentID
       questionTag
       options
+      createdAt
       stats
       owner
-      createdAt
       updatedAt
     }
   }
