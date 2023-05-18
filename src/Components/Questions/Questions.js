@@ -4,7 +4,7 @@ import Question from "./Question";
 import QuestionList from "./QuestionsList";
 import QuestionAndPoll from './QuestionAndPoll';
 import { Modal } from 'react-bootstrap';
-import { GhostLoader, Alert, Switch, Friends }  from '../../Components';
+import { Loading, Alert, Switch, Friends }  from '../../Components';
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
@@ -48,13 +48,13 @@ const Questions = () => {
           console.error("Questions.js Loading Questions from queries error", err);        
           setBackendQuestions([]);
           setFilterList([]);
-          //setLoading(false);        
+          setLoading(false);        
         }
       }, [nextToken]); 
 
       const loadSingleQuestion = async () => {
         try{
-          //setLoading(true);       
+          setLoading(true);       
          
           //direct link to question - queryString id - URL paramenters
           if (questionQueryId){                   
@@ -67,7 +67,7 @@ const Questions = () => {
             setActiveQuestion(null); 
             setShowSingleQuestionModal(false);
           }                       
-         // setLoading(false);
+          setLoading(false);
         }catch(err){
           console.error("Questions.js Loading Single Question from queries error", err);
           setActiveQuestion(null);    
@@ -79,7 +79,7 @@ const Questions = () => {
       const initQuestions = async () => {
         try {   
           await loadQuestions();
-         // subscribeToQuestion(dispatch);
+         // subscribeToQuestion(dispatch); this enables pub/sub 
         }catch(error){
           console.error("Error on init questions", error);
         }
@@ -118,20 +118,20 @@ const Questions = () => {
 
             dispatch({type: TYPES.ADD_QUESTIONS, payload: unique});
             
-           // setLoading(false);
+            setLoading(false);
           }else{
-            //setLoading(false);
+            setLoading(false);
           }
 
           if(questions.nextToken === null){    
             console.log("Fetch no more data .. has more is false");    
             setHasMore(false);
-            //setLoading(false);
+            setLoading(false);
           }                
       }else{
         console.log("Fetched no questions");
         setHasMore(false);
-       // setLoading(false); 
+        setLoading(false); 
       }
       }
       
@@ -828,7 +828,7 @@ const Questions = () => {
            
               
            
-              {loading && <GhostLoader />}
+              {loading && <Loading />}
                   
               {/* <div id="all-questions" className="py-1 my-1">
                   {state?.questions?.map((rootQuestion) => (
