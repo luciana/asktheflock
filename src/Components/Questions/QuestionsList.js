@@ -4,7 +4,7 @@ import { AppContext} from '../../Contexts';
 
 
 
-function QuestionsList({next,hasMore, handleVote, updateQuestionVoteTime, deleteQuestion, createComment, getComment}) {
+function QuestionsList({next,hasMore, handleVote, updateQuestionVoteTime, deleteQuestion, createComment, getComment, loading}) {
 
     const { state } = useContext(AppContext);  
     const { questions } = state;
@@ -45,7 +45,8 @@ function QuestionsList({next,hasMore, handleVote, updateQuestionVoteTime, delete
                 updateQuestionVoteTime={updateQuestionVoteTime}                                        
                 deleteQuestion={deleteQuestion}
                 createComment={createComment}                      
-                getComment={getComment}                                                              
+                getComment={getComment}
+                loading={loading}                                                
             />
            
         ))}

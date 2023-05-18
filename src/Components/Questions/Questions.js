@@ -124,7 +124,7 @@ const Questions = () => {
           }
 
           if(questions.nextToken === null){    
-            console.log("Fetch no more data .. has more is false");    
+           // console.log("Fetch no more data .. has more is false");    
             setHasMore(false);
             setLoading(false);
           }                
@@ -136,7 +136,7 @@ const Questions = () => {
       }
       
       const next = () => {
-        console.log("calling next, setting next next token to null");
+       // console.log("calling next, setting next next token to null");
         setPreviousTokens((prev) => [...prev, nextToken])
         setNextToken(nextNextToken)
         setNextNextToken(null)
@@ -401,7 +401,7 @@ const Questions = () => {
             question.createdAt
           );           
           
-          console.log("set active question in Mutations.UpdateQuestionOptions", result);
+          //console.log("set active question in Mutations.UpdateQuestionOptions", result);
           setActiveQuestion(result);
           dispatch({type: TYPES.UPDATE_QUESTION, payload: result});
 
@@ -440,7 +440,7 @@ const Questions = () => {
 
           let itemAlreadyInVoteTable = [];
           //logic to present duplicates in Vote table 
-          console.log("checking if should create new vote item, myVote context", myVotes);
+          //console.log("checking if should create new vote item, myVote context", myVotes);
           if(checkInTable || !myVotes){
             //this is used during the migration or when myVotes context is not available
            // console.log("checking by looking directly at the table");
@@ -762,7 +762,7 @@ const Questions = () => {
          // console.log("user vote has NOT been emptied from the migration - update user vote and migrate");
           updateUserVotes( userVote);
          }else{
-          console.log("user vote has been emptied from the migration. just create item in votes table");
+         // console.log("user vote has been emptied from the migration. just create item in votes table");
            await createVote(user.id, user.name, question.id, userVote.optionId, false, question);  
               
          }
@@ -781,7 +781,7 @@ const Questions = () => {
       }      
       const showNoQuestions = questions?.length === 0;
 
-      console.log("what is the loading value", loading);
+    
       return ( 
         <>
            
@@ -825,7 +825,7 @@ const Questions = () => {
               </div>           
             </div>  
               {/* Question List Section */}    
-              {loading && <Loading />}                
+                       
               {/* <div id="all-questions" className="py-1 my-1">
                   {state?.questions?.map((rootQuestion) => (
                       <Question
@@ -848,7 +848,8 @@ const Questions = () => {
                   updateQuestionVoteTime={updateQuestionVoteTime}                                        
                   deleteQuestion={deleteQuestion}                
                   createComment={createComment}                      
-                  getComment={getComment}                                                              
+                  getComment={getComment}  
+                  loading={loading}                                                            
                />
                 
                 )}

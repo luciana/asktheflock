@@ -4,6 +4,7 @@ import QuestionCommentForm from '../Questions/QuestionCommentForm';
 import { FaRegCommentDots, FaRegComment } from 'react-icons/fa';
 import CommentModalDialog from '../Comments/CommentModalDialog';
 import { LANGUAGES } from '../../Constants';
+import { Loading } from '../../Components';
 import { AppContext } from '../../Contexts';
 const Vote = ({ question,     
              items,               
@@ -14,7 +15,9 @@ const Vote = ({ question,
              createVoteCommentObject,
              alreadyCommented,
              //user,
-             iVotedForIt
+             iVotedForIt,
+             loading
+             
              }) => {
 
 const [edit, setEdit] = useState({
@@ -80,9 +83,11 @@ const openCommentDetails = (item) => {
 
 return (
 <>
+{loading && <Loading size={10}/>}  
   {items.map((item, index) => (
    
     <div className='container p-3 border-bottom bg-light ' key={index} >
+     
           <div className="row ">                      
               <div key={item.id} onClick={() => voteUp(item)} className={iVotedForIt(item.id) ? 'col  ' : 'col  '}>
                 <span className="badge fs-6 text rounded-pill bg-dark  mx-2 ">

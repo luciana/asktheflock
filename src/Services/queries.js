@@ -37,7 +37,7 @@ const GetAllQuestions = async(limit, nextToken) => {
       ]
     }, 
   }));
-  console.log(" next next Token", data.data.listQuestions.nextToken);
+//  console.log(" next next Token", data.data.listQuestions.nextToken);
   return data.data.listQuestions.items.length ? data.data.listQuestions : null;
 }
 
@@ -54,7 +54,6 @@ const GetAllQuestionsByVoteEndDate = async(limit, nextToken, type) => {
     nextToken: nextToken,
   
 }));
-console.log(" query all questions with limits ", data.data.questionsByVoteEndDate);
   return data.data.questionsByVoteEndDate.items.length ? data.data.questionsByVoteEndDate : null;
 }
 

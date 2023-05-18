@@ -1,8 +1,9 @@
-
 import BeatLoader from "react-spinners/BeatLoader";
 
-const Loading = () => {
+const Loading = ({size}) => {
   const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+  const s = size ? size : 30;
+  
   return (
 
     <div style={style}>
@@ -10,7 +11,7 @@ const Loading = () => {
           color={'#076AE0'}
           loading={true}
           margin= {3}
-          size={30}
+          size={s}
           aria-label="Loading Spinner"
           data-testid="loader"
         />

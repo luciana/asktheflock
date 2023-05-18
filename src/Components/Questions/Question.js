@@ -11,7 +11,7 @@ import { SocialShare } from '../Social';
 import { formatDateTime, formatName, findCounts } from '../../Helpers';
 import { LANGUAGES } from '../../Constants';
 import { Modal } from 'react-bootstrap';
-import { Button, Input, Alert, Loading } from './../../Components';
+import { Button, Input, Alert } from './../../Components';
 //import  shortenURL  from './../../Services/shortenURL';
 import { AppContext} from '../../Contexts'; 
 
@@ -23,6 +23,7 @@ function Question({
   createComment,
   getComment,
   parentId = null,
+  loading,
  }) {
 
   const [showQuestionCopyLink, setShowQuestionCopyLink] = useState(false);
@@ -31,7 +32,7 @@ function Question({
   const [expertVoteCount, setExpertVoteCount] =useState(null);
   const [alert, setAlert] = useState();
   const [questionLink, setQuestionLink] = useState("");
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const [optionItem, setOptionItem] = useState(null);
   const [commentData, setCommentData] = useState(null);
   const [alreadyCommented, setAlreadyCommented] = useState(false);
@@ -49,7 +50,7 @@ function Question({
     getExpertVoteCount();
     getCommentDataForOptions();   
     checkIfAlreadyVoted();
-    console.log("rendering Question component");
+    //console.log("rendering Question component");
   }, [question.options]);
 
  
@@ -224,7 +225,7 @@ function Question({
     const url = window.location.origin +"/main?id=" + question.id;
    // const s = await shortenURL(url);   
     try{
-      setLoading(true);
+     // setLoading(true);
       
       // if(s){
       //   setQuestionLink(s);
@@ -234,13 +235,13 @@ function Question({
        // console.warning("shorten URL didn't return link");
         setShowQuestionCopyLink(true);
         setQuestionLink(url);
-        setLoading(false);
+      //  setLoading(false);
       //  }
       
     }catch (error){
       setShowQuestionCopyLink(true);
       setQuestionLink(url);
-      setLoading(false);
+     // setLoading(false);
     }  
   }
 
@@ -277,7 +278,7 @@ function Question({
 
   return (
     <>
-        {loading && <Loading />}
+
        <div key={question.id} className="mb-1 border border-1" >           
         <div className="py-1 d-flex align-items-center">    
           <div className="py-2 me-auto d-flex align-items-center">
@@ -352,6 +353,7 @@ function Question({
                 alreadyCommented={alreadyCommented}
                 user={user}
                 iVotedForIt={iVotedForIt} 
+                loading={loading}
                 />    
         </div>     
           {/* {replies && replies.length > 0 && (             
