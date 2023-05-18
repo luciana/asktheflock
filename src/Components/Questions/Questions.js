@@ -824,12 +824,8 @@ const Questions = () => {
                   
               </div>           
             </div>  
-                     {/* Question List Section */}
-           
-              
-           
-              {loading && <Loading />}
-                  
+              {/* Question List Section */}    
+              {loading && <Loading />}                
               {/* <div id="all-questions" className="py-1 my-1">
                   {state?.questions?.map((rootQuestion) => (
                       <Question
@@ -844,7 +840,7 @@ const Questions = () => {
                       />
                   ))}
               </div>    */}
-               {!loading && state?.questions && (
+               {state?.questions && (
                  <QuestionList          
                   next={next}      
                   hasMore={hasMore}                           

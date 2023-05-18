@@ -14,7 +14,6 @@ import { Modal } from 'react-bootstrap';
 import { Button, Input, Alert, Loading } from './../../Components';
 //import  shortenURL  from './../../Services/shortenURL';
 import { AppContext} from '../../Contexts'; 
-import ContentLoader, { Facebook } from 'react-content-loader'
 
 function Question({ 
   question,    
@@ -278,7 +277,7 @@ function Question({
 
   return (
     <>
-        {loading && <Facebook />}
+        {loading && <Loading />}
        <div key={question.id} className="mb-1 border border-1" >           
         <div className="py-1 d-flex align-items-center">    
           <div className="py-2 me-auto d-flex align-items-center">
