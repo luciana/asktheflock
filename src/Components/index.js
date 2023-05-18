@@ -1,6 +1,7 @@
 export { default as Alert } from "./Alert";
 export { default as Input } from "./Elements/Input";
 export { default as Loading } from "./Loading";
+export { default as GhostLoader } from "./Loading/GhostLoader";
 export { default as Button } from "./Elements/Button";
 export { default as Form } from "./Elements/Form";
 export { default as Select } from "./Elements/Select";

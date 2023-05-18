@@ -20,9 +20,13 @@ function updateUser(state, payload) {
 }
 
 function updateVotes(state, payload) {  
-  const newState = { ...state, myVotes: payload, votesCount: payload.length ? payload.length :0 };
+  let myVotes = 0;
+  if( payload ){
+    myVotes = payload.length ? payload.length :0
+  }
+  const newState = { ...state, myVotes: payload, votesCount: myVotes };
   
- // console.log("updateVotes state = ", newState);
+  console.log("updateVotes state = ", newState);
   return newState;
 }
 

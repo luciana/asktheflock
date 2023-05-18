@@ -114,8 +114,7 @@ export default function Layout() {
         }           
         if(String(error).includes("The user is not authenticated")){   
           sessionStorage.removeItem('logged_in');           
-          dispatch({ type: TYPES.UPDATE_USER, payload: null });   
-          dispatch({ type: TYPES.UPDATE_VOTES, payload: null });
+          dispatch({ type: TYPES.UPDATE_USER, payload: null });           
         }      
        navigate(ROUTES[state.lang].HOME);
       }

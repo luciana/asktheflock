@@ -307,7 +307,7 @@ export const questionByUserId = /* GraphQL */ `
 export const questionsByVoteEndDate = /* GraphQL */ `
   query QuestionsByVoteEndDate(
     $type: String!
-    $createdAtVoteEndAt: ModelQuestionQuestionsByVoteEndDateCompositeKeyConditionInput
+    $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelQuestionFilterInput
     $limit: Int
@@ -315,7 +315,7 @@ export const questionsByVoteEndDate = /* GraphQL */ `
   ) {
     questionsByVoteEndDate(
       type: $type
-      createdAtVoteEndAt: $createdAtVoteEndAt
+      createdAt: $createdAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

@@ -39,6 +39,7 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "react-share": "^4.4.1",
+    "react-spinners": "^0.13.8",
     "reactstrap": "^9.1.5",
     "type-fest": "^0.21.3",
     "web-vitals": "^2.1.4"

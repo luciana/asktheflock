@@ -4,23 +4,19 @@ import Question from "./Question";
 import QuestionList from "./QuestionsList";
 import QuestionAndPoll from './QuestionAndPoll';
 import { Modal } from 'react-bootstrap';
-import { Loading, Alert, Switch, Friends }  from '../../Components';
-import ContentLoader, { Facebook } from 'react-content-loader'
+import { GhostLoader, Alert, Switch, Friends }  from '../../Components';
 import { AppContext} from '../../Contexts'; 
 import { LANGUAGES, ROUTES, TYPES } from "../../Constants";
 import { findGeneration, findAge } from "../../Helpers";
 import { inBoth } from "../../Helpers/arrayComparison";
 import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
-// import {subscribeToQuestion} from "../../Services/Subscriptions";
-// import { CONNECTION_STATE_CHANGE, ConnectionState } from '@aws-amplify/pubsub';
-// import { Hub } from 'aws-amplify';
 
 const Questions = () => {
     const [backendQuestions, setBackendQuestions] = useState([]);
     const [activeQuestion, setActiveQuestion] = useState(null);
     const [isFriendQuestionFilterChecked, setIsFriendQuestionFilterChecked] = useState(false);  
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState();
     const [isVoteFilterChecked, setIsVoteFilterChecked] = useState(false);  
     const [isQuestionFilterChecked, setIsQuestionFilterChecked] = useState(false);   
     const [isAlreadyVotedFilterChecked , setIsAlreadyVotedFilterChecked] = useState(false);
@@ -40,43 +36,25 @@ const Questions = () => {
     const [previousTokens, setPreviousTokens] = useState([]);
     const [hasMore, setHasMore] = useState(true); 
     const limit = process.env.REACT_APP_PAGE_SIZE_FOR_QUESTIONS;
+ 
 
     const loadQuestions = useCallback(() => { 
       //  console.log("about to load questions");
         try{
-          setLoading(true);         
-          // let priorConnectionState = ConnectionState;
-          // Hub.listen('api', (data) => {
-          //   const { payload } = data;
-          //   if (payload.event === CONNECTION_STATE_CHANGE) {
-          //     const connectionState = payload.data.connectionState;
-          //     console.log(connectionState);
-          //   }
-          // });            
-          //   Hub.listen("api", (data) => {
-          //     const { payload } = data;
-          //     if (
-          //       payload.event === CONNECTION_STATE_CHANGE
-          //     ) {
-            
-          //       if (priorConnectionState === ConnectionState.Connecting && payload.data.connectionState === ConnectionState.Connected) {
-                    fetchQuestions();
-            //     }
-            //     priorConnectionState = payload.data.connectionState;
-            //   }
-            // });
-          setLoading(false);
+           
+          fetchQuestions();          
+  
         }catch(err){
           console.error("Questions.js Loading Questions from queries error", err);        
           setBackendQuestions([]);
           setFilterList([]);
-          setLoading(false);        
+          //setLoading(false);        
         }
       }, [nextToken]); 
 
       const loadSingleQuestion = async () => {
         try{
-          setLoading(true);       
+          //setLoading(true);       
          
           //direct link to question - queryString id - URL paramenters
           if (questionQueryId){                   
@@ -89,7 +67,7 @@ const Questions = () => {
             setActiveQuestion(null); 
             setShowSingleQuestionModal(false);
           }                       
-          setLoading(false);
+         // setLoading(false);
         }catch(err){
           console.error("Questions.js Loading Single Question from queries error", err);
           setActiveQuestion(null);    
@@ -121,36 +99,39 @@ const Questions = () => {
           let items = questions.items;
           if( items ){                    
             let newQuestions = [];
-            if ( state?.questions ){
+            if ( state?.questions && state?.questions.length > 0){
               newQuestions = (state?.questions).concat(items);
             }else{
               newQuestions = items;
             }
 
+            const unique = [...new Map(newQuestions.map((m) => [m.id, m])).values()];
+            console.log(unique);
+
             const sortedNewQuestions = newQuestions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .sort((a, b) => ((new Date(a.voteEndAt) - new Date() < 1) - (new Date(b.voteEndAt) - new Date() < 1))); 
 
-            console.log("newQuestions", newQuestions);
+            console.log("newQuestions unique", unique);
 
-            setBackendQuestions(prevQuestions => [...prevQuestions, ...newQuestions]);                  
-            setFilterList(prevQuestions => [...prevQuestions, ...newQuestions]);   
+            setBackendQuestions(prevQuestions => [...prevQuestions, ...unique]);                  
+            setFilterList(prevQuestions => [...prevQuestions, ...unique]);   
 
-            dispatch({type: TYPES.ADD_QUESTIONS, payload: newQuestions});
+            dispatch({type: TYPES.ADD_QUESTIONS, payload: unique});
             
-            setLoading(false);
+           // setLoading(false);
           }else{
-            setLoading(false);
+            //setLoading(false);
           }
 
           if(questions.nextToken === null){    
             console.log("Fetch no more data .. has more is false");    
             setHasMore(false);
-            setLoading(false);
+            //setLoading(false);
           }                
       }else{
         console.log("Fetched no questions");
         setHasMore(false);
-        setLoading(false);
+       // setLoading(false); 
       }
       }
       
@@ -799,9 +780,11 @@ const Questions = () => {
         navigate(ROUTES[user.locale].MAIN);
       }      
       const showNoQuestions = questions?.length === 0;
+
+      console.log("what is the loading value", loading);
       return ( 
         <>
-            {loading && <Facebook />}
+           
             <Alert type={alert?.type} text={alert?.text} />
             {( !loading && showNoQuestions ) && <Alert type="warning" text={LANGUAGES[state.lang].Questions.NoQuestionsPosted} link={ROUTES[state.lang].NEW_QUESTION} />}          
             
@@ -845,7 +828,7 @@ const Questions = () => {
            
               
            
-           
+              {loading && <GhostLoader />}
                   
               {/* <div id="all-questions" className="py-1 my-1">
                   {state?.questions?.map((rootQuestion) => (
@@ -861,7 +844,7 @@ const Questions = () => {
                       />
                   ))}
               </div>    */}
-               {state?.questions && (
+               {!loading && state?.questions && (
                  <QuestionList          
                   next={next}      
                   hasMore={hasMore}                           

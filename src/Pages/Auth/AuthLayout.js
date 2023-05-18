@@ -10,8 +10,6 @@ import Queries from "../../Services/queries";
 import Mutations from "../../Services/mutations";
 import gtag from 'ga-gtag';
 
-
-
 export default function AuthLayout() {
   const navigate = useNavigate();
   const { state, dispatch } = useContext(AppContext);
@@ -65,17 +63,18 @@ export default function AuthLayout() {
 
       
     } catch (err) {
-      stopLoading();
+      stopLoading();    
       console.error("AuthLayout.js signIn error calling Auth.Signin", err);
       handleErrors(err);  
     }
   };
 
   function signInWithGoogle() {
+
       gtag('event', 'click_sign_with_google_button', {}); 
       Auth.SignInWithGoogle();
       sessionStorage.setItem('logged_in', true); 
-      stopLoading();
+
      
    }
  
@@ -83,7 +82,6 @@ export default function AuthLayout() {
       gtag('event', 'click_sign_with_facebook_button', {});   
       Auth.SignInWithFacebook(); 
       sessionStorage.setItem('logged_in', true); 
-      stopLoading();
 
     }
 
@@ -206,11 +204,12 @@ export default function AuthLayout() {
   useEffect(() => {
     const loadUser = async () => {
       setLoading(true);
+    
       try {
         const attributes = await Auth.GetUser();
        // console.log("do I get there?", attributes);
         if ( attributes){
-          setLoading(false);
+          setLoading(false);   
           navigate(ROUTES[state.lang].MAIN);
         }else{
           setLoading(false);
@@ -224,6 +223,7 @@ export default function AuthLayout() {
         // });
         // navigate(ROUTES[state.lang].SIGN_IN);
         setLoading(false);
+        
       }
     };
     

@@ -1,18 +1,19 @@
-import { useContext } from "react";
-import { AppContext } from "../../Contexts";
-import { LANGUAGES } from "../../Constants";
+
+import BeatLoader from "react-spinners/BeatLoader";
 
 const Loading = () => {
-  const { state } = useContext(AppContext);
-
+  const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-90 overflow-y-auto h-full w-full z-50">
-      <div className="flex flex-col justify-center items-center h-full w-full">
-        <div className="mb-4 text-indigo-500 text-2xl font-bold">
-          {LANGUAGES[state.lang].Loading}...
-        </div>
-        <div className="animate-spin rounded-full h-32 w-32 border-b-8 border-indigo-500" />
-      </div>
+
+    <div style={style}>
+      <BeatLoader
+          color={'#076AE0'}
+          loading={true}
+          margin= {3}
+          size={30}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
     </div>
   );
 };
