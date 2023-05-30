@@ -5,24 +5,27 @@ import { ROUTES, TYPES } from "./Constants";
 import { Loading } from "./Components";
 import './Assets/Fonts/BebasNeue-Regular.ttf';
 
-const NotFound = lazy(() => import("./Pages/NotFound"));
-const AuthLayout = lazy(() => import("./Pages/Auth/AuthLayout"));
-const SignIn = lazy(() => import("./Pages/Auth/SignIn"));
-const ForgotPassword = lazy(() => import("./Pages/Auth/ForgotPassword"));
-const RedefinePassword = lazy(() => import("./Pages/Auth/RedefinePassword"));
-const SignUp = lazy(() => import("./Pages/Auth/SignUp"));
-const ConfirmSignUp = lazy(() => import("./Pages/Auth/ConfirmSignUp"));
+const componentMap = {
+  NotFound: "./Pages/NotFound",
+  AuthLayout: "./Pages/Auth/AuthLayout",
+  SignIn: "./Pages/Auth/SignIn",
+  ForgotPassword: "./Pages/Auth/ForgotPassword",
+  RedefinePassword: "./Pages/Auth/RedefinePassword",
+  SignUp: "./Pages/Auth/SignUp",
+  ConfirmSignUp: "./Pages/Auth/ConfirmSignUp",
+  Layout: "./Pages/Layout/Layout",
+  Main: "./Pages/Main",
+  Stats: "./Pages/Main/Stats",
+  Admin: "./Pages/Admin",
+  AdminUsers: "./Pages/Admin/Users",
+  Home: "./Pages/Home",
+  Privacy: "./Pages/Terms/Privacy",
+  Profile: "./Pages/Profile",
+};
 
-
-const Layout = lazy(() => import("./Pages/Layout/Layout"));
-const Main = lazy(() => import("./Pages/Main"));
-const Stats = lazy(() => import("./Pages/Main/Stats"));
-const Admin = lazy(() => import("./Pages/Admin"));
-const AdminUsers = lazy(() => import("./Pages/Admin/Users"));
-const Home = lazy(() => import("./Pages/Home"));
-const Privacy = lazy(() => import("./Pages/Terms/Privacy"));
-const Profile = lazy(() => import("./Pages/Profile"));
-
+Object.keys(componentMap).forEach((key) => {
+  componentMap[key] = lazy(() => import(componentMap[key]));
+});
 
 function App() {
   const [searchParams] = useSearchParams();
@@ -33,26 +36,28 @@ function App() {
       dispatch({ type: TYPES.UPDATE_LANG, payload: searchParams.get("lang") });
     }, [dispatch, searchParams]);
 
+  const getRoute = (routeName) => ROUTES[state.lang][routeName];
+
   return (
     <Suspense fallback={<Loading />}>
       <Routes>              
-        <Route path={ROUTES[state.lang].HOME} element={<Home />} />     
-        <Route path={ROUTES[state.lang].PRIVACY} element={<Privacy />} />              
-        <Route element={<AuthLayout />}>
-          <Route path={ROUTES[state.lang].SIGN_IN} element={<SignIn />} />
-          <Route path={ROUTES[state.lang].FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES[state.lang].REDEFINE_PASSWORD} element={<RedefinePassword />}/>
-          <Route path={ROUTES[state.lang].SIGN_UP} element={<SignUp />} />
-          <Route path={ROUTES[state.lang].CONFIRM_SIGN_UP} element={<ConfirmSignUp />}/>
+        <Route path={getRoute('HOME')} element={<componentMap.Home />} />     
+        <Route path={getRoute('PRIVACY')} element={<componentMap.Privacy />} />              
+        <Route element={<componentMap.AuthLayout />}>
+          <Route path={getRoute('SIGN_IN')} element={<componentMap.SignIn />} />
+          <Route path={getRoute('FORGOT_PASSWORD')} element={<componentMap.ForgotPassword />} />
+          <Route path={getRoute('REDEFINE_PASSWORD')} element={<componentMap.RedefinePassword />}/>
+          <Route path={getRoute('SIGN_UP')} element={<componentMap.SignUp />} />
+          <Route path={getRoute('CONFIRM_SIGN_UP')} element={<componentMap.ConfirmSignUp />}/>
         </Route>
-        <Route element={<Layout />}>         
-          <Route path={ROUTES[state.lang].MAIN} element={<Main />} />
-          <Route path={ROUTES[state.lang].QUESTION_STATS}  element={<Stats />} />
-          <Route path={ROUTES[state.lang].PROFILE} element={<Profile />} />         
-          <Route path={ROUTES[state.lang].ADMIN} element={<Admin />} /> 
-          <Route path={ROUTES[state.lang].ADMINUSERS} element={<AdminUsers />} /> 
+        <Route element={<componentMap.Layout />}>         
+          <Route path={getRoute('MAIN')} element={<componentMap.Main />} />
+          <Route path={getRoute('QUESTION_STATS')}  element={<componentMap.Stats />} />
+          <Route path={getRoute('PROFILE')}element={<componentMap.Profile />} />         
+          <Route path={getRoute('ADMIN')} element={<componentMap.Admin />} /> 
+          <Route path={getRoute('ADMINUSERS')} element={<componentMap.AdminUsers />} /> 
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<componentMap.NotFound />} />
        
       </Routes>
     </Suspense>
